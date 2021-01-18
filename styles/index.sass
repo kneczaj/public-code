@@ -1,0 +1,86 @@
+@import '~dejavu-sans/css/dejavu-sans.css'
+@import "branded/styles/variables"
+@import 'bootstrap'
+@import 'stylish-portfolio'
+@import '~react-notifications/lib/notifications.css'
+@import 'modal'
+@import "material"
+@import "branded/styles/index"
+
+#root
+  position: absolute
+  top: 0
+  left: 0
+  height: 100%
+  width: 100%
+
+body
+  margin: 0
+  padding: 0
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  -webkit-overflow-scrolling: touch
+  scroll-behavior: smooth
+
+code
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace
+
+.btn::first-letter
+  text-transform: capitalize
+
+.scroll-here
+  overflow: auto
+  -webkit-overflow-scrolling: touch
+  scroll-behavior: smooth
+
+.notification-container
+  bottom: 10px
+  top: initial
+
+.text-bold
+  font-weight: 500
+
+.form-row > *
+  margin-left: 5px
+  margin-right: 5px
+
+.no-wrap
+  white-space: nowrap
+
+.MuiSlider-root
+  // fix handle going out from the container
+  width: calc(100% - 12px) !important
+  margin-left: 6px
+  margin-right: 6px
+
+.flex-1
+  flex: 1
+  min-height: 0
+  min-width: 0
+  flex-basis: 0
+
+.dark-page
+  background-color: $background-color
+  color: white
+  //min-height: 100%
+  a:not(.btn):not(.dropdown-item)
+    color: white
+  p
+    a:not(.btn):not(.dropdown-item)
+      text-decoration: underline
+
+.centered-content
+  display: table
+  margin: auto
+  .center
+    display: table-cell
+
+.hidden
+  visibility: hidden
+
+.stretch-abs
+  position: absolute
+  left: 0
+  right: 0
+  top: 0
+  bottom: 0

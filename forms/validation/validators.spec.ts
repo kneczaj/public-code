@@ -1,0 +1,180 @@
+import { composeValidators, isUniqueKeyword, ValidatorFn } from "./index";
+import {
+  isGreaterThan,
+  isEqualOrGreaterThan,
+  isNaturalNumber,
+  isNumber,
+  oneInFormRequired,
+  oneRequired,
+  rangeValidator,
+  required,
+  isEmail,
+  containsOnlyLetters,
+  isValidHouseNumber
+} from "./validators";
+import { translationResources } from "../../../app/i18n";
+
+function testValidator(
+  validatorName: string,
+  errorStringIdentifier: string,
+  validator: ValidatorFn,
+  passes: Array<any>,
+  fails: Array<any>
+) {
+  describe(validatorName, () => {
+    passes.forEach(value => {
+      const valueStr = typeof value === 'object' ? JSON.stringify(value) : value;
+      it(`passes with value '${valueStr}'`, () =>
+        expect(validator(value, null as any)).toBeNull()
+      )
+    });
+    fails.forEach(value => {
+      const valueStr = typeof value === 'object' ? JSON.stringify(value) : value;
+      it(`fails with value '${valueStr}'`, () => {
+        const result = validator(value, null as any);
+        expect(result).not.toBeNull();
+        const stringIdentifier = Array.isArray(result) ? result[0] : result;
+        expect(stringIdentifier).toBe(errorStringIdentifier);
+        Object.keys(translationResources).filter(lang => lang !== 'en').forEach(language => {
+          expect(Object.keys((translationResources as any)[language].translation)).toContain(errorStringIdentifier);
+        });
+      })
+    });
+  });
+}
+
+const emptyValues: Array<any> = ['', null, undefined, ' '];
+
+describe('validators', () => {
+
+  describe('compose', () => {
+    describe('with validators returning a dict', () => {
+      let validator: ValidatorFn;
+
+      beforeEach(() => {
+        validator = composeValidators([isNumber, isNaturalNumber]);
+      });
+
+      it('returns error detail of the first error when more fail', () => {
+        expect(validator('a', null as any)).toBe('numbers_only');
+      });
+
+      it('returns error detail of the first error when some passes', () => {
+        expect(validator('-1', null as any)).toBe('natural_numbers_only');
+      });
+
+      it('returns undefined when no error', () => {
+        expect(validator('1', null as any)).toBe(undefined);
+      });
+    });
+  });
+
+  testValidator(
+    'required',
+    'required',
+    required,
+    ['fdsa', '4', 'a'],
+    emptyValues.concat(false)
+  );
+  testValidator(
+    'isNumber',
+    'numbers_only',
+    isNumber,
+    emptyValues.concat(['4', '-4', '1.0', '-1.0', '0', '-.1', '.1', 4, 1.0]),
+    ['a', '-a', ',', '-', '4a', 'a4']
+  );
+  testValidator(
+    'isNaturalNumber',
+    'natural_numbers_only',
+    isNaturalNumber,
+    emptyValues.concat(['1', '10', '0', 4, 1.0]),
+    ['-1', '0.1', 'a', '-a', '-0.1', -1, 1.1]
+  );
+  testValidator(
+    'oneRequired',
+    'at_least_one_required',
+    oneRequired,
+    [[true, false], [true, true], ['a', undefined], ['a', 'b']],
+    emptyValues.concat([[], [''], [false, false]])
+  );
+  testValidator(
+    'oneInFormRequired',
+    'at_least_one_required',
+    oneInFormRequired,
+    [
+      { 'a': true, 'b': false },
+      { 'a': true, 'b': true },
+      { 'a': 'a', 'b': undefined },
+      { 'a': 'a', 'b': 'b' }
+    ],
+    emptyValues.concat([{}, { a: '' }, { 'a': false, b: false }])
+  );
+  testValidator(
+    'rangeValidator',
+    'improper_range',
+    rangeValidator,
+    [
+      { min: 'a', max: 'b' },
+      { min: 'b', max: 'a' },
+      { min: '-1', max: '2.0' },
+      { min: '2', max: '3' },
+      { min: '2', max: null },
+      { min: '2', max: undefined },
+      { min: '2', max: '' },
+      { min: null, max: '3' },
+      { min: undefined, max: '3' },
+      { min: '', max: '3' },
+      { min: '', max: '' },
+      { min: null, max: null },
+      { min: undefined, max: undefined },
+      { min: null, max: undefined },
+      { min: undefined, max: null },
+    ],
+    [
+      { min: '2', max: '1' },
+      { min: '-2', max: '-3' }
+    ]
+  );
+  testValidator(
+    'isGreaterThan',
+    'must_be_greater_than',
+    isGreaterThan(0),
+    emptyValues.concat(['1', '20', '1.2']),
+    ['0', '-1', '-0.4']
+  );
+  testValidator(
+    'isEqualOrGreaterThan',
+    'must be greater or equal',
+    isEqualOrGreaterThan(0),
+    emptyValues.concat(['0', '1', '1.2']),
+    ['-1', '-0.1', '-1.2']
+  );
+  testValidator(
+    'isEmail',
+    'email required',
+    isEmail,
+    emptyValues.concat(['aaaa@fsdjkf.pl']),
+    ['0', '-1', 'afdsfsd', '.pl', 'bgg.com', '323fd@gdfgd']
+  );
+  testValidator(
+    'isUniqueKeyword',
+    'is already among keywords',
+    isUniqueKeyword(['AaA', 'whatever', 'tralaLa']),
+    emptyValues.concat('bbb', 'a'),
+    ['aaa', 'aAa', 'TralaLa']
+  );
+  testValidator(
+    'containsOnlyLetters',
+    'accepts only letters',
+    containsOnlyLetters,
+    emptyValues.concat('AaXZ', 'a', 'B'),
+    ['2Wy', '%1A', '%A']
+  );
+  testValidator(
+    'isValidHouseNumber',
+    'accepts only numbers or combination of numbers and 1 letter',
+    isValidHouseNumber,
+    emptyValues.concat('213', '2', '1a', '44f'),
+    ['ads', 'a1', '1%', '%1', '%a5', '1a1a']
+  );
+});

@@ -1,0 +1,11 @@
+$margin: 0.2rem
+
+.inline-container-root
+  .compensation-container
+    margin-left: #{-$margin}
+    margin-right: #{-$margin}
+    display: flex
+    align-items: center
+    flex-wrap: wrap
+    & > *
+      margin: $margin/2 $margin
