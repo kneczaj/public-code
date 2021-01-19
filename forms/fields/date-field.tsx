@@ -1,26 +1,29 @@
 import React from "react";
-import { DatePicker } from "@material-ui/pickers";
-import { useField } from "../hooks/field";
-import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
-import { OuterProps } from "../HOC/field";
-import { DatePickerProps } from "@material-ui/pickers/DatePicker/DatePicker";
-import { isNullOrUndefined } from "../../util";
-import { FormControl, FormHelperText } from "@material-ui/core";
+import {DatePicker} from "@material-ui/pickers";
+import {useField} from "../hooks/field";
+import {OuterProps} from "../HOC/field";
+import {DatePickerProps} from "@material-ui/pickers/DatePicker/DatePicker";
+import {isUndefined} from "../../util";
+import {FormControl, FormHelperText} from "@material-ui/core";
+import {Moment} from "moment";
 
 interface InputElementProps extends Omit<DatePickerProps, 'defaultValue' | 'format' | 'name' | 'value' | 'onChange'> {}
 
-export interface Props extends OuterProps<MaterialUiPickersDate>, InputElementProps {
+export interface Props extends OuterProps<string>, InputElementProps {
   dateFormat?: DatePickerProps['format'];
 }
 
 export function DateField({ children, dateFormat, ...config }: Props): JSX.Element {
-  const { input, input: { value }, formControl, errorLabel } = useField<MaterialUiPickersDate, HTMLDivElement, InputElementProps>({
+  const { input, input: { value }, formControl, errorLabel } = useField<any, HTMLDivElement, InputElementProps>({
     ...config,
-    format: value => {
-      if (isNullOrUndefined(value)) {
+    format: (value: Moment | string | undefined) => {
+      if (typeof value === 'string' || isUndefined(value)) {
         return value;
       }
-      return value.utc().startOf('day').toISOString();
+      return value.format('YYYY-MM-DD');
+    },
+    parse: (value: Moment) => {
+      return value.format('YYYY-MM-DD')
     }
   });
   return (
