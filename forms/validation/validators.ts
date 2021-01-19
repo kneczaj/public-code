@@ -1,5 +1,5 @@
 import validator from "validator";
-import { isNullOrUndefined, isUndefined } from "public/util";
+import { isNull, isNullOrUndefined, isUndefined } from "public/util";
 import { skipEmptyField, ValidationResult, ValidatorFn } from "./util";
 import { RangeDataFormat } from "../models/range";
 
@@ -25,11 +25,11 @@ export const isNaturalNumber = skipEmptyField((value: any, values: FormValues) =
  * @param threshold
  */
 export const isGreaterThan = (threshold: number) => skipEmptyField((value: any, values: FormValues) => {
-  return Number(value) > threshold ? null : 'must_be_greater_than';
+  return Number(value) > threshold ? null : ['must_be_greater_than',  { threshold }];
 });
 
 export const isEqualOrGreaterThan = (threshold: number) => skipEmptyField((value: any, values: FormValues) => {
-  return Number(value) >= threshold ? null : 'must be greater or equal'; //@todo check how to pass the variable to i18n as ['must be greater or equal', {threshold}] does not work
+  return Number(value) >= threshold ? null : ['must be greater or equal', { threshold }];
 });
 
 function isNotEmpty(value: any): boolean {
@@ -39,9 +39,10 @@ function isNotEmpty(value: any): boolean {
   return !isNullOrUndefined(value) && value !== false;
 }
 
-export const oneRequired = (value: any, values: FormValues) => {
-  return Array.isArray(value) &&
-    value.filter(item => isNotEmpty(item)).length > 0 ?
+export const oneRequiredDict = (value: any, values: FormValues) => {
+  return typeof value === "object"
+    && !isNull(value)
+    && Object.keys(value).filter(item => value[item]).length > 0 ?
     null :
     'at_least_one_required';
 };

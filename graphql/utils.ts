@@ -9,7 +9,11 @@ function convertGQLErrors2Form(errors: ReadonlyArray<GraphQLError>): object {
     return { [FORM_ERROR]: "unknown error"}
   }
   try {
-    return { [FORM_ERROR]: errors[0].extensions!.exception.data.message[0].messages[0].message }
+    const exceptionData = errors[0].extensions!.exception.data;
+    if (exceptionData.errors) {
+      return exceptionData.errors;
+    }
+    return { [FORM_ERROR]: exceptionData.message[0].messages[0].message }
   } catch (e) {
     return { [FORM_ERROR]: errors[0].message }
   }

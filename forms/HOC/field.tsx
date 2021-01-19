@@ -15,7 +15,6 @@ export interface ControlBaseProps {
  * Props required from a wrapped component
  */
 export interface InnerProps extends ControlBaseProps {
-  children: any;
   label?: string;
 }
 
@@ -47,7 +46,6 @@ export const withField = <TControl extends ControlBaseProps, FieldValue = any>(
   ignoreTouched,
   showErrorWhen,
   // Other Field props
-  children,
   name,
   showLabel,
   ...innerComponentProps
@@ -72,15 +70,12 @@ export const withField = <TControl extends ControlBaseProps, FieldValue = any>(
     ignoreTouched,
     showErrorWhen,
     // Other Field props
-    children,
     name,
     showLabel
   };
   return (
     <Field {...fieldWrapperProps}>
-      <WrappedComponent {...innerComponentProps as unknown as TControl}>
-        {children}
-      </WrappedComponent>
+      <WrappedComponent {...innerComponentProps as unknown as TControl}/>
     </Field>
   );
 };

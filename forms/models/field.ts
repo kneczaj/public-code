@@ -1,6 +1,7 @@
 import { UseFieldConfig } from "../hooks/field-format-on-blur";
 import { ValidationBaseProps } from "./validation";
 import { UseFieldArrayConfig } from "react-final-form-arrays";
+import { ReactNode } from "react";
 
 /**
  * Common props for both array and single field
@@ -8,7 +9,6 @@ import { UseFieldArrayConfig } from "react-final-form-arrays";
 interface CommonBaseOuterProps<T> extends ValidationBaseProps<T> {
   className?: string;
   name: string;
-  children?: any;
   showLabel?: boolean;
 }
 

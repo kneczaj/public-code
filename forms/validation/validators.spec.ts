@@ -1,11 +1,11 @@
-import { composeValidators, isUniqueKeyword, ValidatorFn } from "./index";
+import { composeValidators, isUniqueKeyword, ValidationError, ValidatorFn } from "./index";
 import {
   isGreaterThan,
   isEqualOrGreaterThan,
   isNaturalNumber,
   isNumber,
   oneInFormRequired,
-  oneRequired,
+  oneRequiredDict,
   rangeValidator,
   required,
   isEmail,
@@ -16,11 +16,12 @@ import { translationResources } from "../../../app/i18n";
 
 function testValidator(
   validatorName: string,
-  errorStringIdentifier: string,
+  expectedResult: ValidationError,
   validator: ValidatorFn,
   passes: Array<any>,
   fails: Array<any>
 ) {
+  const errorStringIdentifier = Array.isArray(expectedResult) ? expectedResult[0] : expectedResult;
   describe(validatorName, () => {
     passes.forEach(value => {
       const valueStr = typeof value === 'object' ? JSON.stringify(value) : value;
@@ -33,13 +34,27 @@ function testValidator(
       it(`fails with value '${valueStr}'`, () => {
         const result = validator(value, null as any);
         expect(result).not.toBeNull();
-        const stringIdentifier = Array.isArray(result) ? result[0] : result;
-        expect(stringIdentifier).toBe(errorStringIdentifier);
-        Object.keys(translationResources).filter(lang => lang !== 'en').forEach(language => {
-          expect(Object.keys((translationResources as any)[language].translation)).toContain(errorStringIdentifier);
-        });
+        expect(result).toEqual(expectedResult);
       })
     });
+    it('has translation', () => {
+      Object.keys(translationResources).filter(lang => lang !== 'en').forEach(language => {
+        const resource = (translationResources as any)[language].translation;
+        expect(Object.keys(resource)).toContain(errorStringIdentifier);
+      });
+    });
+    if (Array.isArray(expectedResult)) {
+      // if there are error details this should be included also in English translation
+      it('uses error details to generate the translation', () => {
+        Object.keys(translationResources).forEach(language => {
+          const resource = (translationResources as any)[language].translation;
+          const translation = resource[errorStringIdentifier];
+          Object.keys(expectedResult[1]).forEach(detail => {
+            expect(translation).toMatch(new RegExp(`{{\\s*${detail}\\s*}}`, 'g'));
+          })
+        });
+      });
+    }
   });
 }
 
@@ -73,7 +88,7 @@ describe('validators', () => {
     'required',
     'required',
     required,
-    ['fdsa', '4', 'a'],
+    ['fdsa', '4', 'a', '53241.'],
     emptyValues.concat(false)
   );
   testValidator(
@@ -93,9 +108,9 @@ describe('validators', () => {
   testValidator(
     'oneRequired',
     'at_least_one_required',
-    oneRequired,
-    [[true, false], [true, true], ['a', undefined], ['a', 'b']],
-    emptyValues.concat([[], [''], [false, false]])
+    oneRequiredDict,
+    [{ a: true, b: false}, [{ a: true, b: true}], {a: true, b: undefined}, {a: true, b: '' }],
+    emptyValues.concat([{}, { a: '', b: '' }, { a: undefined, b: undefined }, { a: false, b: false }])
   );
   testValidator(
     'oneInFormRequired',
@@ -137,14 +152,14 @@ describe('validators', () => {
   );
   testValidator(
     'isGreaterThan',
-    'must_be_greater_than',
+    ['must_be_greater_than', { threshold: 0 }],
     isGreaterThan(0),
     emptyValues.concat(['1', '20', '1.2']),
     ['0', '-1', '-0.4']
   );
   testValidator(
     'isEqualOrGreaterThan',
-    'must be greater or equal',
+    ["must be greater or equal", { threshold: 0 }],
     isEqualOrGreaterThan(0),
     emptyValues.concat(['0', '1', '1.2']),
     ['-1', '-0.1', '-1.2']

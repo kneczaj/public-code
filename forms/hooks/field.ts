@@ -10,6 +10,7 @@ import { capitalizeFirstLetter, isUndefined } from "../../util";
 import { FormHelperTextTypeMap } from "@material-ui/core/FormHelperText/FormHelperText";
 import { DefaultComponentProps } from "@material-ui/core/OverridableComponent";
 import { useFieldFormatOnBlur, UseFieldConfig } from "./field-format-on-blur";
+import { useMemo } from "react";
 
 interface CustomInput<FieldValue, T extends HTMLElement = HTMLElement> extends FieldInputProps<FieldValue, T> {
   id: string;
@@ -31,20 +32,21 @@ export interface Props<FieldValue> extends UseFieldConfig<FieldValue> {
   ignoreTouched?: boolean;
 }
 
-function shouldShowError<FieldValue>(
-  { error, submitError, touched }: FieldMetaState<FieldValue>,
-  ignoreTouched?: boolean
-): boolean {
-  const displayedError = error || submitError;
-  // this will be false when error comes from child element
-  const isString = typeof displayedError === "string";
-  if (!isString) {
-    return false;
+export function getDisplayedError<FieldValue>(
+  { error, submitError }: Pick<FieldMetaState<FieldValue>, 'error' | 'submitError'>,
+  t: (str: string, params: {}) => string
+): string | undefined {
+  const displayedError = [error, submitError].filter(error => {
+    // this will be false when error comes from child element
+    const isString = typeof error === "string";
+    const isArray = Array.isArray(error);
+    return isString || isArray;
+  })[0];
+  if (isUndefined(displayedError)) {
+    return undefined;
   }
-  if (!ignoreTouched && !touched) {
-    return false;
-  }
-  return !!displayedError;
+  // @ts-ignore
+  return t(...[].concat(displayedError));
 }
 
 export function useField<FieldValue = any, T extends HTMLElement = HTMLElement, TInputElementProps = any>(
@@ -97,22 +99,30 @@ export function useField<FieldValue = any, T extends HTMLElement = HTMLElement, 
   };
   const field = useFieldFormatOnBlur(name, config);
   const helperTextId = `${id}-helper-text`;
-  const showError = shouldShowError(field.meta) && (!isUndefined(showErrorWhen) ? showErrorWhen(field) : true);
+  const errorString: string | undefined = useMemo(() => {
+    if (!ignoreTouched && !field.meta.touched) {
+      return undefined;
+    }
+    if (showErrorWhen && !showErrorWhen(field)) {
+      return undefined;
+    }
+    return getDisplayedError(field.meta, t);
+  }, [field, showErrorWhen, ignoreTouched, t]);
   return {
     ...field,
     input: {
       ...field.input,
-      'aria-describedby': showError ? helperTextId : undefined,
+      'aria-describedby': !!errorString ? helperTextId : undefined,
       id,
       ...inputElementProps as unknown as TInputElementProps
     },
     formControl: {
-      error: showError
+      error: !!errorString
     },
-    errorLabel: showError
+    errorLabel: !!errorString
       ? {
         id: helperTextId,
-        children: capitalizeFirstLetter(t(field.meta.error || field.meta.submitError))
+        children: capitalizeFirstLetter(errorString)
       }
       : undefined
   }
