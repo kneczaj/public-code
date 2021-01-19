@@ -1,11 +1,11 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { InputField } from "../../forms/fields/input-field";
 import { composeValidators, isEmail } from "../../forms/validation";
 import { FormRenderProps } from "react-final-form";
 import { Form } from "../../forms/components/form";
 import { LoginQueryPayload, LoginResponsePayload } from "../models/login";
 import { User } from "../models/user";
-import { capitalizeFirstLetter } from "../../util";
+import {capitalizeFirstLetter, isNullOrUndefined} from "../../util";
 import { useT } from "../../hooks/translation";
 import { Button, Grid, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -44,10 +44,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 export function LoginForm({ children, confirmButtonLabel, onError, onSuccess }: Props) {
   const t = useT();
   const classes = useStyles();
-  const [ onLogin ] = useFormMutation<LoginResponsePayload, LoginQueryPayload>(LOGIN, {
-    onSuccess: data => onSuccess({ token: data.login.jwt, email: data.login.user.email }),
+  const [ onLogin, { data } ] = useFormMutation<LoginResponsePayload, LoginQueryPayload>(LOGIN, {
     onError
   });
+  useEffect(() => {
+    if (isNullOrUndefined(data)) {
+      return;
+    }
+    onSuccess({ token: data.login.jwt, email: data.login.user.email })
+  }, [data, onSuccess])
 
   return (
     <Form
