@@ -6,6 +6,7 @@ import {DatePickerProps} from "@material-ui/pickers/DatePicker/DatePicker";
 import {isUndefined} from "../../util";
 import {FormControl, FormHelperText} from "@material-ui/core";
 import {Moment} from "moment";
+import {DATE_SCALAR} from "public/graphql/graphql-moment";
 
 interface InputElementProps extends Omit<DatePickerProps, 'defaultValue' | 'format' | 'name' | 'value' | 'onChange'> {}
 
@@ -20,10 +21,10 @@ export function DateField({ children, dateFormat, ...config }: Props): JSX.Eleme
       if (typeof value === 'string' || isUndefined(value)) {
         return value;
       }
-      return value.format('YYYY-MM-DD');
+      return DATE_SCALAR.serialize(value);
     },
     parse: (value: Moment) => {
-      return value.format('YYYY-MM-DD')
+      return DATE_SCALAR.serialize(value)
     }
   });
   return (
