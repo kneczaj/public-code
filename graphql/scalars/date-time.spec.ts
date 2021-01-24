@@ -1,6 +1,6 @@
 import { IntValueNode, Kind } from 'graphql';
-import { getDateTimeScalar } from './graphql-moment';
-import moment, { Moment } from 'moment';
+import { getDateTimeScalar } from './date-time';
+import { DateTime } from "luxon";
 
 describe('GraphQLMoment DateTime', () => {
   // these are the same dates
@@ -9,8 +9,9 @@ describe('GraphQLMoment DateTime', () => {
 
   // Date (not DateTime) scalar should be used for this
   let invalidDateTime = '2016-04-31'; // This date doesn't exist
+  const timezone = 'UTC+3';
 
-  const DATE_TIME_SCALAR = getDateTimeScalar('-3:00');
+  const DATE_TIME_SCALAR = getDateTimeScalar(timezone);
 
   describe('serialize', () => {
     it('should error when serializing an invalid date', () => {
@@ -22,13 +23,13 @@ describe('GraphQLMoment DateTime', () => {
     it('should serialize a valid date-time with timezone', () => {
       // this should serialize any timezone to UTC
       expect(
-        DATE_TIME_SCALAR.serialize(moment(validDateTime))
+        DATE_TIME_SCALAR.serialize(DateTime.fromISO(validDateTime))
       ).toEqual('2016-08-15T10:00:32Z');
     });
 
     it('should serialize a valid date-time in UTC', () => {
       expect(
-        DATE_TIME_SCALAR.serialize(moment(validDateTimeUTC))
+        DATE_TIME_SCALAR.serialize(DateTime.fromISO(validDateTimeUTC))
       ).toEqual('2016-08-15T10:00:32Z');
     });
   });
@@ -43,16 +44,16 @@ describe('GraphQLMoment DateTime', () => {
     it('should parse a value to date-time', () => {
       expect(
         DATE_TIME_SCALAR.parseValue(validDateTime)
-      ).toEqual(moment(validDateTime, moment.ISO_8601).utc());
+      ).toEqual(DateTime.fromISO(validDateTime).toUTC());
     });
 
     it.only('should parse a UTC value to date-time', () => {
-      const momentDate: Moment = DATE_TIME_SCALAR.parseValue(validDateTime);
-      expect(momentDate.utcOffset()).toBe(3);
-      expect(momentDate.hour()).toBe(3);
+      const momentDate: DateTime = DATE_TIME_SCALAR.parseValue(validDateTime);
+      expect(momentDate.offset).toBe(180); // in minutes
+      expect(momentDate.hour).toBe(13);
       expect(
         DATE_TIME_SCALAR.parseValue(validDateTime)
-      ).toEqual(moment(validDateTimeUTC, moment.ISO_8601).utc());
+      ).toEqual(DateTime.fromISO(validDateTimeUTC).setZone(timezone));
     });
   });
 
@@ -83,7 +84,7 @@ describe('GraphQLMoment DateTime', () => {
         value: validDateTime
       };
       let date = DATE_TIME_SCALAR.parseLiteral(ast, {})
-      expect(moment.isMoment(date)).toBe(true);
+      expect(DateTime.isDateTime(date)).toBe(true);
       expect(date.toJSON()).toEqual(ast.value)
     });
   });

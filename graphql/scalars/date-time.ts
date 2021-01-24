@@ -1,29 +1,28 @@
-import moment, { Moment } from 'moment';
 import {GraphQLScalarType, GraphQLError, Kind} from 'graphql';
+import { DateTime } from "luxon";
 
-export function getDateTimeScalar(timezone: string) {
+export function getDateTimeScalar(timezone: string = 'local') {
   return new GraphQLScalarType({
     name: 'DateTime',
     /**
      * Serialize date value into string
-     * @param  {moment} value date value
+     * @param  {value} value date value
      * @return {String} date as string
      */
-    serialize: function (value) {
-      let date = moment.utc(value);
-      if(!date.isValid()) {
+    serialize: function (value: DateTime) {
+      if(!value.isValid) {
         throw new GraphQLError('Field serialize error: value is an invalid DateTime');
       }
-      return date.format();
+      return value.toUTC().toISO();
     },
     /**
      * Parse value into date
      * @param  {*} value serialized date value
-     * @return {moment} date value
+     * @return {value} date value
      */
-    parseValue: function (value): Moment {
-      let date = moment.tz(value);
-      if(!date.isValid()) {
+    parseValue: function (value: string): DateTime {
+      let date = DateTime.fromISO(value).setZone(timezone);
+      if(!date.isValid) {
         throw new GraphQLError('Field parse error: value is an invalid DateTime');
       }
       return date;
@@ -31,14 +30,14 @@ export function getDateTimeScalar(timezone: string) {
     /**
      * Parse ast literal to date
      * @param  {Object} ast graphql ast
-     * @return {moment} date value
+     * @return date value
      */
     parseLiteral: (ast) => {
       if(ast.kind !== Kind.STRING) {
         throw new GraphQLError('Query error: Can only parse strings to date-time but got: ' + ast.kind);
       }
-      let date = moment(ast.value);
-      if(!date.isValid()) {
+      let date = DateTime.fromISO(ast.value).setZone('local');
+      if(!date.isValid) {
         throw new GraphQLError('Query error: Invalid date-time');
       }
       return date;
