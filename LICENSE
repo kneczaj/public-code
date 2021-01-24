@@ -1,4 +1,10 @@
-This license file describe the license on which the files in this directory and subdirectories are published.
+This license file describes the license on which the files in this directory and subdirectories are published
+with one exception: if there is a comment on top of any code part e.g. function/class with "SOURCE:" and a link
+header then this part of the code contains code which is licensed on the source license, but all the later amendments
+are still on the license described below.
+
+Whoever commits their code to this directory or its subdirectories agrees their code to be published on the license
+below.
 
 Creative Commons Legal Code
 
