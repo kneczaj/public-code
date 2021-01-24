@@ -1,30 +1,31 @@
 import React from "react";
-import {DatePicker} from "@material-ui/pickers";
-import {useField} from "../hooks/field";
-import {OuterProps} from "../HOC/field";
-import {DatePickerProps} from "@material-ui/pickers/DatePicker/DatePicker";
-import {isUndefined} from "../../util";
-import {FormControl, FormHelperText} from "@material-ui/core";
-import {Moment} from "moment";
-import {DATE_SCALAR} from "public/graphql/graphql-moment";
+import { DatePicker } from "@material-ui/pickers";
+import { useField } from "../hooks/field";
+import { OuterProps } from "../HOC/field";
+import { DatePickerProps } from "@material-ui/pickers/DatePicker/DatePicker";
+import { isNullOrUndefined } from "../../util";
+import { FormControl, FormHelperText } from "@material-ui/core";
+import { DateTime } from "luxon";
+import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
+import { dateOnly } from "../../date-utils";
 
 interface InputElementProps extends Omit<DatePickerProps, 'defaultValue' | 'format' | 'name' | 'value' | 'onChange'> {}
 
-export interface Props extends OuterProps<string>, InputElementProps {
+export interface Props extends OuterProps<MaterialUiPickersDate>, InputElementProps {
   dateFormat?: DatePickerProps['format'];
 }
 
 export function DateField({ children, dateFormat, ...config }: Props): JSX.Element {
   const { input, input: { value }, formControl, errorLabel } = useField<any, HTMLDivElement, InputElementProps>({
     ...config,
-    format: (value: Moment | string | undefined) => {
-      if (typeof value === 'string' || isUndefined(value)) {
+    format: (value: DateTime | undefined) => {
+      if (isNullOrUndefined(value)) {
         return value;
       }
-      return DATE_SCALAR.serialize(value);
+      return dateOnly(value);
     },
-    parse: (value: Moment) => {
-      return DATE_SCALAR.serialize(value)
+    parse: (value: DateTime) => {
+      return dateOnly(value);
     }
   });
   return (

@@ -4,6 +4,8 @@ import {DateField, Props} from "public/forms/fields/date-field";
 import {mockAllProviderHooks} from "public/mocks";
 import {act, fireEvent, render, screen, waitFor} from "@testing-library/react";
 import {MuiPickersUtilsProvider} from "app/root/providers/mui-pickers";
+import { DateTime } from "luxon";
+import { dateOnly } from "../../date-utils";
 
 const mocks = {
   onSubmit: (values: any) => {}
@@ -83,16 +85,17 @@ describe('Date field', () => {
     // });
   });
   describe('with initial value', () => {
+    const initial = dateOnly(DateTime.utc(2020, 1, 2));
     beforeAll(() => {
       mockAllProviderHooks();
     });
     beforeEach(() => {
-      render(<TestComponent initialValue={'2020-01-02'}/>);
+      render(<TestComponent initialValue={initial}/>);
     });
     it('submits as empty', async () => {
       await clickSubmit();
       expect(spy).toHaveBeenCalledWith({
-        test: '2020-01-02'
+        test: initial
       }, expect.anything(), expect.anything());
     });
   });
