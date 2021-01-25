@@ -1,14 +1,13 @@
 import React from "react";
-import { Button, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { Button, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { LoginForm } from "./login-form";
 import { capitalizeFirstLetter } from "../../util";
-import { User } from "../models/user";
 import { useT } from "../../hooks/translation";
 import { useModal } from "../../modals/hooks";
 import { BACKEND_URL } from "../../../env";
 
 export interface Props {
-  onSuccess: (user: User) => void;
+  onSuccess: (token: string) => void;
   onError: (error: any) => void;
   goToRegister: () => void;
   children: {

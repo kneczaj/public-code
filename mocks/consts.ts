@@ -4,6 +4,12 @@ import { ApolloClient } from "@apollo/client/core";
 export const apolloClient = {} as ApolloClient<object>;
 
 export const user: User = {
-  token: "token",
-  email: "testuser@testdomain.com"
+  username: "user",
+  email: "testuser@testdomain.com",
+  id: "1",
+  blocked: false,
+  confirmed: true,
+  role: {
+    name: "Authenticated"
+  }
 }

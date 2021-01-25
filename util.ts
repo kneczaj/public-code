@@ -100,3 +100,10 @@ export function filterOutNull<T extends object>(input: T): Partial<T> {
     return acc;
   }, {} as Partial<T>);
 }
+
+/**
+ * This takes out null and undefined from union types e.g. graphql-codegen generated Maybe
+ *
+ * SOURCE: https://mariusschulz.com/blog/conditional-types-in-typescript
+ */
+export type NonNullable<T> = T extends null | undefined ? never : T;

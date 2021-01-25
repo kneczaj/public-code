@@ -17,7 +17,7 @@ export function LoginRedirect({ providerName }: Props) {
       const data: any = await (await fetch(`${BACKEND_URL}/auth/${providerName}/callback${searchString}`)).json();
       // Successfully logged with Strapi
       // Now saving the jwt to use it for future authenticated requests to Strapi
-      login({ email: data.user.email, token: data.jwt });
+      login(data.jwt);
       console.log(data);
     }
 

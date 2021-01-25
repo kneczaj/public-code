@@ -6,7 +6,6 @@ import { Contact } from "./contact-modal";
 import { Licenses } from "./licences-modal";
 import { AuthenticationModal } from "../auth/components/authentication-modal";
 import { useT } from "../hooks/translation";
-import { User } from "../auth/models/user";
 import { useUser } from "../auth/components/user-provider";
 
 interface Props {
@@ -30,8 +29,8 @@ export const ModalProvider = ({ children }: Props) => {
 
   const t = useT();
 
-  function onSuccess(user: User) {
-    login(user);
+  function onSuccess(token: string) {
+    login(token);
     closeModal();
   }
 

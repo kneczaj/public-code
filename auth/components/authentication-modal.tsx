@@ -4,11 +4,10 @@ import { useState } from "../../hooks/state";
 import { RegisterModal } from "./register-modal";
 import { LoginModal } from "./login-modal";
 import { isUndefined } from "../../util";
-import { User } from "../models/user";
 import { useT } from "../../hooks/translation";
 
 export interface Props {
-  onSuccess: (user: User) => void;
+  onSuccess: (token: string) => void;
   onError?: (error: any) => void;
   onClose: () => void;
   showRegisterModal?: boolean;

@@ -1,39 +1,46 @@
 import React from "react";
-import { getInitialState, User } from "../models/user";
-import { isNull } from "../../util";
 import { createContext, createContextHook } from "../../utils/context-hook";
 import { ProviderComponentProps } from "../../components/provider-group";
-import { useState } from "../../hooks/state";
 import { useHistory } from "../../routing/hooks/history";
 import { useNotifications } from "../../notifications/notifications-provider";
+import { gql } from "@apollo/client";
+import { useToken } from "public/auth/components/token-provider";
+import { useMeQuery } from "generated/graphql";
+import { User } from "../models/user";
 
 export interface ContextProps {
   user: User | null;
   isAuthenticated: boolean;
   logout: () => void;
-  login: (user: User) => void;
+  login: (token: string) => void;
 }
 
 export const UserContext = createContext<ContextProps>('user');
 export const useUser = createContextHook(UserContext);
 
+export const ME = gql`
+  query Me {
+    me {
+      id
+      username
+      email
+      confirmed
+      blocked
+      role {
+        name
+      }
+    }
+  }
+`;
+
 export function UserProvider({ children }: ProviderComponentProps) {
   const { show } = useNotifications();
   const { push } = useHistory();
-  const { value: user, set } = useState<User | null>(getInitialState());
-
-  function login(user: User): void {
-    set(user);
-    localStorage.setItem('token', user.token);
-    localStorage.setItem('username', user.email);
-  }
+  const { logout: logoutBase, isAuthenticated, login } = useToken();
+  const { data: { me } = {}, loading } = useMeQuery();
 
   function logout(): void {
-    set(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    // TODO: should probably call graphql too!
-    // clear search parameters from url
+    logoutBase();
     push('/', () => ({}));
     show({
       type: "success",
@@ -41,11 +48,15 @@ export function UserProvider({ children }: ProviderComponentProps) {
     });
   }
 
+  if (loading) {
+    return <>loading...</>;
+  }
+
   return (
     <UserContext.Provider
       value={{
-        user,
-        isAuthenticated: !isNull(user),
+        user: me || null,
+        isAuthenticated,
         logout,
         login
       }}

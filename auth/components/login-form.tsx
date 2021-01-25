@@ -1,11 +1,10 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { InputField } from "../../forms/fields/input-field";
 import { composeValidators, isEmail } from "../../forms/validation";
 import { FormRenderProps } from "react-final-form";
 import { Form } from "../../forms/components/form";
 import { LoginQueryPayload, LoginResponsePayload } from "../models/login";
-import { User } from "../models/user";
-import {capitalizeFirstLetter, isNullOrUndefined} from "../../util";
+import { capitalizeFirstLetter, isNullOrUndefined } from "../../util";
 import { useT } from "../../hooks/translation";
 import { Button, Grid, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -29,7 +28,7 @@ const LOGIN = gql`
 `;
 
 export interface Props {
-  onSuccess: (user: User) => void;
+  onSuccess: (token: string) => void;
   onError: (error: any) => void;
   children?: any;
   confirmButtonLabel?: string;
@@ -51,7 +50,7 @@ export function LoginForm({ children, confirmButtonLabel, onError, onSuccess }: 
     if (isNullOrUndefined(data)) {
       return;
     }
-    onSuccess({ token: data.login.jwt, email: data.login.user.email })
+    onSuccess(data.login.jwt)
   }, [data, onSuccess])
 
   return (

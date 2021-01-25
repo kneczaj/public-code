@@ -1,19 +1,15 @@
 import React from "react";
 import { useState } from "../../hooks/state";
-import { Button, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { Button, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { RegistrationForm } from "./registration-form";
 import { capitalizeFirstLetter } from "../../util";
-import {
-  isRegisterResponseToConfirm,
-  RegisterResponsePayload,
-} from "../models/register";
-import { User } from "../models/user";
+import { isRegisterResponseToConfirm, RegisterResponsePayload, } from "../models/register";
 import { useT } from "../../hooks/translation";
 import { useModal } from "../../modals/hooks";
 
 export interface Props {
   onClose: () => void;
-  onSuccess: (user: User) => void;
+  onSuccess: (token: string) => void;
   onError: (error: any) => void;
   goToLogin: () => void;
   children: {
@@ -44,7 +40,7 @@ export function RegisterModal({
     if (isRegisterResponseToConfirm(payload)) {
       registerFinalized.set(true);
     } else {
-      onSuccessBase({ token: payload.key, email: username });
+      onSuccessBase(payload.key);
     }
   }
 

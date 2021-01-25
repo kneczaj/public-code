@@ -1,18 +1,7 @@
-import { isNull } from "../../util";
+import { MeQuery } from "../../../generated/graphql";
 
-export interface User {
-  email: string;
-  token: string;
-}
+export type User = NonNullable<MeQuery['me']>
 
-export function getInitialState(): User | null {
-  const email = localStorage.getItem('username') || null;
-  const token = localStorage.getItem('token') || null;
-  if (isNull(email) || isNull(token)) {
-    return null;
-  }
-  return {
-    email,
-    token
-  };
+export function getInitialState(): string | null {
+  return localStorage.getItem('token') || null;
 }
