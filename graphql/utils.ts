@@ -47,7 +47,7 @@ export function makeMutationRequest<TData, FormValues>(
         errors
       };
     } catch (e) {
-      if (isUndefined(e.graphQLErrors)) {
+      if (isUndefined(e.graphQLErrors) || e.graphQLErrors.length === 0) {
         console.error(e);
         return {
           data: null,
