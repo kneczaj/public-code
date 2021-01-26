@@ -15,7 +15,8 @@ export interface Hook<LocationState, Search> extends Omit<History<LocationState>
 }
 
 /**
- * This useHistory wrapper takes care of converting url search part from and to object.
+ * This useHistory wrapper takes care of converting url search part from and to object in contrary to useHistoryBase
+ * which keeps it in string.
  *
  * By default if push handler does not passes `updateSearch` arg it preserves the current one.
  */

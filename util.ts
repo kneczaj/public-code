@@ -12,6 +12,10 @@ export function isNotUndefined<T>(val: T | undefined): val is T {
   return val !== undefined;
 }
 
+export function isNotNull<T>(val: T | null): val is T {
+  return val !== null;
+}
+
 export function isNullOrUndefined(val: any): val is (null | undefined) {
   return isNull(val) || isUndefined(val);
 }
