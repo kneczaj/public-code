@@ -1,10 +1,11 @@
 import React from "react";
-import { Button, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { LoginForm } from "./login-form";
 import { capitalizeFirstLetter } from "../../util";
 import { useT } from "../../hooks/translation";
 import { useModal } from "../../modals/hooks";
 import { BACKEND_URL } from "../../../env";
+import Link from "@material-ui/core/Link";
 
 export interface Props {
   onSuccess: (token: string) => void;
@@ -52,9 +53,9 @@ export function LoginModal({
       </ModalBody>
       <ModalFooter className={className}>
         <div className={'text-center'}>{
-          <Button color={'link'} onClick={goToRegister}>
+          <Link component="button" onClick={goToRegister}>
             {capitalizeFirstLetter(t('I don\'t have an account - register me'))}
-          </Button>
+          </Link>
         }</div>
       </ModalFooter>
     </>

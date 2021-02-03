@@ -1,11 +1,13 @@
 import React from "react";
 import { useState } from "../../hooks/state";
-import { Button, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import Button from '@material-ui/core/Button';
 import { RegistrationForm } from "./registration-form";
 import { capitalizeFirstLetter } from "../../util";
 import { isRegisterResponseToConfirm, RegisterResponsePayload, } from "../models/register";
 import { useT } from "../../hooks/translation";
 import { useModal } from "../../modals/hooks";
+import Link from "@material-ui/core/Link";
 
 export interface Props {
   onClose: () => void;
@@ -77,9 +79,9 @@ export function RegisterModal({
               {capitalizeFirstLetter(t('close'))}
             </Button>
           ) : (
-            <Button color={'link'} onClick={goToLogin}>
+            <Link component="button" onClick={goToLogin}>
               {capitalizeFirstLetter(t('already have an account? - Log in'))}
-            </Button>
+            </Link>
           )}
         </div>
       </ModalFooter>
