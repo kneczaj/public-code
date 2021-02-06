@@ -1,6 +1,6 @@
-import {GraphQLScalarType, GraphQLError, Kind} from 'graphql';
-import { DateTime } from "luxon";
-import { dateOnly } from "../../date-utils";
+import { GraphQLScalarType, GraphQLError, Kind } from 'graphql';
+import { DateTime } from 'luxon';
+import { dateOnly } from '../../date-utils';
 
 export const DATE_SCALAR = new GraphQLScalarType({
   name: 'Date',
@@ -10,7 +10,7 @@ export const DATE_SCALAR = new GraphQLScalarType({
    * @return {String} date as string
    */
   serialize: function (value: DateTime) {
-    if(!value.isValid) {
+    if (!value.isValid) {
       throw new GraphQLError('Field serialize error: value is an invalid Date');
     }
     return value.toFormat('yyyy-MM-dd');
@@ -22,8 +22,8 @@ export const DATE_SCALAR = new GraphQLScalarType({
    */
   parseValue: function (value: string): DateTime {
     // we keep UTC, because we do not want the day to change when timezone changes
-    let date = dateOnly(DateTime.fromFormat(value, 'yyyy-MM-dd'));
-    if(!date.isValid) {
+    const date = dateOnly(DateTime.fromFormat(value, 'yyyy-MM-dd'));
+    if (!date.isValid) {
       throw new GraphQLError('Field parse error: value is an invalid Date');
     }
     return date;
@@ -33,12 +33,14 @@ export const DATE_SCALAR = new GraphQLScalarType({
    * @param  {Object} ast graphql ast
    * @return {date} date value
    */
-  parseLiteral: (ast) => {
-    if(ast.kind !== Kind.STRING) {
-      throw new GraphQLError('Query error: Can only parse strings to date but got: ' + ast.kind);
+  parseLiteral: ast => {
+    if (ast.kind !== Kind.STRING) {
+      throw new GraphQLError(
+        'Query error: Can only parse strings to date but got: ' + ast.kind
+      );
     }
-    let date = dateOnly(DateTime.fromFormat(ast.value, 'yyyy-MM-dd'));
-    if(!date.isValid) {
+    const date = dateOnly(DateTime.fromFormat(ast.value, 'yyyy-MM-dd'));
+    if (!date.isValid) {
       throw new GraphQLError('Query error: Invalid date');
     }
     return date;

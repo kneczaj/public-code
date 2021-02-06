@@ -1,8 +1,10 @@
-import { isUndefined, WithId } from "../util";
-import { Pagination } from "./models/pagination";
-import { RequestStateBase, PaginationRequestState } from "./models/state";
+import { isUndefined, WithId } from '../util';
+import { Pagination } from './models/pagination';
+import { RequestStateBase, PaginationRequestState } from './models/state';
 
-export function getRequestInitialState<T>(val: RequestStateBase<T>['data']): RequestStateBase<T> {
+export function getRequestInitialState<T>(
+  val: RequestStateBase<T>['data']
+): RequestStateBase<T> {
   return {
     loading: false,
     error: null,
@@ -19,9 +21,7 @@ export const PAGINATION_REQUEST_INITIAL_STATE = {
 };
 
 export class Request<RequestPayload, ResponsePayload, TError> {
-  constructor(
-    protected readonly type: string
-  ) {}
+  constructor(protected readonly type: string) {}
 
   public readonly requestActionType = `${this.type}_REQUEST`;
   public readonly errorActionType = `${this.type}_ERROR`;
@@ -32,14 +32,14 @@ export class Request<RequestPayload, ResponsePayload, TError> {
     return {
       type: this.requestActionType,
       payload
-    }
+    };
   };
 
   response = (payload: ResponsePayload) => {
     return {
       type: this.responseActionType,
       payload
-    }
+    };
   };
 
   error = (error: TError, payload?: ResponsePayload) => {
@@ -47,7 +47,7 @@ export class Request<RequestPayload, ResponsePayload, TError> {
       type: this.errorActionType,
       error,
       payload
-    }
+    };
   };
 
   addResponse = (payload: ResponsePayload) => ({
@@ -55,7 +55,10 @@ export class Request<RequestPayload, ResponsePayload, TError> {
     payload
   });
 
-  reducer(state: RequestStateBase<any> | PaginationRequestState<any>, action: any): RequestStateBase<any> | PaginationRequestState<any> {
+  reducer(
+    state: RequestStateBase<any> | PaginationRequestState<any>,
+    action: any
+  ): RequestStateBase<any> | PaginationRequestState<any> {
     switch (action.type) {
       case this.requestActionType:
         return {
@@ -69,7 +72,7 @@ export class Request<RequestPayload, ResponsePayload, TError> {
             loading: false,
             error: null,
             ...action.payload
-          }
+          };
         }
         return {
           loading: false,
@@ -90,7 +93,13 @@ export class Request<RequestPayload, ResponsePayload, TError> {
         return {
           loading: false,
           error: null,
-          data: currentState.data.concat(data.filter(item => isUndefined(currentState.data.find(existing => existing.id === item.id)))),
+          data: currentState.data.concat(
+            data.filter(item =>
+              isUndefined(
+                currentState.data.find(existing => existing.id === item.id)
+              )
+            )
+          ),
           ...rest
         } as PaginationRequestState<WithId<any>>;
       default:

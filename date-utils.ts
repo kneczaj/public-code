@@ -1,4 +1,4 @@
-import { DateTime } from "luxon";
+import { DateTime } from 'luxon';
 
 /**
  * This sets the DateTime object to the middle of the day in UTC. After this operation the date part will never be
@@ -6,17 +6,20 @@ import { DateTime } from "luxon";
  * @param dateTime
  */
 export function dateOnly(dateTime: DateTime) {
-  return dateTime.set({
-    hour: 12,
-    minute: 0,
-    second: 0,
-    millisecond: 0
-  }).toUTC().set({
-    hour: 12,
-    minute: 0,
-    second: 0,
-    millisecond: 0
-  });
+  return dateTime
+    .set({
+      hour: 12,
+      minute: 0,
+      second: 0,
+      millisecond: 0
+    })
+    .toUTC()
+    .set({
+      hour: 12,
+      minute: 0,
+      second: 0,
+      millisecond: 0
+    });
 }
 
 export function today(): DateTime {

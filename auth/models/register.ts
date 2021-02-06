@@ -1,5 +1,5 @@
-import { isUndefined } from "../../util";
-import { TokenResponsePayload } from "./token";
+import { isUndefined } from '../../util';
+import { TokenResponsePayload } from './token';
 
 interface RegisterToConfirmResponsePayload {
   /**
@@ -8,9 +8,13 @@ interface RegisterToConfirmResponsePayload {
   detail: string;
 }
 
-export type RegisterResponsePayload = TokenResponsePayload | RegisterToConfirmResponsePayload;
+export type RegisterResponsePayload =
+  | TokenResponsePayload
+  | RegisterToConfirmResponsePayload;
 
-export function isRegisterResponseToConfirm(payload: RegisterResponsePayload): payload is RegisterToConfirmResponsePayload {
+export function isRegisterResponseToConfirm(
+  payload: RegisterResponsePayload
+): payload is RegisterToConfirmResponsePayload {
   return isUndefined((payload as TokenResponsePayload).key);
 }
 

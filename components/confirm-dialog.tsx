@@ -5,9 +5,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { useT } from "../hooks/translation";
-import { capitalizeFirstLetter, isNull } from "../util"
-import { useState } from "../hooks/state";
+import { useT } from '../hooks/translation';
+import { capitalizeFirstLetter, isNull } from '../util';
+import { useState } from '../hooks/state';
 
 export interface DialogEventHandlers {
   onAgreed: () => void;
@@ -39,14 +39,20 @@ export function useConfirmDialog(): Hook {
     props: isNull(dialog.value)
       ? null
       : {
-        ...dialog.value,
-        close: () => dialog.set(null)
-      },
+          ...dialog.value,
+          close: () => dialog.set(null)
+        },
     open
-  }
+  };
 }
 
-export function ConfirmDialog({ children, onAgreed: onAgreedBase, onDiscarded: onDiscardedBase, close, title }: Props) {
+export function ConfirmDialog({
+  children,
+  onAgreed: onAgreedBase,
+  onDiscarded: onDiscardedBase,
+  close,
+  title
+}: Props) {
   const t = useT();
   function onAgreed() {
     onAgreedBase();
@@ -59,20 +65,20 @@ export function ConfirmDialog({ children, onAgreed: onAgreedBase, onDiscarded: o
   return (
     <Dialog
       open={true}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
+      aria-labelledby='alert-dialog-title'
+      aria-describedby='alert-dialog-description'
     >
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+      <DialogTitle id='alert-dialog-title'>{title}</DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
+        <DialogContentText id='alert-dialog-description'>
           {children}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onDiscarded} color="primary">
+        <Button onClick={onDiscarded} color='primary'>
           {capitalizeFirstLetter(t('no'))}
         </Button>
-        <Button onClick={onAgreed} color="primary" autoFocus>
+        <Button onClick={onAgreed} color='primary' autoFocus>
           {capitalizeFirstLetter(t('yes'))}
         </Button>
       </DialogActions>

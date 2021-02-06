@@ -1,4 +1,4 @@
-import { useState as useStateBase } from "react";
+import { useState as useStateBase } from 'react';
 
 export interface Hook<T> {
   value: T;

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export function isNull(val: any): val is null {
   return val === null;
@@ -16,7 +16,7 @@ export function isNotNull<T>(val: T | null): val is T {
   return val !== null;
 }
 
-export function isNullOrUndefined(val: any): val is (null | undefined) {
+export function isNullOrUndefined(val: any): val is null | undefined {
   return isNull(val) || isUndefined(val);
 }
 
@@ -30,13 +30,13 @@ export interface WithId<T, Id = number> {
 }
 
 export function deserializeWithId<Id, T>(
-  payload: WithIdPayload<Id> & T,
+  payload: WithIdPayload<Id> & T
 ): WithId<Id, T> {
   const { id, ...data } = payload;
-  return {
+  return ({
     id,
     data
-  } as unknown as WithId<Id, T>
+  } as unknown) as WithId<Id, T>;
 }
 
 export function capitalizeFirstLetter(text: string) {
@@ -52,11 +52,19 @@ export function capitalizeFirstLetter(text: string) {
  * @param connector
  * @param lastWordConnector
  */
-export function joinWords(words: string[], connector: string, lastWordConnector: string) {
+export function joinWords(
+  words: string[],
+  connector: string,
+  lastWordConnector: string
+) {
   if (words.length === 1) {
     return words[0];
   }
-  return words.slice(0, words.length - 1).join(connector) + lastWordConnector + words[words.length - 1];
+  return (
+    words.slice(0, words.length - 1).join(connector) +
+    lastWordConnector +
+    words[words.length - 1]
+  );
 }
 
 /**
@@ -64,12 +72,12 @@ export function joinWords(words: string[], connector: string, lastWordConnector:
  * @param val
  */
 export function isFunction(val: any): boolean {
- return val && {}.toString.call(val) === '[object Function]';
+  return val && {}.toString.call(val) === '[object Function]';
 }
 
 export function isReturningReactNode<TProps>(
   val: React.ReactNode | ((formProps: TProps) => React.ReactNode)
-): val is ((formProps: TProps) => React.ReactNode) {
+): val is (formProps: TProps) => React.ReactNode {
   return isFunction(val);
 }
 
@@ -81,11 +89,15 @@ export function getIfDefined<T>(val: T | undefined, fallback: T): T {
  * Typed version of Object.keys
  * @param input
  */
-export function keys<T extends object>(input: T): Array<keyof T> {
+export function keys<T extends Record<string, unknown>>(
+  input: T
+): Array<keyof T> {
   return Object.keys(input) as Array<keyof T>;
 }
 
-export function filterOutUndefined<T extends object>(input: T): Partial<T> {
+export function filterOutUndefined<T extends Record<string, unknown>>(
+  input: T
+): Partial<T> {
   return keys(input).reduce<Partial<T>>((acc, key) => {
     if (isUndefined(input[key])) {
       return acc;
@@ -95,7 +107,9 @@ export function filterOutUndefined<T extends object>(input: T): Partial<T> {
   }, {} as Partial<T>);
 }
 
-export function filterOutNull<T extends object>(input: T): Partial<T> {
+export function filterOutNull<T extends Record<string, unknown>>(
+  input: T
+): Partial<T> {
   return keys(input).reduce<Partial<T>>((acc, key) => {
     if (isNull(input[key])) {
       return acc;

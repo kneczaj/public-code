@@ -1,25 +1,23 @@
-import React from "react";
-import { ModalHeader, ModalBody } from "reactstrap";
-import { useT } from "../hooks/translation";
-import { capitalizeFirstLetter } from "../util";
-import { CONTACT_EMAIL } from "../config";
-import { useModal } from "./hooks";
+import React from 'react';
+import { ModalHeader, ModalBody } from 'reactstrap';
+import { useT } from '../hooks/translation';
+import { capitalizeFirstLetter } from '../util';
+import { CONTACT_EMAIL } from '../config';
+import { useModal } from './hooks';
 
-export interface Props { }
-
-export function Contact(props: Props) {
+export function Contact(props: unknown): JSX.Element {
   const t = useT();
   const { closeModal } = useModal();
 
   return (
     <>
       <ModalHeader toggle={closeModal}>
-        {capitalizeFirstLetter(t("contact"))}
+        {capitalizeFirstLetter(t('contact'))}
       </ModalHeader>
       <ModalBody>
-        <h5 itemProp={"company"}>Gryfny Team Sp. z o.o.</h5>
+        <h5 itemProp={'company'}>Gryfny Team Sp. z o.o.</h5>
         <div>
-          <div itemProp={"address"}>
+          <div itemProp={'address'}>
             <div>Rynek Główny 28</div>
             <div>31-010 Kraków</div>
           </div>

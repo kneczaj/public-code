@@ -1,8 +1,13 @@
-import React, { useEffect } from "react";
-import { Hook as StateHook, useState } from "../../hooks/state";
-import { RequestStateBase } from "../models/state";
+import React, { useEffect } from 'react';
+import { Hook as StateHook, useState } from '../../hooks/state';
+import { RequestStateBase } from '../models/state';
 
-export interface Props<TData, TResponseData, TError, TState extends RequestStateBase<TData>> {
+export interface Props<
+  TData,
+  TResponseData,
+  TError,
+  TState extends RequestStateBase<TData>
+> {
   children: (state: TState) => any;
   requestFn: () => Promise<TResponseData>;
   /**
@@ -19,7 +24,12 @@ export interface Props<TData, TResponseData, TError, TState extends RequestState
   onStart: () => void;
 }
 
-export function ApiRequestBase<TData, TResponseData, TError, TState extends RequestStateBase<any> >({
+export function ApiRequestBase<
+  TData,
+  TResponseData,
+  TError,
+  TState extends RequestStateBase<any>
+>({
   children,
   onSuccess,
   onFailure,
@@ -42,7 +52,10 @@ export function ApiRequestBase<TData, TResponseData, TError, TState extends Requ
   }
 
   useEffect(() => {
-    if (isActive && (isActive !== wasActive.value || token !== oldToken.value)) {
+    if (
+      isActive &&
+      (isActive !== wasActive.value || token !== oldToken.value)
+    ) {
       onStart();
       makeRequest().then();
     }

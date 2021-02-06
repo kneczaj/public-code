@@ -1,5 +1,5 @@
-import React from "react";
-import { ReactNode } from "react";
+import React from 'react';
+import { ReactNode } from 'react';
 
 export interface ProviderComponentProps {
   children: ReactNode;
@@ -22,7 +22,10 @@ export interface Props {
  * Limits indentation changes by grouping all provider components in one place
  */
 export function ProviderGroup({ children, providers }: Props): JSX.Element {
-  return providers.reduceRight<JSX.Element>((children, Provider): JSX.Element => {
-    return <Provider>{children}</Provider>
-  }, <>{children}</>);
+  return providers.reduceRight<JSX.Element>(
+    (children, Provider): JSX.Element => {
+      return <Provider>{children}</Provider>;
+    },
+    <>{children}</>
+  );
 }

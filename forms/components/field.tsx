@@ -1,11 +1,11 @@
-import React from "react";
-import { capitalizeFirstLetter } from "../../util";
-import { useFormName } from "../form-name-context";
-import { Field as FieldBase, FieldRenderProps } from "react-final-form";
-import { toId } from "../utils";
-import { FieldContext } from "../hooks/field-context";
-import { BaseOuterProps } from "../models/field";
-import { useT } from "../../hooks/translation";
+import React from 'react';
+import { capitalizeFirstLetter } from '../../util';
+import { useFormName } from '../form-name-context';
+import { Field as FieldBase, FieldRenderProps } from 'react-final-form';
+import { toId } from '../utils';
+import { FieldContext } from '../hooks/field-context';
+import { BaseOuterProps } from '../models/field';
+import { useT } from '../../hooks/translation';
 
 export interface Props<T> extends BaseOuterProps<T> {
   children: any;
@@ -30,14 +30,15 @@ export function Field<FieldValue = any>({
   const id = toId(`${formName}-${name}`);
   const label = showLabel ? capitalizeFirstLetter(t(name)) : undefined;
   return (
-    <FieldBase
-      name={name}
-      {...rest}
-    >{(props: FieldRenderProps<any, HTMLElement>) =>
-      <FieldContext.Provider value={{ ignoreTouched, showErrorWhen, id, label, ...props }}>{
-        children
-      }</FieldContext.Provider>
-    }</FieldBase>
+    <FieldBase name={name} {...rest}>
+      {(props: FieldRenderProps<any, HTMLElement>) => (
+        <FieldContext.Provider
+          value={{ ignoreTouched, showErrorWhen, id, label, ...props }}
+        >
+          {children}
+        </FieldContext.Provider>
+      )}
+    </FieldBase>
   );
 }
 

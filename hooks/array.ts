@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { List } from "immutable";
+import { useState } from 'react';
+import { List } from 'immutable';
 
 export interface Hook<T> {
   value: T[];

@@ -1,5 +1,5 @@
-import { useWindowSize } from "../hooks/window-size";
-import { isUndefined } from "../util";
+import { useWindowSize } from '../hooks/window-size';
+import { isUndefined } from '../util';
 
 export interface Props {
   children: (windowWidth: number, windowHeight: number) => any;

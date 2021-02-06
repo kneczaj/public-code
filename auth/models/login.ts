@@ -7,7 +7,7 @@ export interface LoginResponsePayload {
   login: {
     user: {
       email: string;
-    }
+    };
     jwt: string;
-  }
+  };
 }

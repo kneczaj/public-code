@@ -1,4 +1,4 @@
-import { createContext, createContextHook } from "../../utils/context-hook";
+import { createContext, createContextHook } from '../../utils/context-hook';
 
 export interface ContextProps {
   str: string;

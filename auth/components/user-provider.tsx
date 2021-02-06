@@ -1,12 +1,12 @@
-import React from "react";
-import { createContext, createContextHook } from "../../utils/context-hook";
-import { ProviderComponentProps } from "../../components/provider-group";
-import { useHistory } from "../../routing/hooks/history";
-import { useNotifications } from "../../notifications/notifications-provider";
-import { gql } from "@apollo/client";
-import { useToken } from "public/auth/components/token-provider";
-import { useMeQuery } from "generated/graphql";
-import { User } from "../models/user";
+import React from 'react';
+import { createContext, createContextHook } from '../../utils/context-hook';
+import { ProviderComponentProps } from '../../components/provider-group';
+import { useHistory } from '../../routing/hooks/history';
+import { useNotifications } from '../../notifications/notifications-provider';
+import { gql } from '@apollo/client';
+import { useToken } from 'public/auth/components/token-provider';
+import { useMeQuery } from 'generated/graphql';
+import { User } from '../models/user';
 
 export interface ContextProps {
   user: User | null;
@@ -43,8 +43,8 @@ export function UserProvider({ children }: ProviderComponentProps) {
     logoutBase();
     push('/', () => ({}));
     show({
-      type: "success",
-      message: "Wylogowano"
+      type: 'success',
+      message: 'Wylogowano'
     });
   }
 
@@ -61,7 +61,7 @@ export function UserProvider({ children }: ProviderComponentProps) {
         login
       }}
     >
-      { children }
+      {children}
     </UserContext.Provider>
   );
 }

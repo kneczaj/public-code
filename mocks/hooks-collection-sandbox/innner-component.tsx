@@ -1,5 +1,5 @@
-import React from "react";
-import { useTest } from "./test-hook";
+import React from 'react';
+import { useTest } from './test-hook';
 
 export function InnerComponent(props: any) {
   const { str, setStr } = useTest();
@@ -8,5 +8,5 @@ export function InnerComponent(props: any) {
       <div>{str}</div>
       <button onClick={() => setStr('bye')}>bye</button>
     </>
-  )
+  );
 }

@@ -24,5 +24,5 @@ export function deserialize<Payload>(
     previousUrl,
     data: results,
     ...rest
-  }
+  };
 }

@@ -1,4 +1,9 @@
-import { composeValidators, isUniqueKeyword, ValidationError, ValidatorFn } from "./index";
+import {
+  composeValidators,
+  isUniqueKeyword,
+  ValidationError,
+  ValidatorFn
+} from './index';
 import {
   isGreaterThan,
   isEqualOrGreaterThan,
@@ -11,8 +16,8 @@ import {
   isEmail,
   containsOnlyLetters,
   isValidHouseNumber
-} from "./validators";
-import { translationResources } from "../../../app/i18n";
+} from './validators';
+import { translationResources } from '../../../app/i18n';
 
 function testValidator(
   validatorName: string,
@@ -21,27 +26,32 @@ function testValidator(
   passes: Array<any>,
   fails: Array<any>
 ) {
-  const errorStringIdentifier = Array.isArray(expectedResult) ? expectedResult[0] : expectedResult;
+  const errorStringIdentifier = Array.isArray(expectedResult)
+    ? expectedResult[0]
+    : expectedResult;
   describe(validatorName, () => {
     passes.forEach(value => {
-      const valueStr = typeof value === 'object' ? JSON.stringify(value) : value;
+      const valueStr =
+        typeof value === 'object' ? JSON.stringify(value) : value;
       it(`passes with value '${valueStr}'`, () =>
-        expect(validator(value, null as any)).toBeNull()
-      )
+        expect(validator(value, null as any)).toBeNull());
     });
     fails.forEach(value => {
-      const valueStr = typeof value === 'object' ? JSON.stringify(value) : value;
+      const valueStr =
+        typeof value === 'object' ? JSON.stringify(value) : value;
       it(`fails with value '${valueStr}'`, () => {
         const result = validator(value, null as any);
         expect(result).not.toBeNull();
         expect(result).toEqual(expectedResult);
-      })
+      });
     });
     it('has translation', () => {
-      Object.keys(translationResources).filter(lang => lang !== 'en').forEach(language => {
-        const resource = (translationResources as any)[language].translation;
-        expect(Object.keys(resource)).toContain(errorStringIdentifier);
-      });
+      Object.keys(translationResources)
+        .filter(lang => lang !== 'en')
+        .forEach(language => {
+          const resource = (translationResources as any)[language].translation;
+          expect(Object.keys(resource)).toContain(errorStringIdentifier);
+        });
     });
     if (Array.isArray(expectedResult)) {
       // if there are error details this should be included also in English translation
@@ -50,8 +60,10 @@ function testValidator(
           const resource = (translationResources as any)[language].translation;
           const translation = resource[errorStringIdentifier];
           Object.keys(expectedResult[1]).forEach(detail => {
-            expect(translation).toMatch(new RegExp(`{{\\s*${detail}\\s*}}`, 'g'));
-          })
+            expect(translation).toMatch(
+              new RegExp(`{{\\s*${detail}\\s*}}`, 'g')
+            );
+          });
         });
       });
     }
@@ -61,7 +73,6 @@ function testValidator(
 const emptyValues: Array<any> = ['', null, undefined, ' '];
 
 describe('validators', () => {
-
   describe('compose', () => {
     describe('with validators returning a dict', () => {
       let validator: ValidatorFn;
@@ -109,20 +120,30 @@ describe('validators', () => {
     'oneRequired',
     'at_least_one_required',
     oneRequiredDict,
-    [{ a: true, b: false}, [{ a: true, b: true}], {a: true, b: undefined}, {a: true, b: '' }],
-    emptyValues.concat([{}, { a: '', b: '' }, { a: undefined, b: undefined }, { a: false, b: false }])
+    [
+      { a: true, b: false },
+      [{ a: true, b: true }],
+      { a: true, b: undefined },
+      { a: true, b: '' }
+    ],
+    emptyValues.concat([
+      {},
+      { a: '', b: '' },
+      { a: undefined, b: undefined },
+      { a: false, b: false }
+    ])
   );
   testValidator(
     'oneInFormRequired',
     'at_least_one_required',
     oneInFormRequired,
     [
-      { 'a': true, 'b': false },
-      { 'a': true, 'b': true },
-      { 'a': 'a', 'b': undefined },
-      { 'a': 'a', 'b': 'b' }
+      { a: true, b: false },
+      { a: true, b: true },
+      { a: 'a', b: undefined },
+      { a: 'a', b: 'b' }
     ],
-    emptyValues.concat([{}, { a: '' }, { 'a': false, b: false }])
+    emptyValues.concat([{}, { a: '' }, { a: false, b: false }])
   );
   testValidator(
     'rangeValidator',
@@ -143,7 +164,7 @@ describe('validators', () => {
       { min: null, max: null },
       { min: undefined, max: undefined },
       { min: null, max: undefined },
-      { min: undefined, max: null },
+      { min: undefined, max: null }
     ],
     [
       { min: '2', max: '1' },
@@ -159,7 +180,7 @@ describe('validators', () => {
   );
   testValidator(
     'isEqualOrGreaterThan',
-    ["must be greater or equal", { threshold: 0 }],
+    ['must be greater or equal', { threshold: 0 }],
     isEqualOrGreaterThan(0),
     emptyValues.concat(['0', '1', '1.2']),
     ['-1', '-0.1', '-1.2']

@@ -2,28 +2,33 @@ import {
   FieldInputProps,
   FieldMetaState,
   FieldRenderProps
-} from "react-final-form";
-import { useId } from "./id";
-import { useT } from "../../hooks/translation";
-import { FormControlTypeMap } from "@material-ui/core";
-import { capitalizeFirstLetter, isUndefined } from "../../util";
-import { FormHelperTextTypeMap } from "@material-ui/core/FormHelperText/FormHelperText";
-import { DefaultComponentProps } from "@material-ui/core/OverridableComponent";
-import { useFieldFormatOnBlur, UseFieldConfig } from "./field-format-on-blur";
-import { useMemo } from "react";
+} from 'react-final-form';
+import { useId } from './id';
+import { useT } from '../../hooks/translation';
+import { FormControlTypeMap } from '@material-ui/core';
+import { capitalizeFirstLetter, isUndefined } from '../../util';
+import { FormHelperTextTypeMap } from '@material-ui/core/FormHelperText/FormHelperText';
+import { DefaultComponentProps } from '@material-ui/core/OverridableComponent';
+import { useFieldFormatOnBlur, UseFieldConfig } from './field-format-on-blur';
+import { useMemo } from 'react';
 
-interface CustomInput<FieldValue, T extends HTMLElement = HTMLElement> extends FieldInputProps<FieldValue, T> {
+interface CustomInput<FieldValue, T extends HTMLElement = HTMLElement>
+  extends FieldInputProps<FieldValue, T> {
   id: string;
 }
 
-export interface Hook<FieldValue, TInputElementProps, T extends HTMLElement = HTMLElement> {
+export interface Hook<
+  FieldValue,
+  TInputElementProps,
+  T extends HTMLElement = HTMLElement
+> {
   input: CustomInput<FieldValue, T> & TInputElementProps;
   meta: FieldMetaState<FieldValue>;
   formControl: Pick<FormControlTypeMap['props'], 'error' | 'hiddenLabel'>;
   /**
    * is undefined when no error produced, so the error label can be hidden
    */
-  errorLabel?: DefaultComponentProps<FormHelperTextTypeMap>
+  errorLabel?: DefaultComponentProps<FormHelperTextTypeMap>;
 }
 
 export interface Props<FieldValue> extends UseFieldConfig<FieldValue> {
@@ -33,12 +38,15 @@ export interface Props<FieldValue> extends UseFieldConfig<FieldValue> {
 }
 
 export function getDisplayedError<FieldValue>(
-  { error, submitError }: Pick<FieldMetaState<FieldValue>, 'error' | 'submitError'>,
-  t: (str: string, params: {}) => string
+  {
+    error,
+    submitError
+  }: Pick<FieldMetaState<FieldValue>, 'error' | 'submitError'>,
+  t: (str: string, params: unknown) => string
 ): string | undefined {
   const displayedError = [error, submitError].filter(error => {
     // this will be false when error comes from child element
-    const isString = typeof error === "string";
+    const isString = typeof error === 'string';
     const isArray = Array.isArray(error);
     return isString || isArray;
   })[0];
@@ -49,7 +57,11 @@ export function getDisplayedError<FieldValue>(
   return t(...[].concat(displayedError));
 }
 
-export function useField<FieldValue = any, T extends HTMLElement = HTMLElement, TInputElementProps = any>(
+export function useField<
+  FieldValue = any,
+  T extends HTMLElement = HTMLElement,
+  TInputElementProps = any
+>(
   props: Props<FieldValue> & TInputElementProps
 ): Hook<FieldValue, TInputElementProps, T> {
   const t = useT();
@@ -114,16 +126,16 @@ export function useField<FieldValue = any, T extends HTMLElement = HTMLElement, 
       ...field.input,
       'aria-describedby': !!errorString ? helperTextId : undefined,
       id,
-      ...inputElementProps as unknown as TInputElementProps
+      ...((inputElementProps as unknown) as TInputElementProps)
     },
     formControl: {
       error: !!errorString
     },
     errorLabel: !!errorString
       ? {
-        id: helperTextId,
-        children: capitalizeFirstLetter(errorString)
-      }
+          id: helperTextId,
+          children: capitalizeFirstLetter(errorString)
+        }
       : undefined
-  }
+  };
 }

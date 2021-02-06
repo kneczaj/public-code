@@ -1,7 +1,7 @@
-import React from "react";
-import { merge } from "../../css";
-import { FieldLabel } from "./field-label";
-import { Validation } from "./validation";
+import React from 'react';
+import { merge } from '../../css';
+import { FieldLabel } from './field-label';
+import { Validation } from './validation';
 
 export interface Props {
   className?: string;
@@ -11,9 +11,9 @@ export interface Props {
 export function FormGroupWrapper({ className, children }: Props) {
   return (
     <div className={merge('form-group', className)}>
-      <FieldLabel/>
+      <FieldLabel />
       {children}
-      <Validation/>
+      <Validation />
     </div>
   );
 }

@@ -1,10 +1,10 @@
 import './authentication-modal.sass';
-import React from "react";
-import { useState } from "../../hooks/state";
-import { RegisterModal } from "./register-modal";
-import { LoginModal } from "./login-modal";
-import { isUndefined } from "../../util";
-import { useT } from "../../hooks/translation";
+import React from 'react';
+import { useState } from '../../hooks/state';
+import { RegisterModal } from './register-modal';
+import { LoginModal } from './login-modal';
+import { isUndefined } from '../../util';
+import { useT } from '../../hooks/translation';
 
 export interface Props {
   onSuccess: (token: string) => void;
@@ -25,10 +25,10 @@ export function AuthenticationModal({
   showRegisterModal = true,
   children,
   getConfirmButtonLabel,
-  onError = () => { },
+  onError = () => undefined,
   onSuccess,
   onClose,
-  showHeader = false,
+  showHeader = false
 }: Props) {
   const showRegister = useState(showRegisterModal);
   const t = useT();
@@ -51,7 +51,7 @@ export function AuthenticationModal({
         {{
           successMessage: children.registrationSuccessMessage,
           registerFormHeader: children.registrationFormHeader,
-          formChildren: children.formChildren,
+          formChildren: children.formChildren
         }}
       </RegisterModal>
     );
@@ -71,7 +71,7 @@ export function AuthenticationModal({
     >
       {{
         formHeader: children.loginFormHeader,
-        formChildren: children.formChildren,
+        formChildren: children.formChildren
       }}
     </LoginModal>
   );

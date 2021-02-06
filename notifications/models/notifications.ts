@@ -3,7 +3,12 @@ import { NotificationManager as NotificationManagerBase } from 'react-notificati
 
 export type NotificationType = 'info' | 'success' | 'warning' | 'error';
 
-export type NotifyFunction = (message: string, title?: string, timeout?: number, callback?: () => void) => void;
+export type NotifyFunction = (
+  message: string,
+  title?: string,
+  timeout?: number,
+  callback?: () => void
+) => void;
 
 export interface NotificationManager {
   info: NotifyFunction;

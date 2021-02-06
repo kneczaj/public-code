@@ -1,10 +1,11 @@
-import React from "react";
-import { useHistory } from "../hooks/history";
-import { Redirect as RedirectBase, RedirectProps } from "react-router-dom";
-import { getLocationObj, LocationDescriptor, UpdateSearch } from "../models";
-import { StringifiableRecord } from "query-string";
+import React from 'react';
+import { useHistory } from '../hooks/history';
+import { Redirect as RedirectBase, RedirectProps } from 'react-router-dom';
+import { getLocationObj, LocationDescriptor, UpdateSearch } from '../models';
+import { StringifiableRecord } from 'query-string';
 
-export interface Props<LocationState, Search> extends Omit<RedirectProps, 'to'> {
+export interface Props<LocationState, Search>
+  extends Omit<RedirectProps, 'to'> {
   to: LocationDescriptor<LocationState>;
   updateSearch?: UpdateSearch<Search>;
 }
@@ -20,5 +21,14 @@ export function Redirect<LocationState, Search extends StringifiableRecord>({
   ...rest
 }: Props<LocationState, Search>) {
   const { location } = useHistory<LocationState, Search>();
-  return <RedirectBase to={getLocationObj<LocationState, Search>(to, location.search, updateSearch)} {...rest}/>;
+  return (
+    <RedirectBase
+      to={getLocationObj<LocationState, Search>(
+        to,
+        location.search,
+        updateSearch
+      )}
+      {...rest}
+    />
+  );
 }

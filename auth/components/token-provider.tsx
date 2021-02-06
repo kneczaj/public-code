@@ -1,10 +1,10 @@
-import React from "react";
-import { getInitialState } from "../models/user";
-import { isNull } from "../../util";
-import { createContext, createContextHook } from "../../utils/context-hook";
-import { ProviderComponentProps } from "../../components/provider-group";
-import { useState } from "../../hooks/state";
-import { useHistory } from "../../routing/hooks/history";
+import React from 'react';
+import { getInitialState } from '../models/user';
+import { isNull } from '../../util';
+import { createContext, createContextHook } from '../../utils/context-hook';
+import { ProviderComponentProps } from '../../components/provider-group';
+import { useState } from '../../hooks/state';
+import { useHistory } from '../../routing/hooks/history';
 
 export interface ContextProps {
   token: string | null;
@@ -42,7 +42,7 @@ export function TokenProvider({ children }: ProviderComponentProps) {
         login
       }}
     >
-      { children }
+      {children}
     </TokenContext.Provider>
   );
 }

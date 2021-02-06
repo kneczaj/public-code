@@ -1,8 +1,7 @@
-import { Hook, useArray } from "./array";
+import { Hook, useArray } from './array';
 
 // TODO: find out hot to test hooks
 xdescribe('useArray', () => {
-
   let array: Hook<number>;
 
   beforeEach(() => {

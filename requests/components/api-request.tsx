@@ -1,6 +1,9 @@
-import React, { useEffect } from "react";
-import { RequestWrapper, Props as RequestWrapperProps } from "../request-wrapper";
-import { useApiRequest } from "../hooks/api-request";
+import React, { useEffect } from 'react';
+import {
+  RequestWrapper,
+  Props as RequestWrapperProps
+} from '../request-wrapper';
+import { useApiRequest } from '../hooks/api-request';
 
 export interface ChildrenProps<TData> {
   className?: string;
@@ -8,7 +11,8 @@ export interface ChildrenProps<TData> {
   onChange: (val: TData) => void;
 }
 
-export interface Props<TData, TNoData, TQueryParams> extends Omit<RequestWrapperProps<TData, TNoData>, 'children' | 'state'> {
+export interface Props<TData, TNoData, TQueryParams>
+  extends Omit<RequestWrapperProps<TData, TNoData>, 'children' | 'state'> {
   children: (props: ChildrenProps<TData>) => any;
   requestFn: (params: TQueryParams) => Promise<TData | TNoData>;
   initialData: TData | TNoData;
@@ -30,20 +34,24 @@ export function ApiRequest<TData, TQueryParams = void, TNoData = null>({
   queryParams,
   ...rest
 }: Props<TData, TNoData, TQueryParams>) {
-
-  const { state, onChange, updateRequestState } = useApiRequest<TData, TQueryParams, TNoData>({
+  const { state, onChange, updateRequestState } = useApiRequest<
+    TData,
+    TQueryParams,
+    TNoData
+  >({
     isActive,
     requestFn,
     initialData
   });
 
-  useEffect(() => updateRequestState(isActive, queryParams), [isActive, queryParams, updateRequestState]);
+  useEffect(() => updateRequestState(isActive, queryParams), [
+    isActive,
+    queryParams,
+    updateRequestState
+  ]);
 
   return (
-    <RequestWrapper<TData, TNoData>
-      state={state}
-      {...rest}
-    >
+    <RequestWrapper<TData, TNoData> state={state} {...rest}>
       {({ data, className }) => children({ className, data, onChange })}
     </RequestWrapper>
   );

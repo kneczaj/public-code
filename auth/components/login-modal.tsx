@@ -1,19 +1,19 @@
-import React from "react";
-import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { LoginForm } from "./login-form";
-import { capitalizeFirstLetter } from "../../util";
-import { useT } from "../../hooks/translation";
-import { useModal } from "../../modals/hooks";
-import { BACKEND_URL } from "../../../env";
-import Link from "@material-ui/core/Link";
+import React from 'react';
+import { ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { LoginForm } from './login-form';
+import { capitalizeFirstLetter } from '../../util';
+import { useT } from '../../hooks/translation';
+import { useModal } from '../../modals/hooks';
+import { BACKEND_URL } from '../../../env';
+import Link from '@material-ui/core/Link';
 
 export interface Props {
   onSuccess: (token: string) => void;
   onError: (error: any) => void;
   goToRegister: () => void;
   children: {
-    formHeader: any,
-    formChildren: any
+    formHeader: any;
+    formChildren: any;
   };
   className?: string;
   confirmButtonLabel?: string;
@@ -27,7 +27,7 @@ export function LoginModal({
   goToRegister,
   onError,
   onSuccess,
-  showHeader,
+  showHeader
 }: Props) {
   const t = useT();
   const { closeModal } = useModal();
@@ -47,16 +47,24 @@ export function LoginModal({
         <a href={`${BACKEND_URL}/connect/google`}>
           <button style={{ width: '150px' }}>Connect to google</button>
         </a>
-        <LoginForm confirmButtonLabel={confirmButtonLabel} onSuccess={onSuccess} onError={onError}>
+        <LoginForm
+          confirmButtonLabel={confirmButtonLabel}
+          onSuccess={onSuccess}
+          onError={onError}
+        >
           {children.formChildren}
         </LoginForm>
       </ModalBody>
       <ModalFooter className={className}>
-        <div className={'text-center'}>{
-          <Link component="button" onClick={goToRegister}>
-            {capitalizeFirstLetter(t('I don\'t have an account - register me'))}
-          </Link>
-        }</div>
+        <div className={'text-center'}>
+          {
+            <Link component='button' onClick={goToRegister}>
+              {capitalizeFirstLetter(
+                t("I don't have an account - register me")
+              )}
+            </Link>
+          }
+        </div>
       </ModalFooter>
     </>
   );

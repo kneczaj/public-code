@@ -1,14 +1,14 @@
 import { IntValueNode, Kind } from 'graphql';
 import { getDateTimeScalar } from './date-time';
-import { DateTime } from "luxon";
+import { DateTime } from 'luxon';
 
 describe('GraphQLMoment DateTime', () => {
   // these are the same dates
-  let validDateTime = '2016-08-15T12:00:32.030+02:00';
-  let validDateTimeUTC = '2016-08-15T10:00:32.030Z';
+  const validDateTime = '2016-08-15T12:00:32.030+02:00';
+  const validDateTimeUTC = '2016-08-15T10:00:32.030Z';
 
   // Date (not DateTime) scalar should be used for this
-  let invalidDateTime = '2016-04-31'; // This date doesn't exist
+  const invalidDateTime = '2016-04-31'; // This date doesn't exist
   const timezone = 'UTC+3';
 
   const DATE_TIME_SCALAR = getDateTimeScalar(timezone);
@@ -36,56 +36,56 @@ describe('GraphQLMoment DateTime', () => {
 
   describe('parseValue', () => {
     it('should error when serializing an invalid date-time', () => {
-      expect(
-        () => DATE_TIME_SCALAR.parseValue(invalidDateTime)
-      ).toThrowError(/^Field parse error: value is an invalid DateTime$/);
+      expect(() => DATE_TIME_SCALAR.parseValue(invalidDateTime)).toThrowError(
+        /^Field parse error: value is an invalid DateTime$/
+      );
     });
 
     it('should parse a value to date-time', () => {
-      expect(
-        DATE_TIME_SCALAR.parseValue(validDateTime)
-      ).toEqual(DateTime.fromISO(validDateTime).toUTC());
+      expect(DATE_TIME_SCALAR.parseValue(validDateTime)).toEqual(
+        DateTime.fromISO(validDateTime).toUTC()
+      );
     });
 
     it.only('should parse a UTC value to date-time', () => {
       const momentDate: DateTime = DATE_TIME_SCALAR.parseValue(validDateTime);
       expect(momentDate.offset).toBe(180); // in minutes
       expect(momentDate.hour).toBe(13);
-      expect(
-        DATE_TIME_SCALAR.parseValue(validDateTime)
-      ).toEqual(DateTime.fromISO(validDateTimeUTC).setZone(timezone));
+      expect(DATE_TIME_SCALAR.parseValue(validDateTime)).toEqual(
+        DateTime.fromISO(validDateTimeUTC).setZone(timezone)
+      );
     });
   });
 
   describe('parseLiteral', () => {
     it('should error when parsing an ast int', () => {
-      let ast: IntValueNode = {
+      const ast: IntValueNode = {
         kind: Kind.INT,
         value: ''
       };
-      expect(
-        () => DATE_TIME_SCALAR.parseLiteral(ast, {})
-      ).toThrow(/Query error: Can only parse strings to date-time but got: IntValue/);
+      expect(() => DATE_TIME_SCALAR.parseLiteral(ast, {})).toThrow(
+        /Query error: Can only parse strings to date-time but got: IntValue/
+      );
     });
 
     it('should error when parsing ast with invalid value', () => {
-      let ast = {
+      const ast = {
         kind: Kind.STRING,
         value: invalidDateTime
       };
-      expect(
-        DATE_TIME_SCALAR.parseLiteral.bind(DATE_TIME_SCALAR, ast)
-      ).toThrow(/Query error: Invalid date-time/);
-    })
+      expect(DATE_TIME_SCALAR.parseLiteral.bind(DATE_TIME_SCALAR, ast)).toThrow(
+        /Query error: Invalid date-time/
+      );
+    });
 
     it('should parse a ast literal', () => {
-      let ast = {
+      const ast = {
         kind: Kind.STRING,
         value: validDateTime
       };
-      let date = DATE_TIME_SCALAR.parseLiteral(ast, {})
+      const date = DATE_TIME_SCALAR.parseLiteral(ast, {});
       expect(DateTime.isDateTime(date)).toBe(true);
-      expect(date.toJSON()).toEqual(ast.value)
+      expect(date.toJSON()).toEqual(ast.value);
     });
   });
 });

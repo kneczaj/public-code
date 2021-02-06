@@ -1,34 +1,41 @@
-import {Form} from "react-final-form";
-import React from "react";
-import {DateField, Props} from "public/forms/fields/date-field";
-import {mockAllProviderHooks} from "public/mocks";
-import {act, fireEvent, render, screen, waitFor} from "@testing-library/react";
-import {MuiPickersUtilsProvider} from "app/root/providers/mui-pickers";
-import { DateTime } from "luxon";
-import { dateOnly } from "../../date-utils";
+import { Form } from 'react-final-form';
+import React from 'react';
+import { DateField, Props } from 'public/forms/fields/date-field';
+import { mockAllProviderHooks } from 'public/mocks';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor
+} from '@testing-library/react';
+import { MuiPickersUtilsProvider } from 'app/root/providers/mui-pickers';
+import { DateTime } from 'luxon';
+import { dateOnly } from '../../date-utils';
 
 const mocks = {
   onSubmit: (values: any) => {}
-}
+};
 
 function TestComponent(props: Omit<Props, 'name'>) {
   return (
     <MuiPickersUtilsProvider>
-      <Form
-        onSubmit={mocks.onSubmit}
-      >
-        {(formProps) => <>
-          <form onSubmit={formProps.handleSubmit}>
-            <DateField {...props} name={'test'} label={'test'}/>
-            <button type={'submit'}>Submit</button>
-          </form>
-        </>}
+      <Form onSubmit={mocks.onSubmit}>
+        {formProps => (
+          <>
+            <form onSubmit={formProps.handleSubmit}>
+              <DateField {...props} name={'test'} label={'test'} />
+              <button type={'submit'}>Submit</button>
+            </form>
+          </>
+        )}
       </Form>
     </MuiPickersUtilsProvider>
-  )
+  );
 }
 
-const getSubmitButton = () => screen.getByRole('button', {name: new RegExp('submit', 'i')});
+const getSubmitButton = () =>
+  screen.getByRole('button', { name: new RegExp('submit', 'i') });
 
 async function clickSubmit() {
   await act(async () => {
@@ -38,13 +45,14 @@ async function clickSubmit() {
 
 async function click() {
   await act(async () => {
-    await fireEvent.click(screen.getByRole('button', {name: new RegExp('submit', 'i')}));
+    await fireEvent.click(
+      screen.getByRole('button', { name: new RegExp('submit', 'i') })
+    );
   });
 }
 
 describe('Date field', () => {
-
-  let spy = jest.spyOn(mocks, 'onSubmit');
+  const spy = jest.spyOn(mocks, 'onSubmit');
 
   afterEach(() => {
     spy.mockClear();
@@ -55,13 +63,17 @@ describe('Date field', () => {
       mockAllProviderHooks();
     });
     beforeEach(() => {
-      render(<TestComponent/>);
+      render(<TestComponent />);
     });
     it('submits as empty', async () => {
       await clickSubmit();
-      expect(spy).toHaveBeenCalledWith({
-        test: undefined
-      }, expect.anything(), expect.anything());
+      expect(spy).toHaveBeenCalledWith(
+        {
+          test: undefined
+        },
+        expect.anything(),
+        expect.anything()
+      );
     });
     // it.only('after setting a value', async () => {
     //   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -90,13 +102,17 @@ describe('Date field', () => {
       mockAllProviderHooks();
     });
     beforeEach(() => {
-      render(<TestComponent initialValue={initial}/>);
+      render(<TestComponent initialValue={initial} />);
     });
     it('submits as empty', async () => {
       await clickSubmit();
-      expect(spy).toHaveBeenCalledWith({
-        test: initial
-      }, expect.anything(), expect.anything());
+      expect(spy).toHaveBeenCalledWith(
+        {
+          test: initial
+        },
+        expect.anything(),
+        expect.anything()
+      );
     });
   });
 });

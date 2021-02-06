@@ -1,20 +1,23 @@
-import { OuterProps } from "../HOC/field";
-import React from "react";
-import { useField } from "../hooks/field";
+import { OuterProps } from '../HOC/field';
+import React from 'react';
+import { useField } from '../hooks/field';
 import { TextField, TextFieldProps } from '@material-ui/core';
-import { isUndefined } from "../../util";
-import { naturalNumberFormat, naturalNumberParser } from "../parser";
+import { isUndefined } from '../../util';
+import { naturalNumberFormat, naturalNumberParser } from '../parser';
 
-interface PropsBase<FieldValue> extends OuterProps<FieldValue> {}
+type PropsBase<FieldValue> = OuterProps<FieldValue>;
 
 export type Props<FieldValue> = PropsBase<FieldValue> & TextFieldProps;
 
-export function InputField<FieldValue extends string | number | string[] | undefined>({
-  className,
-  wrapperClassName,
-  ...config
-}: Props<FieldValue>) {
-  const { input, input: { value }, formControl, errorLabel } = useField<FieldValue, HTMLInputElement, TextFieldProps>(config);
+export function InputField<
+  FieldValue extends string | number | string[] | undefined
+>({ className, wrapperClassName, ...config }: Props<FieldValue>) {
+  const {
+    input,
+    input: { value },
+    formControl,
+    errorLabel
+  } = useField<FieldValue, HTMLInputElement, TextFieldProps>(config);
   return (
     <TextField
       {...input}
@@ -22,7 +25,7 @@ export function InputField<FieldValue extends string | number | string[] | undef
       value={value || ''}
       helperText={!isUndefined(errorLabel) ? errorLabel.children : undefined}
     />
-  )
+  );
 }
 
 /**
@@ -34,12 +37,14 @@ export function InputField<FieldValue extends string | number | string[] | undef
  * It shows numeric keyboard on mobile
  * @param props
  */
-export function NaturalNumberInputField(props: Omit<Props<number>, 'parse' | 'type'>) {
+export function NaturalNumberInputField(
+  props: Omit<Props<number>, 'parse' | 'type'>
+) {
   return (
     <InputField
       {...props}
       inputProps={{
-        inputMode: "numeric"
+        inputMode: 'numeric'
       }}
       parse={naturalNumberParser}
       format={naturalNumberFormat}

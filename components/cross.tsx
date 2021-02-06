@@ -1,7 +1,7 @@
-import "./cross.sass";
+import './cross.sass';
 
-import React from "react";
-import { merge } from "../css";
+import React from 'react';
+import { merge } from '../css';
 
 export interface Props {
   className?: string;
@@ -20,9 +20,11 @@ export function Cross(props: Props) {
       aria-label={label}
       className={merge('cross-button-root', className)}
       onClick={onClick}
-      aria-hidden="true"
-    >&#x2715;</span>
-  )
+      aria-hidden='true'
+    >
+      &#x2715;
+    </span>
+  );
 }
 
 Cross.defaultProps = defaultProps;

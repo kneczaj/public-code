@@ -1,11 +1,12 @@
-import React from "react";
+import React from 'react';
 import './request-result.sass';
-import { isNull } from "../../util";
-import { CircularProgress } from "@material-ui/core";
-import { defaultPropsBase, PropsBase } from "./base";
-import { Centered } from "../../components/centered";
+import { isNull } from '../../util';
+import { CircularProgress } from '@material-ui/core';
+import { defaultPropsBase, PropsBase } from './base';
+import { Centered } from '../../components/centered';
 
-export interface Props<TData extends Array<any>, TNoData> extends PropsBase<TData, TNoData> {
+export interface Props<TData extends Array<any>, TNoData>
+  extends PropsBase<TData, TNoData> {
   /**
    * Passed to each: children, noDataPlaceholder, errorPlaceholder
    */
@@ -14,10 +15,12 @@ export interface Props<TData extends Array<any>, TNoData> extends PropsBase<TDat
 
 const defaultProps = {
   ...defaultPropsBase,
-  noDataDetector: (data: Array<any>) => !data.length,
-}
+  noDataDetector: (data: Array<any>) => !data.length
+};
 
-export function Pagination<TData extends Array<any>, TNoData = never>(props: Props<TData, TNoData>) {
+export function Pagination<TData extends Array<any>, TNoData = never>(
+  props: Props<TData, TNoData>
+) {
   const {
     children,
     className,
@@ -30,12 +33,16 @@ export function Pagination<TData extends Array<any>, TNoData = never>(props: Pro
     <>
       {noDataDetector(state.data)
         ? noDataPlaceholder(className)
-        : children({ data: state.data, className })
-      }
-      {!isNull(state.error) && errorPlaceholder({error: state.error, className})}
-      {state.loading && <Centered className={'p-1'}><CircularProgress/></Centered>}
+        : children({ data: state.data, className })}
+      {!isNull(state.error) &&
+        errorPlaceholder({ error: state.error, className })}
+      {state.loading && (
+        <Centered className={'p-1'}>
+          <CircularProgress />
+        </Centered>
+      )}
     </>
-  )
+  );
 }
 
 Pagination.defaultProps = defaultProps;

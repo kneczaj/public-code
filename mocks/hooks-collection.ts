@@ -1,17 +1,19 @@
-import { MockContextHook } from "./utils";
-import { isUndefined, keys } from "../util";
+import { MockContextHook } from './utils';
+import { isUndefined, keys } from '../util';
 
 export type HooksCollection = {
   [M: string]: MockContextHook<any>;
-}
+};
 
 export type HooksSpies<T extends HooksCollection> = {
   [M in keyof T]: jest.Mock<ReturnType<T[M]>, Parameters<T[M]>>;
-}
+};
 
 export type HooksReturnValues<T extends HooksCollection> = {
-  [M in keyof T]?: (defaults: ReturnType<ReturnType<T[M]>>) => ReturnType<ReturnType<T[M]>>;
-}
+  [M in keyof T]?: (
+    defaults: ReturnType<ReturnType<T[M]>>
+  ) => ReturnType<ReturnType<T[M]>>;
+};
 
 /**
  * here should be added all mocks for context hooks, so it is possible to get them all mocked with one command
@@ -32,9 +34,9 @@ export function mockHookCollection<T extends HooksCollection>(
     }
     const hookMock: MockContextHook<any> = collection[name];
     const getToReturn = returnValues[name];
-    const toReturn = isUndefined(getToReturn) ? undefined : (
-      getToReturn(hookMock.defaultValue)
-    );
+    const toReturn = isUndefined(getToReturn)
+      ? undefined
+      : getToReturn(hookMock.defaultValue);
     // @ts-ignore
     spies[name] = hookMock(toReturn);
     return spies;

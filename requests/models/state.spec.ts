@@ -1,20 +1,22 @@
-import { mergeStates } from "./state";
+import { mergeStates } from './state';
 
 describe('mergeStates', () => {
   describe('mergin loading', () => {
     it('returns true if at least one is true', () => {
-      expect(mergeStates({
-        a: {
-          loading: true,
-          error: null,
-          data: null
-        },
-        b: {
-          loading: false,
-          error: null,
-          data: null
-        }
-      })).toEqual({
+      expect(
+        mergeStates({
+          a: {
+            loading: true,
+            error: null,
+            data: null
+          },
+          b: {
+            loading: false,
+            error: null,
+            data: null
+          }
+        })
+      ).toEqual({
         loading: true,
         error: null,
         data: {
@@ -25,18 +27,20 @@ describe('mergeStates', () => {
     });
 
     it('returns false if both are false', () => {
-      expect(mergeStates({
-        a: {
-          loading: false,
-          error: null,
-          data: null
-        },
-        b: {
-          loading: false,
-          error: null,
-          data: null
-        }
-      })).toEqual({
+      expect(
+        mergeStates({
+          a: {
+            loading: false,
+            error: null,
+            data: null
+          },
+          b: {
+            loading: false,
+            error: null,
+            data: null
+          }
+        })
+      ).toEqual({
         loading: false,
         error: null,
         data: {
@@ -49,18 +53,20 @@ describe('mergeStates', () => {
 
   describe('merging errors', () => {
     it('returns null when all null', () => {
-      expect(mergeStates({
-        a: {
-          loading: false,
-          error: null,
-          data: null
-        },
-        b: {
-          loading: false,
-          error: null,
-          data: null
-        }
-      })).toEqual({
+      expect(
+        mergeStates({
+          a: {
+            loading: false,
+            error: null,
+            data: null
+          },
+          b: {
+            loading: false,
+            error: null,
+            data: null
+          }
+        })
+      ).toEqual({
         loading: false,
         error: null,
         data: {
@@ -70,20 +76,22 @@ describe('mergeStates', () => {
       });
     });
     it('returns error from not null object', () => {
-      expect(mergeStates({
-        a: {
-          loading: false,
-          error: {
-            messages: ['Hello', 'Error']
+      expect(
+        mergeStates({
+          a: {
+            loading: false,
+            error: {
+              messages: ['Hello', 'Error']
+            },
+            data: null
           },
-          data: null
-        },
-        b: {
-          loading: false,
-          error: null,
-          data: null
-        }
-      })).toEqual({
+          b: {
+            loading: false,
+            error: null,
+            data: null
+          }
+        })
+      ).toEqual({
         loading: false,
         error: {
           messages: ['Hello', 'Error']
@@ -95,22 +103,24 @@ describe('mergeStates', () => {
       });
     });
     it('merges errors from both objects', () => {
-      expect(mergeStates({
-        a: {
-          loading: false,
-          error: {
-            messages: ['Hello', 'Error']
+      expect(
+        mergeStates({
+          a: {
+            loading: false,
+            error: {
+              messages: ['Hello', 'Error']
+            },
+            data: null
           },
-          data: null
-        },
-        b: {
-          loading: false,
-          error: {
-            messages: ['Another', 'and one more']
-          },
-          data: null
-        }
-      })).toEqual({
+          b: {
+            loading: false,
+            error: {
+              messages: ['Another', 'and one more']
+            },
+            data: null
+          }
+        })
+      ).toEqual({
         loading: false,
         error: {
           messages: ['Hello', 'Error', 'Another', 'and one more']
@@ -123,25 +133,27 @@ describe('mergeStates', () => {
     });
   });
   it('merges data', () => {
-    expect(mergeStates({
-      a: {
-        loading: false,
-        error: null,
-        data: {
-          hello: 5,
-          aaa: 'bbb'
-        }
-      },
-      b: {
-        loading: false,
-        error: null,
-        data: {
-          sth: {
-            a: 'an obj'
+    expect(
+      mergeStates({
+        a: {
+          loading: false,
+          error: null,
+          data: {
+            hello: 5,
+            aaa: 'bbb'
+          }
+        },
+        b: {
+          loading: false,
+          error: null,
+          data: {
+            sth: {
+              a: 'an obj'
+            }
           }
         }
-      }
-    })).toEqual({
+      })
+    ).toEqual({
       loading: false,
       error: null,
       data: {

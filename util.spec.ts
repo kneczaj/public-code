@@ -1,4 +1,4 @@
-import { joinWords } from "./util";
+import { joinWords } from './util';
 
 describe('joinWords', () => {
   it('with one element', () => {

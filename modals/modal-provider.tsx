@@ -1,12 +1,12 @@
-import React from "react";
-import { Modal } from "reactstrap";
-import { ModalContext, ModalType } from "./hooks";
-import { capitalizeFirstLetter, isUndefined } from "../util";
-import { Contact } from "./contact-modal";
-import { Licenses } from "./licences-modal";
-import { AuthenticationModal } from "../auth/components/authentication-modal";
-import { useT } from "../hooks/translation";
-import { useUser } from "../auth/components/user-provider";
+import React from 'react';
+import { Modal } from 'reactstrap';
+import { ModalContext, ModalType } from './hooks';
+import { capitalizeFirstLetter, isUndefined } from '../util';
+import { Contact } from './contact-modal';
+import { Licenses } from './licences-modal';
+import { AuthenticationModal } from '../auth/components/authentication-modal';
+import { useT } from '../hooks/translation';
+import { useUser } from '../auth/components/user-provider';
 
 interface Props {
   children: any;
@@ -18,7 +18,7 @@ export interface LocationState {
 }
 
 export const ModalProvider = ({ children }: Props) => {
-  let [modalContent, setModalContent] = React.useState<ModalType | undefined>(
+  const [modalContent, setModalContent] = React.useState<ModalType | undefined>(
     undefined
   );
   const { login } = useUser();
@@ -44,22 +44,22 @@ export const ModalProvider = ({ children }: Props) => {
         >
           {{
             registrationSuccessMessage: (
-              <p>You're account has been created successfully</p>
+              <p>{t('Your account has been created successfully')}</p>
             ),
             registrationFormHeader: (
               <p>
                 {capitalizeFirstLetter(
-                  t("Please enter your username and password")
+                  t('Please enter your username and password')
                 )}
               </p>
             ),
             loginFormHeader: (
               <p>
                 {capitalizeFirstLetter(
-                  t("Please enter your username and password")
+                  t('Please enter your username and password')
                 )}
               </p>
-            ),
+            )
           }}
         </AuthenticationModal>
       </>
@@ -74,28 +74,28 @@ export const ModalProvider = ({ children }: Props) => {
         >
           {{
             registrationSuccessMessage: (
-              <p>You're account has been created successfully</p>
+              <p>{t('Your account has been created successfully')}</p>
             ),
             registrationFormHeader: (
               <p>
                 {capitalizeFirstLetter(
-                  t("Please enter your username and password")
+                  t('Please enter your username and password')
                 )}
               </p>
             ),
             loginFormHeader: (
               <p>
                 {capitalizeFirstLetter(
-                  t("Please enter your username and password")
+                  t('Please enter your username and password')
                 )}
               </p>
-            ),
+            )
           }}
         </AuthenticationModal>
       </>
     ),
     LICENSES: <Licenses />,
-    CONTACT: <Contact />,
+    CONTACT: <Contact />
   };
 
   return (

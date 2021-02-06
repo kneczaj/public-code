@@ -1,5 +1,4 @@
-import { useState } from "./state";
-
+import { useState } from './state';
 
 export interface Hook {
   value: boolean;

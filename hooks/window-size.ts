@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 
 export interface Hook {
   width: number | undefined;
@@ -9,7 +9,6 @@ export interface Hook {
  * source: https://usehooks.com/useWindowSize/
  */
 export function useWindowSize(): Hook {
-
   const getSize = useCallback(() => {
     const isClient = typeof window === 'object';
     return {

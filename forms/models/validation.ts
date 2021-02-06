@@ -1,4 +1,4 @@
-import { FieldRenderProps } from "react-final-form";
+import { FieldRenderProps } from 'react-final-form';
 
 export interface ValidationBaseProps<T> {
   ignoreTouched?: boolean;

@@ -1,13 +1,16 @@
-import React from "react";
-import { useState } from "../../hooks/state";
-import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import React from 'react';
+import { useState } from '../../hooks/state';
+import { ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import Button from '@material-ui/core/Button';
-import { RegistrationForm } from "./registration-form";
-import { capitalizeFirstLetter } from "../../util";
-import { isRegisterResponseToConfirm, RegisterResponsePayload, } from "../models/register";
-import { useT } from "../../hooks/translation";
-import { useModal } from "../../modals/hooks";
-import Link from "@material-ui/core/Link";
+import { RegistrationForm } from './registration-form';
+import { capitalizeFirstLetter } from '../../util';
+import {
+  isRegisterResponseToConfirm,
+  RegisterResponsePayload
+} from '../models/register';
+import { useT } from '../../hooks/translation';
+import { useModal } from '../../modals/hooks';
+import Link from '@material-ui/core/Link';
 
 export interface Props {
   onClose: () => void;
@@ -32,7 +35,7 @@ export function RegisterModal({
   onError,
   onSuccess: onSuccessBase,
   goToLogin,
-  showHeader,
+  showHeader
 }: Props) {
   const registerFinalized = useState(false);
   const t = useT();
@@ -50,7 +53,7 @@ export function RegisterModal({
     <>
       {showHeader && (
         <ModalHeader toggle={closeModal}>
-          {capitalizeFirstLetter(t("register"))}
+          {capitalizeFirstLetter(t('register'))}
         </ModalHeader>
       )}
       <ModalBody className={className}>
@@ -60,17 +63,17 @@ export function RegisterModal({
             <p>{t('account-verification-message')}</p>
           </>
         ) : (
-            <>
-              {children.registerFormHeader}
-              <RegistrationForm
-                confirmButtonLabel={confirmButtonLabel}
-                onSuccess={onSuccess}
-                onError={onError}
-              >
-                {children.formChildren}
-              </RegistrationForm>
-            </>
-          )}
+          <>
+            {children.registerFormHeader}
+            <RegistrationForm
+              confirmButtonLabel={confirmButtonLabel}
+              onSuccess={onSuccess}
+              onError={onError}
+            >
+              {children.formChildren}
+            </RegistrationForm>
+          </>
+        )}
       </ModalBody>
       <ModalFooter className={className}>
         <div className={'text-center'}>
@@ -79,7 +82,7 @@ export function RegisterModal({
               {capitalizeFirstLetter(t('close'))}
             </Button>
           ) : (
-            <Link component="button" onClick={goToLogin}>
+            <Link component='button' onClick={goToLogin}>
               {capitalizeFirstLetter(t('already have an account? - Log in'))}
             </Link>
           )}

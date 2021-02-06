@@ -1,6 +1,7 @@
-import { act, fireEvent, screen } from "@testing-library/react";
+import { act, fireEvent, screen } from '@testing-library/react';
 
-export const getButton = (label: string) => screen.getByRole('button', {name: new RegExp(label, 'i')});
+export const getButton = (label: string) =>
+  screen.getByRole('button', { name: new RegExp(label, 'i') });
 
 export async function clickButton(label: string) {
   return act(async () => {
@@ -11,6 +12,6 @@ export async function clickButton(label: string) {
 export function fillInput(label: string, value: any) {
   const field = screen.getByLabelText(new RegExp(`^${label}$`, 'i'));
   act(() => {
-    fireEvent.change(field, {target: {value}})
+    fireEvent.change(field, { target: { value } });
   });
 }

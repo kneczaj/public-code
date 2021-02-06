@@ -1,5 +1,5 @@
-import React from "react";
-import { ClipLoader } from "react-spinners";
+import React from 'react';
+import { ClipLoader } from 'react-spinners';
 
 export interface Props {
   size?: number;
@@ -18,8 +18,8 @@ export class LoadingPlaceholder extends React.Component<Props> {
     return (
       <div className={className} style={{ width: size, height: size }}>
         <ClipLoader
-          sizeUnit={"px"}
-          size={0.95*size}
+          sizeUnit={'px'}
+          size={0.95 * size}
           color={'#123abc'}
           loading={true}
         />

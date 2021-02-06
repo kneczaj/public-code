@@ -1,5 +1,5 @@
-import i18nBase, { Resource } from "i18next";
-import { initReactI18next } from "react-i18next";
+import i18nBase, { Resource } from 'i18next';
+import { initReactI18next } from 'react-i18next';
 import I18nextBrowserLanguageDetector from 'i18next-browser-languagedetector';
 
 export function getI18n(resources: Resource): i18nBase.i18n {

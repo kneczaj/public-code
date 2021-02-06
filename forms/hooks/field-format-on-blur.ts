@@ -1,16 +1,26 @@
-import { FieldRenderProps, useField as useFieldBase, UseFieldConfig as UseFieldConfigBase } from "react-final-form";
-import { isUndefined } from "../../util";
-import { useMemo } from "react";
+import {
+  FieldRenderProps,
+  useField as useFieldBase,
+  UseFieldConfig as UseFieldConfigBase
+} from 'react-final-form';
+import { isUndefined } from '../../util';
+import { useMemo } from 'react';
 
-export interface UseFieldConfig<FieldValue> extends Omit<UseFieldConfigBase<FieldValue>, 'formatOnBlur'> {
+export interface UseFieldConfig<FieldValue>
+  extends Omit<UseFieldConfigBase<FieldValue>, 'formatOnBlur'> {
   formatOnBlur?: UseFieldConfigBase<FieldValue>['format'];
 }
 
-export function useFieldFormatOnBlur<FieldValue = any, T extends HTMLElement = HTMLElement>(
+export function useFieldFormatOnBlur<
+  FieldValue = any,
+  T extends HTMLElement = HTMLElement
+>(
   name: string,
   config?: UseFieldConfig<FieldValue>
 ): FieldRenderProps<FieldValue, T> {
-  const configResult: UseFieldConfigBase<FieldValue> | undefined = useMemo(() => {
+  const configResult:
+    | UseFieldConfigBase<FieldValue>
+    | undefined = useMemo(() => {
     if (isUndefined(config)) {
       return undefined;
     }
@@ -23,7 +33,7 @@ export function useFieldFormatOnBlur<FieldValue = any, T extends HTMLElement = H
       formatOnBlur: true,
       // the inner useField takes care of formatting on blur
       format: formatOnBlur
-    }
+    };
   }, [config]);
 
   const baseResult = useFieldBase(name, configResult);
@@ -31,9 +41,7 @@ export function useFieldFormatOnBlur<FieldValue = any, T extends HTMLElement = H
     return baseResult;
   }
 
-  const {
-    format: formatBase = (value: FieldValue) => value
-  } = configResult;
+  const { format: formatBase = (value: FieldValue) => value } = configResult;
 
   return {
     ...baseResult,
@@ -42,8 +50,8 @@ export function useFieldFormatOnBlur<FieldValue = any, T extends HTMLElement = H
       get value() {
         // the wrapper takes care of formatting on keypress
         // this is similar to how the final form works for keypress formatting
-        return formatBase(baseResult.input.value, name)
+        return formatBase(baseResult.input.value, name);
       }
     }
-  }
+  };
 }

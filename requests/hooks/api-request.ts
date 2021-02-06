@@ -1,7 +1,7 @@
-import { useState } from "../../hooks/state";
-import { RequestStateBase } from "../models/state";
-import { useApiRequestBase } from "./api-request-base";
-import { makeRequestError } from "../models/errors";
+import { useState } from '../../hooks/state';
+import { RequestStateBase } from '../models/state';
+import { useApiRequestBase } from './api-request-base';
+import { makeRequestError } from '../models/errors';
 
 export interface Hook<TData, TQueryParams, TNoData> {
   state: RequestStateBase<TData | TNoData>;
@@ -18,7 +18,7 @@ export interface Props<TData, TNoData, TQueryParams> {
 export function useApiRequest<TData, TQueryParams, TNoData = null>({
   initialData,
   isActive,
-  requestFn,
+  requestFn
 }: Props<TData, TNoData, TQueryParams>): Hook<TData, TQueryParams, TNoData> {
   const requestState = useState<RequestStateBase<TData | TNoData>>({
     loading: isActive,
@@ -31,21 +31,24 @@ export function useApiRequest<TData, TQueryParams, TNoData = null>({
   }
 
   const updateRequestState = useApiRequestBase({
-    onStart: () => requestState.set({
-      ...requestState.value,
-      data: initialData,
-      loading: true
-    }),
-    onSuccess: (data) => requestState.set({
-      loading: false,
-      data,
-      error: null
-    }),
-    onFailure: (error: any) => requestState.set({
-      ...requestState.value,
-      error: makeRequestError(error),
-      loading: false
-    }),
+    onStart: () =>
+      requestState.set({
+        ...requestState.value,
+        data: initialData,
+        loading: true
+      }),
+    onSuccess: data =>
+      requestState.set({
+        loading: false,
+        data,
+        error: null
+      }),
+    onFailure: (error: any) =>
+      requestState.set({
+        ...requestState.value,
+        error: makeRequestError(error),
+        loading: false
+      }),
     requestFn
   });
 

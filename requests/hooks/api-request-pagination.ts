@@ -1,10 +1,14 @@
-import { useMemo } from "react";
-import { useState } from "../../hooks/state";
-import { PaginationRequestState } from "../models/state";
-import { useApiRequestBase } from "./api-request-base";
-import { deserialize as paginationDeserialize, Pagination, PaginationPayload } from "../models/pagination";
-import { isNull } from "../../util";
-import { makeRequestError } from "../models/errors";
+import { useMemo } from 'react';
+import { useState } from '../../hooks/state';
+import { PaginationRequestState } from '../models/state';
+import { useApiRequestBase } from './api-request-base';
+import {
+  deserialize as paginationDeserialize,
+  Pagination,
+  PaginationPayload
+} from '../models/pagination';
+import { isNull } from '../../util';
+import { makeRequestError } from '../models/errors';
 
 export interface Hook<TData, TQueryParams> {
   state: PaginationRequestState<TData>;
@@ -40,7 +44,9 @@ export function useApiRequestPagination<TData, TRequestData, TQueryParams>({
     previousUrl: null
   });
 
-  const hasMore = useMemo(() => !isNull(requestState.value.nextUrl), [requestState.value]);
+  const hasMore = useMemo(() => !isNull(requestState.value.nextUrl), [
+    requestState.value
+  ]);
 
   async function loadMore() {
     if (isNull(requestState.value.nextUrl)) {
@@ -79,22 +85,24 @@ export function useApiRequestPagination<TData, TRequestData, TQueryParams>({
 
   const updateRequestState = useApiRequestBase({
     onStart,
-    onSuccess: (data: Pagination<TRequestData>) => requestState.set({
-      loading: false,
-      data: data.data.map(deserialize),
-      error: null,
-      count: data.count,
-      nextUrl: data.nextUrl,
-      previousUrl: data.previousUrl
-    }),
-    onFailure: (error: any) => requestState.set({
-      ...requestState.value,
-      error: makeRequestError(error),
-      loading: false,
-      count: 0,
-      nextUrl: null,
-      previousUrl: null
-    }),
+    onSuccess: (data: Pagination<TRequestData>) =>
+      requestState.set({
+        loading: false,
+        data: data.data.map(deserialize),
+        error: null,
+        count: data.count,
+        nextUrl: data.nextUrl,
+        previousUrl: data.previousUrl
+      }),
+    onFailure: (error: any) =>
+      requestState.set({
+        ...requestState.value,
+        error: makeRequestError(error),
+        loading: false,
+        count: 0,
+        nextUrl: null,
+        previousUrl: null
+      }),
     requestFn
   });
 

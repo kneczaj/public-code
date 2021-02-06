@@ -1,7 +1,7 @@
-import React, { ComponentType } from "react";
-import { ValidationBaseProps } from "../models/validation";
-import { Field } from "../components/field";
-import { BaseOuterProps } from "../models/field";
+import React, { ComponentType } from 'react';
+import { ValidationBaseProps } from '../models/validation';
+import { Field } from '../components/field';
+import { BaseOuterProps } from '../models/field';
 
 /**
  * Common inner and outer props
@@ -21,10 +21,13 @@ export interface InnerProps extends ControlBaseProps {
 /**
  * Props interface of the result component
  */
-export interface OuterProps<FieldValue> extends BaseOuterProps<FieldValue>, ValidationBaseProps<FieldValue>, ControlBaseProps {}
+export interface OuterProps<FieldValue>
+  extends BaseOuterProps<FieldValue>,
+    ValidationBaseProps<FieldValue>,
+    ControlBaseProps {}
 
 export const withField = <TControl extends ControlBaseProps, FieldValue = any>(
-  WrappedComponent: ComponentType<InnerProps & TControl>,
+  WrappedComponent: ComponentType<InnerProps & TControl>
 ) => ({
   // UseFieldConfig
   afterSubmit,
@@ -75,7 +78,7 @@ export const withField = <TControl extends ControlBaseProps, FieldValue = any>(
   };
   return (
     <Field {...fieldWrapperProps}>
-      <WrappedComponent {...innerComponentProps as unknown as TControl}/>
+      <WrappedComponent {...((innerComponentProps as unknown) as TControl)} />
     </Field>
   );
 };
