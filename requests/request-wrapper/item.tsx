@@ -4,8 +4,8 @@ import { isNull } from '../../util';
 import React from 'react';
 import { defaultPropsBase, PropsBase } from './base';
 
-export interface Props<TData, TNoData = null>
-  extends PropsBase<TData, TNoData> {
+export interface Props<TResolvedData, TNoData = null, TData = void>
+  extends PropsBase<TResolvedData, TNoData, TData> {
   className?: string;
 }
 

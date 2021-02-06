@@ -3,26 +3,32 @@ import { RequestStateBase } from '../models/state';
 import { Errors } from '../models/errors';
 import { ErrorPlaceholder } from '../components/error-placeholder';
 
-export interface PropsBase<TData, TNoData = never> {
-  /**
-   * The request data or null when in progress or error data
-   */
-  state: RequestStateBase<TData | TNoData>;
-  /**
-   * The proper component
-   * @param data
-   */
-  children: (props: { data: TData; className?: string }) => any;
+export interface PlaceholdersProps {
   noDataPlaceholder?: (className?: string) => JSX.Element;
-  /**
-   * When true render children, when false the noDataPlaceholder
-   * @param data
-   */
-  noDataDetector?: (data: TData | TNoData) => data is TNoData;
   errorPlaceholder?: (props: {
     error: Errors;
     className?: string;
   }) => JSX.Element;
+}
+
+export interface PropsBase<TResolvedData, TNoData = never, TData = void>
+  extends PlaceholdersProps {
+  /**
+   * The request data or null when in progress or error data
+   */
+  state: RequestStateBase<
+    (TData extends void ? TResolvedData : TData) | TNoData
+  >;
+  /**
+   * The proper component
+   * @param data
+   */
+  children: (props: { data: TResolvedData; className?: string }) => any;
+  /**
+   * When true render children, when false the noDataPlaceholder
+   * @param data
+   */
+  noDataDetector: (data: TResolvedData | TNoData) => data is TNoData;
 }
 
 export const defaultPropsBase: Required<

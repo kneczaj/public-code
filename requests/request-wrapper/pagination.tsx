@@ -4,31 +4,40 @@ import { isNull } from '../../util';
 import { CircularProgress } from '@material-ui/core';
 import { defaultPropsBase, PropsBase } from './base';
 import { Centered } from '../../components/centered';
+import { AddResolve } from 'public/requests/models/with-resolve';
 
-export interface Props<TData extends Array<any>, TNoData>
-  extends PropsBase<TData, TNoData> {
+interface PropsWithoutResolve<TResolvedData extends Array<any>, TNoData>
+  extends PropsBase<TResolvedData, TNoData> {
   /**
    * Passed to each: children, noDataPlaceholder, errorPlaceholder
    */
   className?: string;
 }
 
-const defaultProps = {
-  ...defaultPropsBase,
-  noDataDetector: (data: Array<any>) => !data.length
-};
+export type Props<
+  TResolvedData extends Array<any>,
+  TNoData,
+  TData = void
+> = AddResolve<
+  PropsWithoutResolve<TResolvedData, TNoData>,
+  TResolvedData,
+  TNoData,
+  TData
+>;
 
-export function Pagination<TData extends Array<any>, TNoData = never>(
-  props: Props<TData, TNoData>
+export function Pagination<TResolvedData extends Array<any>, TNoData = never>(
+  props: Props<TResolvedData, TNoData>
 ) {
   const {
     children,
     className,
     state,
-    errorPlaceholder,
-    noDataPlaceholder,
+    errorPlaceholder = defaultPropsBase.errorPlaceholder,
+    noDataPlaceholder = (className?: string) => (
+      <div className={className}>No data</div>
+    ),
     noDataDetector
-  } = props as Required<Props<TData, TNoData>>;
+  } = props;
   return (
     <>
       {noDataDetector(state.data)
@@ -44,5 +53,3 @@ export function Pagination<TData extends Array<any>, TNoData = never>(
     </>
   );
 }
-
-Pagination.defaultProps = defaultProps;
