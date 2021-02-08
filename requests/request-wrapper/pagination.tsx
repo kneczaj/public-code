@@ -27,7 +27,7 @@ export type Props<
 
 export function Pagination<TResolvedData extends Array<any>, TNoData = never>(
   props: Props<TResolvedData, TNoData>
-) {
+): JSX.Element {
   const {
     children,
     className,
@@ -41,7 +41,9 @@ export function Pagination<TResolvedData extends Array<any>, TNoData = never>(
   return (
     <>
       {noDataDetector(state.data)
-        ? noDataPlaceholder(className)
+        ? state.loading // show the placeholder only if not at loading state
+          ? null
+          : noDataPlaceholder(className)
         : children({ data: state.data, className })}
       {!isNull(state.error) &&
         errorPlaceholder({ error: state.error, className })}
