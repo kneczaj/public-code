@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client';
 import { useMemo } from 'react';
 import {
   FinalFormSubmissionMutationResult,
+  FinalFormSubmissionResult,
   makeMutationRequest
 } from '../utils';
 import {
@@ -11,11 +12,16 @@ import {
 import { DocumentNode } from 'graphql';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 
+export interface FinalFormMutationResult<FormValues>
+  extends Omit<MutationResult, 'errors'> {
+  errors?: FinalFormSubmissionResult<FormValues>;
+}
+
 export type Hook<TData, FormValues> = [
   (
     variables: FormValues
   ) => Promise<FinalFormSubmissionMutationResult<TData, FormValues>>,
-  MutationResult<TData>
+  FinalFormMutationResult<TData>
 ];
 
 /**
