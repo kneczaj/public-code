@@ -28,32 +28,9 @@ export interface OuterProps<FieldValue>
 
 export const withField = <TControl extends ControlBaseProps, FieldValue = any>(
   WrappedComponent: ComponentType<InnerProps & TControl>
-) => ({
-  // UseFieldConfig
-  afterSubmit,
-  allowNull,
-  beforeSubmit,
-  defaultValue,
-  format,
-  formatOnBlur,
-  initialValue,
-  isEqual,
-  multiple,
-  parse,
-  subscription,
-  type,
-  validate,
-  validateFields,
-  value,
-  // validation props
-  ignoreTouched,
-  showErrorWhen,
-  // Other Field props
-  name,
-  showLabel,
-  ...innerComponentProps
-}: OuterProps<FieldValue> & TControl) => {
-  const fieldWrapperProps = {
+) => {
+  const resultComponent = ({
+    // UseFieldConfig
     afterSubmit,
     allowNull,
     beforeSubmit,
@@ -74,11 +51,39 @@ export const withField = <TControl extends ControlBaseProps, FieldValue = any>(
     showErrorWhen,
     // Other Field props
     name,
-    showLabel
+    showLabel,
+    ...innerComponentProps
+  }: OuterProps<FieldValue> & TControl) => {
+    const fieldWrapperProps = {
+      afterSubmit,
+      allowNull,
+      beforeSubmit,
+      defaultValue,
+      format,
+      formatOnBlur,
+      initialValue,
+      isEqual,
+      multiple,
+      parse,
+      subscription,
+      type,
+      validate,
+      validateFields,
+      value,
+      // validation props
+      ignoreTouched,
+      showErrorWhen,
+      // Other Field props
+      name,
+      showLabel
+    };
+
+    return (
+      <Field {...fieldWrapperProps}>
+        <WrappedComponent {...((innerComponentProps as unknown) as TControl)} />
+      </Field>
+    );
   };
-  return (
-    <Field {...fieldWrapperProps}>
-      <WrappedComponent {...((innerComponentProps as unknown) as TControl)} />
-    </Field>
-  );
+  resultComponent.displayName = 'withField';
+  return resultComponent;
 };
