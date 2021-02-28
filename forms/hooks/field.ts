@@ -11,6 +11,7 @@ import { FormHelperTextTypeMap } from '@material-ui/core/FormHelperText/FormHelp
 import { DefaultComponentProps } from '@material-ui/core/OverridableComponent';
 import { useFieldFormatOnBlur, UseFieldConfig } from './field-format-on-blur';
 import { useMemo } from 'react';
+import { TranslationFunction } from 'i18next';
 
 interface CustomInput<FieldValue, T extends HTMLElement = HTMLElement>
   extends FieldInputProps<FieldValue, T> {
@@ -42,7 +43,7 @@ export function getDisplayedError<FieldValue>(
     error,
     submitError
   }: Pick<FieldMetaState<FieldValue>, 'error' | 'submitError'>,
-  t: (str: string, params: unknown) => string
+  t: TranslationFunction
 ): string | undefined {
   const displayedError = [error, submitError].filter(error => {
     // this will be false when error comes from child element
