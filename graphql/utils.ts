@@ -4,7 +4,7 @@ import { FetchResult } from '@apollo/client/link/core';
 import { MutationFunctionOptions } from '@apollo/client/react/types/types';
 import { GraphQLError } from 'graphql/error/GraphQLError';
 
-function convertGQLErrors2Form(
+export function convertGQLErrors2Form(
   errors: ReadonlyArray<GraphQLError>
 ): SubmissionErrors {
   if (errors.length === 0) {
@@ -34,6 +34,11 @@ export interface FinalFormSubmissionMutationResult<TData, FormValues>
   errors?: FinalFormSubmissionResult<FormValues>;
 }
 
+/**
+ * Make a request to GraphQL API, and interpret errors no matter if they are returned or thrown.
+ * The return format is with standard GraphQL data and loading properties and modified errors.
+ * @param mutation
+ */
 export function makeMutationRequest<TData, FormValues>(
   mutation: (
     options?: MutationFunctionOptions<TData, FormValues>
@@ -51,8 +56,8 @@ export function makeMutationRequest<TData, FormValues>(
         : convertGQLErrors2Form(response.errors);
       const errors = isNull(response.data)
         ? {
-            ...baseErrors,
-            [FORM_ERROR]: `Empty response from server`
+            [FORM_ERROR]: `Empty response from server`,
+            ...baseErrors
           }
         : baseErrors;
       return isUndefined(errors)
@@ -76,5 +81,22 @@ export function makeMutationRequest<TData, FormValues>(
         errors: convertGQLErrors2Form(e.graphQLErrors)
       };
     }
+  };
+}
+
+/**
+ * Converts a function which triggers the mutation from useMutation hook to a onSubmit function for final-form.
+ * Use this wrapped with useMemo.
+ * @param mutation
+ */
+export function makeOnSubmit<TData, FormValues>(
+  mutation: (
+    options?: MutationFunctionOptions<TData, FormValues>
+  ) => Promise<FetchResult<TData>>
+): (variables: FormValues) => Promise<FinalFormSubmissionResult<FormValues>> {
+  const baseFn = makeMutationRequest(mutation);
+  return async (variables: FormValues) => {
+    const { errors } = await baseFn(variables);
+    return errors;
   };
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { InputField } from '../../forms/fields/input-field';
 import { composeValidators, isEmail } from '../../forms/validation';
 import { FormRenderProps } from 'react-final-form';
@@ -8,8 +8,8 @@ import { capitalizeFirstLetter, isNullOrUndefined } from '../../util';
 import { useT } from '../../hooks/translation';
 import { Button, Grid, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { gql } from '@apollo/client';
-import { useFormMutation } from '../../graphql/hooks/form-mutation';
+import { gql, useMutation } from '@apollo/client';
+import { makeOnSubmit } from 'public/graphql/utils';
 
 const LOGIN = gql`
   mutation Login($username: String!, $password: String!) {
@@ -25,7 +25,7 @@ const LOGIN = gql`
 export interface Props {
   onSuccess: (token: string) => void;
   onError: (error: any) => void;
-  children?: any;
+  children?: React.ReactNode;
   confirmButtonLabel?: string;
 }
 
@@ -40,15 +40,17 @@ export function LoginForm({
   confirmButtonLabel,
   onError,
   onSuccess
-}: Props) {
+}: Props): JSX.Element {
   const t = useT();
   const classes = useStyles();
-  const [onLogin, { data }] = useFormMutation<
+  const [trigger, { data }] = useMutation<
     LoginResponsePayload,
     LoginQueryPayload
   >(LOGIN, {
     onError
   });
+  const onSubmit = useMemo(() => makeOnSubmit(trigger), [trigger]);
+
   useEffect(() => {
     if (isNullOrUndefined(data)) {
       return;
@@ -57,7 +59,7 @@ export function LoginForm({
   }, [data, onSuccess]);
 
   return (
-    <Form formName={'login'} onSubmit={onLogin}>
+    <Form formName={'login'} onSubmit={onSubmit}>
       {{
         main() {
           return (
