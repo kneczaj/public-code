@@ -1,16 +1,14 @@
 import React from 'react';
 import { useState } from '../../hooks/state';
-import { ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import Button from '@material-ui/core/Button';
 import { RegistrationForm } from './registration-form';
-import { capitalizeFirstLetter } from '../../util';
 import {
   isRegisterResponseToConfirm,
   RegisterResponsePayload
 } from '../models/register';
-import { useT } from '../../hooks/translation';
-import { useModal } from '../../modals/hooks';
+import { useCT, useT } from '../../hooks/translation';
 import Link from '@material-ui/core/Link';
+import { DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
 export interface Props {
   onClose: () => void;
@@ -36,10 +34,10 @@ export function RegisterModal({
   onSuccess: onSuccessBase,
   goToLogin,
   showHeader
-}: Props) {
+}: Props): JSX.Element {
   const registerFinalized = useState(false);
   const t = useT();
-  const { closeModal } = useModal();
+  const ct = useCT();
 
   function onSuccess(payload: RegisterResponsePayload, username: string) {
     if (isRegisterResponseToConfirm(payload)) {
@@ -51,12 +49,8 @@ export function RegisterModal({
 
   return (
     <>
-      {showHeader && (
-        <ModalHeader toggle={closeModal}>
-          {capitalizeFirstLetter(t('register'))}
-        </ModalHeader>
-      )}
-      <ModalBody className={className}>
+      {showHeader && <DialogTitle>{ct('register')}</DialogTitle>}
+      <DialogContent className={className}>
         {registerFinalized.value ? (
           <>
             {children.successMessage}
@@ -74,20 +68,20 @@ export function RegisterModal({
             </RegistrationForm>
           </>
         )}
-      </ModalBody>
-      <ModalFooter className={className}>
+      </DialogContent>
+      <DialogActions className={className}>
         <div className={'text-center'}>
           {registerFinalized.value ? (
             <Button color={'primary'} onClick={onClose}>
-              {capitalizeFirstLetter(t('close'))}
+              {ct('close')}
             </Button>
           ) : (
             <Link component='button' onClick={goToLogin}>
-              {capitalizeFirstLetter(t('already have an account? - Log in'))}
+              {ct('already have an account? - Log in')}
             </Link>
           )}
         </div>
-      </ModalFooter>
+      </DialogActions>
     </>
   );
 }

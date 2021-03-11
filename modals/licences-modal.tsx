@@ -1,20 +1,18 @@
 import React from 'react';
-import { ModalHeader, ModalBody } from 'reactstrap';
-import { useT } from '../hooks/translation';
-import { capitalizeFirstLetter } from '../util';
+import { useCT } from '../hooks/translation';
 import { useModal } from './hooks';
+import { DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 
 export function Licenses(): JSX.Element {
-  const t = useT();
+  const ct = useCT();
   const { closeModal } = useModal();
 
   return (
     <>
-      <ModalHeader toggle={closeModal}>
-        {capitalizeFirstLetter(t('licenses'))}
-      </ModalHeader>
-      <ModalBody>
-        <h5>Logo</h5>
+      <DialogTitle>{ct('licenses')}</DialogTitle>
+      <DialogContent>
+        <h3>Logo</h3>
         <p>
           Żaba użyta w logo jest licencjonowana na{' '}
           <a
@@ -35,7 +33,12 @@ export function Licenses(): JSX.Element {
           </a>
           . Nie została poddana żadnym modyfikacjom.
         </p>
-      </ModalBody>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={closeModal} color='primary' autoFocus>
+          {ct('close')}
+        </Button>
+      </DialogActions>
     </>
   );
 }

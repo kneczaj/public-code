@@ -1,21 +1,19 @@
 import React from 'react';
-import { ModalHeader, ModalBody } from 'reactstrap';
-import { useT } from '../hooks/translation';
-import { capitalizeFirstLetter } from '../util';
+import { useCT } from '../hooks/translation';
 import { CONTACT_EMAIL } from '../config';
 import { useModal } from './hooks';
+import { DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 
-export function Contact(props: unknown): JSX.Element {
-  const t = useT();
+export function Contact(): JSX.Element {
+  const ct = useCT();
   const { closeModal } = useModal();
 
   return (
     <>
-      <ModalHeader toggle={closeModal}>
-        {capitalizeFirstLetter(t('contact'))}
-      </ModalHeader>
-      <ModalBody>
-        <h5 itemProp={'company'}>Gryfny Team Sp. z o.o.</h5>
+      <DialogTitle>{ct('contact')}</DialogTitle>
+      <DialogContent>
+        <h3 itemProp={'company'}>Gryfny Team Sp. z o.o.</h3>
         <div>
           <div itemProp={'address'}>
             <div>Rynek Główny 28</div>
@@ -27,7 +25,12 @@ export function Contact(props: unknown): JSX.Element {
         <p>
           <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
         </p>
-      </ModalBody>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={closeModal} color='primary' autoFocus>
+          {ct('close')}
+        </Button>
+      </DialogActions>
     </>
   );
 }

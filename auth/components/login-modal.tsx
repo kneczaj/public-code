@@ -1,11 +1,10 @@
 import React from 'react';
-import { ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { LoginForm } from './login-form';
 import { capitalizeFirstLetter } from '../../util';
 import { useT } from '../../hooks/translation';
-import { useModal } from '../../modals/hooks';
 import Link from '@material-ui/core/Link';
 import { fromRelativeBEUrl } from 'env';
+import { DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
 export interface Props {
   onSuccess: (token: string) => void;
@@ -30,16 +29,13 @@ export function LoginModal({
   showHeader
 }: Props): JSX.Element {
   const t = useT();
-  const { closeModal } = useModal();
 
   return (
     <>
       {showHeader && (
-        <ModalHeader toggle={closeModal}>
-          {capitalizeFirstLetter(t('login'))}
-        </ModalHeader>
+        <DialogTitle>{capitalizeFirstLetter(t('login'))}</DialogTitle>
       )}
-      <ModalBody className={className}>
+      <DialogContent className={className}>
         {children.formHeader}
         <a href={fromRelativeBEUrl(`/connect/facebook`)}>
           <button style={{ width: '150px' }}>Connect to facebook</button>
@@ -54,8 +50,8 @@ export function LoginModal({
         >
           {children.formChildren}
         </LoginForm>
-      </ModalBody>
-      <ModalFooter className={className}>
+      </DialogContent>
+      <DialogActions className={className}>
         <div className={'text-center'}>
           {
             <Link component='button' onClick={goToRegister}>
@@ -65,7 +61,7 @@ export function LoginModal({
             </Link>
           }
         </div>
-      </ModalFooter>
+      </DialogActions>
     </>
   );
 }

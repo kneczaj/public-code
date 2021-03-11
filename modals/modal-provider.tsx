@@ -1,5 +1,4 @@
 import React from 'react';
-import { Modal } from 'reactstrap';
 import { ModalContext, ModalType } from './hooks';
 import { capitalizeFirstLetter, isUndefined } from '../util';
 import { Contact } from './contact-modal';
@@ -7,6 +6,7 @@ import { Licenses } from './licences-modal';
 import { AuthenticationModal } from '../auth/components/authentication-modal';
 import { useT } from '../hooks/translation';
 import { useUser } from '../auth/components/user-provider';
+import { Dialog } from '@material-ui/core';
 
 interface Props {
   children: any;
@@ -101,14 +101,9 @@ export const ModalProvider = ({ children }: Props) => {
   return (
     <ModalContext.Provider value={{ openModal, closeModal }}>
       {modalContent && (
-        <Modal
-          isOpen={!isUndefined(modalContent)}
-          backdrop={true}
-          toggle={closeModal}
-          returnFocusAfterClose={true}
-        >
+        <Dialog open={!isUndefined(modalContent)} onClose={closeModal}>
           {modalComponent[modalContent]}
-        </Modal>
+        </Dialog>
       )}
       {children}
     </ModalContext.Provider>
