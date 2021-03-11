@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { BACKEND_URL } from '../../../env';
 import { useHistory } from 'public/routing/hooks/history';
 import { useUser } from './user-provider';
+import { fromRelativeBEUrl } from 'env';
 
 export interface Props {
   providerName: string;
 }
 
-export function LoginRedirect({ providerName }: Props) {
+export function LoginRedirect({ providerName }: Props): JSX.Element {
   const [text, setText] = useState('Loading...');
   const {
     push,
@@ -19,7 +19,7 @@ export function LoginRedirect({ providerName }: Props) {
     async function loginToStrapy() {
       const data: any = await (
         await fetch(
-          `${BACKEND_URL}/auth/${providerName}/callback${searchString}`
+          fromRelativeBEUrl(`/auth/${providerName}/callback${searchString}`)
         )
       ).json();
       // Successfully logged with Strapi

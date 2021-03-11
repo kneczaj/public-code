@@ -4,8 +4,8 @@ import { LoginForm } from './login-form';
 import { capitalizeFirstLetter } from '../../util';
 import { useT } from '../../hooks/translation';
 import { useModal } from '../../modals/hooks';
-import { BACKEND_URL } from '../../../env';
 import Link from '@material-ui/core/Link';
+import { fromRelativeBEUrl } from 'env';
 
 export interface Props {
   onSuccess: (token: string) => void;
@@ -28,7 +28,7 @@ export function LoginModal({
   onError,
   onSuccess,
   showHeader
-}: Props) {
+}: Props): JSX.Element {
   const t = useT();
   const { closeModal } = useModal();
 
@@ -41,10 +41,10 @@ export function LoginModal({
       )}
       <ModalBody className={className}>
         {children.formHeader}
-        <a href={`${BACKEND_URL}/connect/facebook`}>
+        <a href={fromRelativeBEUrl(`/connect/facebook`)}>
           <button style={{ width: '150px' }}>Connect to facebook</button>
         </a>
-        <a href={`${BACKEND_URL}/connect/google`}>
+        <a href={fromRelativeBEUrl(`/connect/google`)}>
           <button style={{ width: '150px' }}>Connect to google</button>
         </a>
         <LoginForm
