@@ -3,18 +3,18 @@ import { Link as ReactLink, LinkProps } from 'react-router-dom';
 import { getLocationObj, LocationDescriptor, UpdateSearch } from '../models';
 import { useHistory } from '../hooks/history';
 import { StringifiableRecord } from 'query-string';
-import { Link as LinkBase } from '@material-ui/core';
+import { Button, ButtonProps } from '@material-ui/core';
+import { Link } from 'public/routing/components/link';
 
 export type PropsBase<S> = LinkProps<S> &
   React.RefAttributes<HTMLAnchorElement>;
 
-export interface Props<LocationState, Search>
-  extends Omit<PropsBase<LocationState>, 'to'> {
+export interface Props<LocationState, Search> extends ButtonProps<ReactLink> {
   to: LocationDescriptor<LocationState>;
   updateSearch?: UpdateSearch<Search>;
 }
 
-export function LinkWithoutRef<
+export function ButtonLinkWithoutRef<
   LocationState,
   Search extends StringifiableRecord
 >(
@@ -26,20 +26,20 @@ export function LinkWithoutRef<
 ): JSX.Element {
   const { location } = useHistory<LocationState, Search>();
   return (
-    <LinkBase
+    <Button
       ref={ref}
-      component={ReactLink}
+      underline={'none'}
+      component={Link}
       to={getLocationObj<LocationState, Search>(
         to,
         location.search,
         updateSearch
       )}
       {...rest}
-      color={'initial'}
     />
   );
 }
 
-export const Link = forwardRef<HTMLAnchorElement, Props<any, any>>(
-  LinkWithoutRef
+export const ButtonLink = forwardRef<HTMLAnchorElement, Props<any, any>>(
+  ButtonLinkWithoutRef
 );
