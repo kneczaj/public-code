@@ -1,6 +1,6 @@
 import React, { AriaAttributes, MouseEventHandler } from 'react';
 import Menu from '@material-ui/core/Menu';
-import { IconButton, PropTypes } from '@material-ui/core';
+import { PropTypes } from '@material-ui/core';
 
 export interface ButtonProps {
   'aria-controls': AriaAttributes['aria-controls'];
@@ -12,12 +12,10 @@ export interface ButtonProps {
 export interface Props {
   id: string;
   children: React.ReactNode;
-  label?: React.ReactNode;
-  color?: PropTypes.Color;
-  button?: (props: ButtonProps) => React.ReactNode;
+  button: (props: ButtonProps) => JSX.Element;
 }
 
-export function MenuButton({ children, color, id, label, button }: Props) {
+export function MenuButton({ children, id, button }: Props) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -30,23 +28,11 @@ export function MenuButton({ children, color, id, label, button }: Props) {
 
   return (
     <>
-      {button ? (
-        button({
-          'aria-controls': id,
-          'aria-haspopup': 'true',
-          color: color,
-          onClick: handleClick
-        })
-      ) : (
-        <IconButton
-          aria-controls={id}
-          aria-haspopup='true'
-          color={color}
-          onClick={handleClick}
-        >
-          {label}
-        </IconButton>
-      )}
+      {button({
+        'aria-controls': id,
+        'aria-haspopup': 'true',
+        onClick: handleClick
+      })}
       <Menu
         id={id}
         anchorEl={anchorEl}
