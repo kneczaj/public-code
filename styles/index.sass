@@ -1,7 +1,9 @@
 @import '~dejavu-sans/css/dejavu-sans.css'
 @import '~react-notifications/lib/notifications.css'
-@import 'modal'
+@import "flex"
+@import "text"
 @import "material"
+@import "margins"
 
 #root
   position: absolute
@@ -23,9 +25,6 @@ body
 code
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace
 
-.btn::first-letter
-  text-transform: capitalize
-
 .scroll-here
   overflow: auto
   -webkit-overflow-scrolling: touch
@@ -35,37 +34,9 @@ code
   bottom: 10px
   top: initial
 
-.text-bold
-  font-weight: 500
-
 .form-row > *
   margin-left: 5px
   margin-right: 5px
-
-.no-wrap
-  white-space: nowrap
-
-.MuiSlider-root
-  // fix handle going out from the container
-  width: calc(100% - 12px) !important
-  margin-left: 6px
-  margin-right: 6px
-
-.flex-1
-  flex: 1
-  min-height: 0
-  min-width: 0
-  flex-basis: 0
-
-.dark-page
-  background-color: $background-color
-  color: white
-  //min-height: 100%
-  a:not(.btn):not(.dropdown-item)
-    color: white
-  p
-    a:not(.btn):not(.dropdown-item)
-      text-decoration: underline
 
 .centered-content
   display: table
