@@ -28,7 +28,7 @@ const REGISTER = gql`
 export interface Props {
   children?: any;
   confirmButtonLabel?: string;
-  onSuccess: (payload: RegisterResponsePayload, username: string) => void;
+  onSuccess: (payload: RegisterResponsePayload) => void;
   onError: (error: any) => void;
 }
 
@@ -42,7 +42,7 @@ export function RegistrationForm({
   children,
   confirmButtonLabel,
   onSuccess
-}: Props) {
+}: Props): JSX.Element {
   const t = useT();
   const classes = useStyles();
   const [register] = useMutation(REGISTER);
@@ -55,7 +55,7 @@ export function RegistrationForm({
       if (response.errors) {
         return { [FORM_ERROR]: response.errors[0].message };
       }
-      onSuccess(response.data, formState.email);
+      onSuccess(response.data);
     } catch (e) {}
   }
 

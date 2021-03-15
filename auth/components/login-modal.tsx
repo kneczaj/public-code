@@ -4,39 +4,64 @@ import { capitalizeFirstLetter } from '../../util';
 import { useT } from '../../hooks/translation';
 import Link from '@material-ui/core/Link';
 import { fromRelativeBEUrl } from 'env';
-import { DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle
+} from '@material-ui/core';
+import { useDialog } from 'public/providers/dialog-provider';
+import { useUser } from 'public/auth/components/user-provider';
 
 export interface Props {
-  onSuccess: (token: string) => void;
+  onSuccess?: (token: string, closeDialog: () => void) => void;
   onError: (error: any) => void;
   goToRegister: () => void;
-  children: {
-    formHeader: any;
-    formChildren: any;
-  };
+  formHeader?: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   confirmButtonLabel?: string;
   showHeader: boolean;
+  id?: string;
 }
 
 export function LoginModal({
-  children,
+  children = null,
   className,
   confirmButtonLabel,
+  formHeader,
   goToRegister,
   onError,
-  onSuccess,
-  showHeader
+  onSuccess: customOnSuccess,
+  showHeader,
+  id
 }: Props): JSX.Element {
   const t = useT();
+  const { closeDialog } = useDialog();
+  const { login } = useUser();
+
+  function onSuccess(token: string) {
+    if (customOnSuccess) {
+      customOnSuccess(token, closeDialog);
+    } else {
+      login(token);
+      closeDialog();
+    }
+  }
 
   return (
-    <>
+    <Dialog open={true} onClose={closeDialog} id={id}>
       {showHeader && (
         <DialogTitle>{capitalizeFirstLetter(t('login'))}</DialogTitle>
       )}
       <DialogContent className={className}>
-        {children.formHeader}
+        {formHeader || (
+          <p>
+            {capitalizeFirstLetter(
+              t('Please enter your username and password')
+            )}
+          </p>
+        )}
         <a href={fromRelativeBEUrl(`/connect/facebook`)}>
           <button style={{ width: '150px' }}>Connect to facebook</button>
         </a>
@@ -48,7 +73,7 @@ export function LoginModal({
           onSuccess={onSuccess}
           onError={onError}
         >
-          {children.formChildren}
+          {children}
         </LoginForm>
       </DialogContent>
       <DialogActions className={className}>
@@ -62,6 +87,6 @@ export function LoginModal({
           }
         </div>
       </DialogActions>
-    </>
+    </Dialog>
   );
 }

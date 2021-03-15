@@ -8,21 +8,28 @@ import {
 } from '../models/register';
 import { useCT, useT } from '../../hooks/translation';
 import Link from '@material-ui/core/Link';
-import { DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle
+} from '@material-ui/core';
+import { useDialog } from 'public/providers/dialog-provider';
+import { capitalizeFirstLetter } from 'public/util';
+import { useUser } from 'public/auth/components/user-provider';
 
 export interface Props {
-  onClose: () => void;
-  onSuccess: (token: string) => void;
+  onClose?: () => void;
+  onSuccess?: (token: string, closeDialog: () => void) => void;
   onError: (error: any) => void;
   goToLogin: () => void;
-  children: {
-    formChildren?: any;
-    successMessage?: any;
-    registerFormHeader?: any;
-  };
+  formHeader?: React.ReactNode;
+  children?: React.ReactNode;
+  successMessage?: React.ReactNode;
   confirmButtonLabel?: string;
   className?: string;
   showHeader: boolean;
+  id?: string;
 }
 
 export function RegisterModal({
@@ -31,40 +38,56 @@ export function RegisterModal({
   children,
   onClose,
   onError,
-  onSuccess: onSuccessBase,
+  onSuccess: customOnSuccess,
   goToLogin,
-  showHeader
+  showHeader,
+  successMessage,
+  formHeader,
+  id
 }: Props): JSX.Element {
   const registerFinalized = useState(false);
   const t = useT();
   const ct = useCT();
+  const { closeDialog } = useDialog();
+  const { login } = useUser();
 
-  function onSuccess(payload: RegisterResponsePayload, username: string) {
+  function onSuccess(payload: RegisterResponsePayload) {
     if (isRegisterResponseToConfirm(payload)) {
       registerFinalized.set(true);
+    } else if (customOnSuccess) {
+      customOnSuccess(payload.key, closeDialog);
     } else {
-      onSuccessBase(payload.key);
+      login(payload.key);
+      closeDialog();
     }
   }
 
   return (
-    <>
+    <Dialog open={true} onClose={closeDialog} id={id}>
       {showHeader && <DialogTitle>{ct('register')}</DialogTitle>}
       <DialogContent className={className}>
         {registerFinalized.value ? (
           <>
-            {children.successMessage}
+            {successMessage || (
+              <p>{t('Your account has been created successfully')}</p>
+            )}
             <p>{t('account-verification-message')}</p>
           </>
         ) : (
           <>
-            {children.registerFormHeader}
+            {formHeader || (
+              <p>
+                {capitalizeFirstLetter(
+                  t('Please enter your username and password')
+                )}
+              </p>
+            )}
             <RegistrationForm
               confirmButtonLabel={confirmButtonLabel}
               onSuccess={onSuccess}
               onError={onError}
             >
-              {children.formChildren}
+              {children}
             </RegistrationForm>
           </>
         )}
@@ -72,7 +95,7 @@ export function RegisterModal({
       <DialogActions className={className}>
         <div className={'text-center'}>
           {registerFinalized.value ? (
-            <Button color={'primary'} onClick={onClose}>
+            <Button color={'primary'} onClick={closeDialog || onClose}>
               {ct('close')}
             </Button>
           ) : (
@@ -82,6 +105,6 @@ export function RegisterModal({
           )}
         </div>
       </DialogActions>
-    </>
+    </Dialog>
   );
 }
