@@ -9,7 +9,7 @@ export type DialogConstructor = (props: DialogProps) => JSX.Element;
 export type DialogDestructor = () => void;
 
 export interface DialogProps {
-  id: string;
+  id?: string;
 }
 
 export type DialogComponent = (props: DialogProps) => JSX.Element;
