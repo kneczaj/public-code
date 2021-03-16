@@ -1,40 +1,33 @@
 import React from 'react';
 import { LoginForm } from './login-form';
-import { capitalizeFirstLetter } from '../../util';
+import { capitalizeFirstLetter, isUndefined } from '../../util';
 import { useT } from '../../hooks/translation';
-import Link from '@material-ui/core/Link';
 import { fromRelativeBEUrl } from 'env';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle
-} from '@material-ui/core';
-import { useDialog } from 'public/providers/dialog-provider';
+import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
+import { DialogProps, useDialog } from 'public/providers/dialog-provider';
 import { useUser } from 'public/auth/components/user-provider';
 
-export interface Props {
+export interface Props extends DialogProps {
   onSuccess?: (token: string, closeDialog: () => void) => void;
-  onError: (error: any) => void;
-  goToRegister: () => void;
+  onError?: (error: any) => void;
+  onClose?: () => void;
   formHeader?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
   confirmButtonLabel?: string;
-  showHeader: boolean;
-  id?: string;
+  title?: string;
 }
 
-export function LoginModal({
+export function LoginDialog({
   children = null,
   className,
   confirmButtonLabel,
   formHeader,
-  goToRegister,
-  onError,
+  onError = (error: any) => undefined,
   onSuccess: customOnSuccess,
-  showHeader,
-  id
+  onClose,
+  id,
+  title
 }: Props): JSX.Element {
   const t = useT();
   const { closeDialog } = useDialog();
@@ -50,10 +43,8 @@ export function LoginModal({
   }
 
   return (
-    <Dialog open={true} onClose={closeDialog} id={id}>
-      {showHeader && (
-        <DialogTitle>{capitalizeFirstLetter(t('login'))}</DialogTitle>
-      )}
+    <Dialog open={true} onClose={onClose || closeDialog} id={id}>
+      <DialogTitle>{title || capitalizeFirstLetter(t('login'))}</DialogTitle>
       <DialogContent className={className}>
         {formHeader || (
           <p>
@@ -69,24 +60,15 @@ export function LoginModal({
           <button style={{ width: '150px' }}>Connect to google</button>
         </a>
         <LoginForm
-          confirmButtonLabel={confirmButtonLabel}
+          confirmButtonLabel={
+            isUndefined(confirmButtonLabel) ? t('login') : confirmButtonLabel
+          }
           onSuccess={onSuccess}
           onError={onError}
         >
           {children}
         </LoginForm>
       </DialogContent>
-      <DialogActions className={className}>
-        <div className={'text-center'}>
-          {
-            <Link component='button' onClick={goToRegister}>
-              {capitalizeFirstLetter(
-                t("I don't have an account - register me")
-              )}
-            </Link>
-          }
-        </div>
-      </DialogActions>
     </Dialog>
   );
 }
