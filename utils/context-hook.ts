@@ -27,7 +27,7 @@ export const createContextHook = <T>(context: Context<T>) => (): T => {
   const val = useContext(context);
   if (isUndefined(val)) {
     throw new ContextError(
-      `A context hook for ${context.displayName} is used outside the context provider`
+      `A context hook for context called "${context.displayName}" is used outside the context provider`
     );
   }
   return val;

@@ -33,7 +33,9 @@ export const ME = gql`
   }
 `;
 
-export function UserProvider({ children }: ProviderComponentProps) {
+export function UserProvider({
+  children
+}: ProviderComponentProps): JSX.Element {
   const { show } = useNotifications();
   const { push } = useHistory();
   const { logout: logoutBase, isAuthenticated, login } = useToken();
