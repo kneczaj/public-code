@@ -5,6 +5,7 @@ import * as UserProvider from 'public/auth/components/user-provider';
 import * as OfferQuery from 'app/root/query-provider/query-context';
 import { user } from './consts';
 import { Query as QueryModel } from '../../app/ads-browser/models/query';
+import * as UseDialog from 'public/providers/dialog-provider';
 
 export const useT = mockHook(Translation, 'useT', (input: string) => input);
 export const useFormName = mockHook(FormContext, 'useFormName', 'testform');
@@ -22,4 +23,13 @@ export const useUser = mockHook<
 export const useOfferQuery = mockHook(OfferQuery, 'useOfferQuery', {
   value: null,
   save: (query: QueryModel, redirectUrl?: string) => undefined
+});
+
+export const useDialog = mockHook<
+  typeof UseDialog.useDialog,
+  'useDialog',
+  typeof UseDialog
+>(UseDialog, 'useDialog', {
+  closeDialog: () => undefined,
+  openDialog: () => undefined
 });
