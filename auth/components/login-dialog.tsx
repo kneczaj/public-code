@@ -1,18 +1,17 @@
 import React from 'react';
 import { Dialog } from '@material-ui/core';
-import { DialogProps, useDialog } from 'public/providers/dialog-provider';
 import { DialogProps as MaterialDialogProps } from '@material-ui/core/Dialog/Dialog';
 import {
   LoginDialogContent,
-  Props as ContentProps
+  Props as ContentProps,
+  ReturnValue
 } from './login-dialog-content';
+import { ConfirmDialogProps } from 'public/providers/dialog-provider';
 
 export interface Props
-  extends DialogProps,
-    Omit<MaterialDialogProps, 'open' | 'onClose' | 'onError'>,
-    Omit<ContentProps, 'onClose'> {
-  onClose?: () => void;
-}
+  extends ConfirmDialogProps<ReturnValue>,
+    Omit<MaterialDialogProps, 'open' | 'onClose' | 'onError' | 'id'>,
+    Omit<ContentProps, 'onClose'> {}
 
 export function LoginDialog({
   children = null,
@@ -20,26 +19,23 @@ export function LoginDialog({
   closeButtonLabel,
   confirmButtonLabel,
   formHeader,
-  onError = (error: any) => undefined,
-  onSuccess,
-  onClose,
+  confirm,
+  close,
   title,
   ...rest
 }: Props): JSX.Element {
-  const { closeDialog } = useDialog();
   const contentProps: ContentProps = {
     className,
     closeButtonLabel,
     confirmButtonLabel,
     formHeader,
-    onError,
-    onSuccess,
-    title,
-    onClose: onClose || closeDialog
+    close,
+    confirm,
+    title
   };
 
   return (
-    <Dialog onClose={onClose || closeDialog} {...rest} open={true}>
+    <Dialog onClose={close} {...rest} open={true}>
       <LoginDialogContent {...contentProps}>{children}</LoginDialogContent>
     </Dialog>
   );

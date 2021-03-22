@@ -6,6 +6,8 @@ import * as OfferQuery from 'app/root/query-provider/query-context';
 import { user } from './consts';
 import { Query as QueryModel } from '../../app/ads-browser/models/query';
 import * as UseDialog from 'public/providers/dialog-provider';
+import { ConfirmDialogComponent } from 'public/providers/dialog-provider/confirm-dialog-provider';
+import { DialogComponent } from 'public/providers/dialog-provider/dialog-provider';
 
 export const useT = mockHook(Translation, 'useT', (input: string) => input);
 export const useFormName = mockHook(FormContext, 'useFormName', 'testform');
@@ -20,6 +22,10 @@ export const useUser = mockHook<
   login: user => undefined
 });
 
+const noop = () => undefined;
+const noopPromise = () => Promise.resolve();
+const noopPromiseObj = () => Promise.resolve({} as any);
+
 export const useOfferQuery = mockHook(OfferQuery, 'useOfferQuery', {
   value: null,
   save: (query: QueryModel, redirectUrl?: string) => undefined
@@ -30,6 +36,7 @@ export const useDialog = mockHook<
   'useDialog',
   typeof UseDialog
 >(UseDialog, 'useDialog', {
-  closeDialog: () => undefined,
-  openDialog: () => undefined
+  openDialog: noop,
+  openConfirmDialogAsync: noopPromiseObj,
+  openDialogAsync: noopPromise
 });

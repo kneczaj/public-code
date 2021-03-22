@@ -6,62 +6,21 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { useT } from '../hooks/translation';
-import { capitalizeFirstLetter, isNull } from '../util';
-import { useState } from '../hooks/state';
+import { capitalizeFirstLetter } from '../util';
+import { ConfirmDialogProps } from 'public/providers/dialog-provider';
 
-export interface DialogEventHandlers {
-  onAgreed: () => void;
-  onDiscarded: () => void;
-}
-
-export interface BaseProps extends DialogEventHandlers {
-  close: () => void;
-}
-
-export interface Props extends BaseProps {
+export interface Props extends ConfirmDialogProps<void> {
   title: string;
   children: JSX.Element;
 }
 
-export interface Hook {
-  open: (onAgreed: () => void, onDiscarded: () => void) => void;
-  props: BaseProps | null;
-}
-
-export function useConfirmDialog(): Hook {
-  const dialog = useState<DialogEventHandlers | null>(null);
-
-  function open(onAgreed: () => void, onDiscarded: () => void) {
-    dialog.set({ onAgreed, onDiscarded });
-  }
-
-  return {
-    props: isNull(dialog.value)
-      ? null
-      : {
-          ...dialog.value,
-          close: () => dialog.set(null)
-        },
-    open
-  };
-}
-
 export function ConfirmDialog({
   children,
-  onAgreed: onAgreedBase,
-  onDiscarded: onDiscardedBase,
   close,
+  confirm,
   title
-}: Props) {
+}: Props): JSX.Element {
   const t = useT();
-  function onAgreed() {
-    onAgreedBase();
-    close();
-  }
-  function onDiscarded() {
-    onDiscardedBase();
-    close();
-  }
   return (
     <Dialog
       open={true}
@@ -75,10 +34,10 @@ export function ConfirmDialog({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onDiscarded} color='primary'>
+        <Button onClick={close} color='primary'>
           {capitalizeFirstLetter(t('no'))}
         </Button>
-        <Button onClick={onAgreed} color='primary' autoFocus>
+        <Button onClick={() => confirm()} color='primary' autoFocus>
           {capitalizeFirstLetter(t('yes'))}
         </Button>
       </DialogActions>

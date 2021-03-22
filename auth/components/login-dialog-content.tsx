@@ -6,11 +6,13 @@ import { fromRelativeBEUrl } from 'env';
 import { LoginForm } from 'public/auth/components/login-form';
 import { isUndefined } from 'public/util';
 import Button from '@material-ui/core/Button';
+import { ConfirmDialogProps } from 'public/providers/dialog-provider';
 
-export interface Props {
-  onSuccess?: (token: string, closeDialog: () => void) => void;
-  onError?: (error: any) => void;
-  onClose: () => void;
+export interface ReturnValue {
+  token: string;
+}
+
+export interface Props extends Omit<ConfirmDialogProps<ReturnValue>, 'id'> {
   formHeader?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
@@ -25,21 +27,16 @@ export function LoginDialogContent({
   closeButtonLabel,
   confirmButtonLabel,
   formHeader,
-  onError = (error: any) => undefined,
-  onSuccess: customOnSuccess,
   title,
-  onClose
+  close,
+  confirm
 }: Props): JSX.Element {
   const ct = useCT();
   const { login } = useUser();
 
   function onSuccess(token: string) {
-    if (customOnSuccess) {
-      customOnSuccess(token, onClose);
-    } else {
-      login(token);
-      onClose();
-    }
+    login(token);
+    confirm({ token });
   }
   return (
     <>
@@ -57,13 +54,13 @@ export function LoginDialogContent({
             isUndefined(confirmButtonLabel) ? ct('login') : confirmButtonLabel
           }
           onSuccess={onSuccess}
-          onError={onError}
+          onError={() => undefined /* TODO */}
         >
           {children}
         </LoginForm>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color='primary' autoFocus>
+        <Button onClick={close} color='primary' autoFocus>
           {closeButtonLabel || ct('close')}
         </Button>
       </DialogActions>
