@@ -1,7 +1,7 @@
 import React from 'react';
 import { DatePicker } from '@material-ui/pickers';
 import { useField } from '../hooks/field';
-import { OuterProps } from '../HOC/field';
+import { OuterProps } from 'public/forms/models/field';
 import { DatePickerProps } from '@material-ui/pickers/DatePicker/DatePicker';
 import { isNullOrUndefined } from '../../util';
 import { FormControl, FormHelperText } from '@material-ui/core';

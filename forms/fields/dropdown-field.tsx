@@ -1,4 +1,3 @@
-import { OuterProps } from '../HOC/field';
 import React, { useCallback } from 'react';
 import { useField } from '../hooks/field';
 import { FormControl } from '@material-ui/core';
@@ -9,10 +8,11 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import { useT } from '../../hooks/translation';
 import { capitalizeFirstLetter } from '../../util';
 import { SelectProps } from '@material-ui/core/Select/Select';
+import { OuterProps } from 'public/forms/models/field';
 
 export function StrDropdownField(
   props: Omit<Props<string>, 'getLabel'> & SelectProps
-) {
+): JSX.Element {
   const t = useT();
   const getLabel = useCallback(val => capitalizeFirstLetter(t(val)), [t]);
   return <DropdownField getLabel={getLabel} {...props} />;

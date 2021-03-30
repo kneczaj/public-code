@@ -1,7 +1,6 @@
 import { UseFieldConfig } from '../hooks/field-format-on-blur';
 import { ValidationBaseProps } from './validation';
 import { UseFieldArrayConfig } from 'react-final-form-arrays';
-import { ReactNode } from 'react';
 
 /**
  * Common props for both array and single field
@@ -19,6 +18,15 @@ export interface BaseOuterProps<T>
   extends UseFieldConfig<T>,
     CommonBaseOuterProps<T> {}
 
+/**
+ * Props interface of the result component
+ */
+export interface OuterProps<FieldValue> extends BaseOuterProps<FieldValue> {
+  className?: string;
+  wrapperClassName?: string;
+  name: string;
+  showLabel?: boolean;
+}
 /**
  * Base outer props for any field array. This contains FinalForm props as well as generic custom props.
  */
