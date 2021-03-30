@@ -9,7 +9,7 @@ import {
   FormGroup,
   FormLabel
 } from '@material-ui/core';
-import { OuterProps } from '../HOC/field';
+import { OuterProps } from 'public/forms/models/field';
 import { CheckboxProps } from '@material-ui/core/Checkbox/Checkbox';
 import { Field } from 'react-final-form';
 import { isUndefined } from '../../util';

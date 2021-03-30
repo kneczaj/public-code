@@ -9,9 +9,9 @@ describe('GraphQLMoment DateTime', () => {
 
   // Date (not DateTime) scalar should be used for this
   const invalidDateTime = '2016-04-31'; // This date doesn't exist
-  const timezone = 'UTC+3';
+  const locale = 'pl-PL';
 
-  const DATE_TIME_SCALAR = getDateTimeScalar(timezone);
+  const DATE_TIME_SCALAR = getDateTimeScalar(locale);
 
   describe('serialize', () => {
     it('should error when serializing an invalid date', () => {
@@ -24,13 +24,13 @@ describe('GraphQLMoment DateTime', () => {
       // this should serialize any timezone to UTC
       expect(
         DATE_TIME_SCALAR.serialize(DateTime.fromISO(validDateTime))
-      ).toEqual('2016-08-15T10:00:32Z');
+      ).toEqual('2016-08-15T10:00:32.030Z');
     });
 
     it('should serialize a valid date-time in UTC', () => {
       expect(
         DATE_TIME_SCALAR.serialize(DateTime.fromISO(validDateTimeUTC))
-      ).toEqual('2016-08-15T10:00:32Z');
+      ).toEqual('2016-08-15T10:00:32.030Z');
     });
   });
 
@@ -43,16 +43,16 @@ describe('GraphQLMoment DateTime', () => {
 
     it('should parse a value to date-time', () => {
       expect(DATE_TIME_SCALAR.parseValue(validDateTime)).toEqual(
-        DateTime.fromISO(validDateTime).toUTC()
+        DateTime.fromISO(validDateTime).setLocale(locale)
       );
     });
 
-    it.only('should parse a UTC value to date-time', () => {
+    it('should parse a UTC value to date-time', () => {
       const momentDate: DateTime = DATE_TIME_SCALAR.parseValue(validDateTime);
-      expect(momentDate.offset).toBe(180); // in minutes
-      expect(momentDate.hour).toBe(13);
+      expect(momentDate.offset).toBe(120); // in minutes, TODO: this changes when time switches summer/winter
+      expect(momentDate.hour).toBe(12); // TODO: this changes when time switches summer/winter
       expect(DATE_TIME_SCALAR.parseValue(validDateTime)).toEqual(
-        DateTime.fromISO(validDateTimeUTC).setZone(timezone)
+        DateTime.fromISO(validDateTimeUTC).setLocale(locale)
       );
     });
   });

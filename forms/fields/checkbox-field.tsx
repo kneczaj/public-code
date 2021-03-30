@@ -7,7 +7,7 @@ import {
   FormControlLabel,
   FormHelperText
 } from '@material-ui/core';
-import { OuterProps } from '../HOC/field';
+import { OuterProps } from 'public/forms/models/field';
 import { CheckboxProps } from '@material-ui/core/Checkbox/Checkbox';
 
 export type Props = OuterProps<string | string[]>;
@@ -16,7 +16,7 @@ export function CheckboxField({
   className,
   wrapperClassName,
   ...config
-}: Props & CheckboxProps) {
+}: Props & CheckboxProps): JSX.Element {
   const t = useT();
   const { input, formControl, errorLabel } = useField<
     string | string[],

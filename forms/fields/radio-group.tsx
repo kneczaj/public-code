@@ -9,7 +9,7 @@ import {
   RadioGroup,
   FormLabel
 } from '@material-ui/core';
-import { OuterProps } from '../HOC/field';
+import { OuterProps } from 'public/forms/models/field';
 import { RadioProps } from '@material-ui/core/Radio/Radio';
 import { Field } from 'react-final-form';
 

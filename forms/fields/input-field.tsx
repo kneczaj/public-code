@@ -1,4 +1,4 @@
-import { OuterProps } from '../HOC/field';
+import { OuterProps } from 'public/forms/models/field';
 import React from 'react';
 import { useField } from '../hooks/field';
 import { TextField, TextFieldProps } from '@material-ui/core';
@@ -11,7 +11,7 @@ export type Props<FieldValue> = PropsBase<FieldValue> & TextFieldProps;
 
 export function InputField<
   FieldValue extends string | number | string[] | undefined
->({ className, wrapperClassName, ...config }: Props<FieldValue>) {
+>({ className, wrapperClassName, ...config }: Props<FieldValue>): JSX.Element {
   const {
     input,
     input: { value },

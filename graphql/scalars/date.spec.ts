@@ -1,11 +1,11 @@
 import { IntValueNode, Kind } from 'graphql';
-import { DATE_SCALAR } from './date';
+import { getDateScalar } from './date';
 import { DateTime } from 'luxon';
 
 describe('GraphQLMoment Date', () => {
   // these are the same dates
   const validDate = '2016-08-15';
-
+  const DATE_SCALAR = getDateScalar('pl');
   const invalidDate = 'aaaa'; // This date doesn't exist
 
   describe('serialize', () => {
