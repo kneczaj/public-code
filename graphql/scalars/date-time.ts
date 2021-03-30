@@ -27,9 +27,7 @@ export function getDateTimeScalar(
      * @return {value} date value
      */
     parseValue: function (value: string): DateTime {
-      const date = DateTime.fromISO(value)
-        .setZone(timezone)
-        .setLocale(i18n.language);
+      const date = DateTime.fromISO(value).setZone(timezone).setLocale(locale);
       if (!date.isValid) {
         throw new GraphQLError(
           'Field parse error: value is an invalid DateTime'
