@@ -13,7 +13,7 @@ import { useFieldFormatOnBlur, UseFieldConfig } from './field-format-on-blur';
 import { useMemo } from 'react';
 import { TranslationFunction } from 'i18next';
 
-interface CustomInput<FieldValue, T extends HTMLElement = HTMLElement>
+export interface CustomInput<FieldValue, T extends HTMLElement = HTMLElement>
   extends FieldInputProps<FieldValue, T> {
   id: string;
 }

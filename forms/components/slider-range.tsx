@@ -1,19 +1,16 @@
 import React from 'react';
 import { Slider, SliderTypeMap } from '@material-ui/core';
-import { useSingleFieldContext } from '../hooks/field-context';
 import { useField } from 'react-final-form';
-import { FormGroupWrapper } from './form-group-wrapper';
 import { isUndefined } from '../../util';
 import { useT } from '../../hooks/translation';
+import { CustomInput } from 'public/forms/hooks/field';
+import { RangeDataFormat } from 'public/forms/models/range';
 
-export type Props = SliderTypeMap<any>['props'];
+export type Props = CustomInput<RangeDataFormat<number>, HTMLInputElement> &
+  SliderTypeMap<any>['props'];
 type ValueLabelFormat = (value: number, index: number) => React.ReactNode;
 
-export function SliderRange(props: Props): JSX.Element {
-  const {
-    id,
-    input: { name }
-  } = useSingleFieldContext();
+export function SliderRange({ name, ...props }: Props): JSX.Element {
   const minField = useField(`${name}.min`);
   const maxField = useField(`${name}.max`);
   const t = useT();
@@ -32,9 +29,9 @@ export function SliderRange(props: Props): JSX.Element {
       ? undefined
       : maxField.input.value;
   return (
-    <FormGroupWrapper>
+    <>
       <Slider
-        id={id}
+        {...props}
         value={[
           isUndefined(minVal) ? props.min : minVal,
           isUndefined(maxVal) ? props.max : maxVal
@@ -45,7 +42,6 @@ export function SliderRange(props: Props): JSX.Element {
             val: number | number[]
           ) => void
         }
-        {...props}
       />
       <div
         className={'d-flex justify-content-between'}
@@ -64,7 +60,7 @@ export function SliderRange(props: Props): JSX.Element {
               )}`}
         </div>
       </div>
-    </FormGroupWrapper>
+    </>
   );
 }
 

@@ -1,10 +1,13 @@
 import React from 'react';
 import { capitalizeFirstLetter } from '../../util';
-import { FormGroupWrapper } from './form-group-wrapper';
-import { useSingleFieldContext } from '../hooks/field-context';
 import { useT } from '../../hooks/translation';
+import { CustomInput } from 'public/forms/hooks/field';
+import { RangeDataFormat } from 'public/forms/models/range';
 
-export interface Props {
+/**
+ * Custom props for exactly this input
+ */
+export interface CustomProps {
   children: {
     minField: (
       name: string,
@@ -19,26 +22,30 @@ export interface Props {
   };
 }
 
-export function Range({ children: { minField, maxField } }: Props) {
-  const {
-    id,
-    input: { name }
-  } = useSingleFieldContext();
+/**
+ * These include props passed from useField
+ */
+export interface Props
+  extends CustomProps,
+    CustomInput<RangeDataFormat<number>, HTMLElement> {}
+
+export function Range({
+  children: { minField, maxField },
+  ...input
+}: Props): JSX.Element {
   const t = useT();
   return (
-    <FormGroupWrapper className={'mb-0'}>
-      <div className={'form-row'} style={{ alignItems: 'baseline' }} id={id}>
-        {minField(
-          `${name}.min`,
-          'flex-grow-1',
-          capitalizeFirstLetter(t('from'))
-        )}
-        {maxField(
-          `${name}.max`,
-          'flex-grow-1',
-          capitalizeFirstLetter(t('upto'))
-        )}
-      </div>
-    </FormGroupWrapper>
+    <div className={'form-row'} style={{ alignItems: 'baseline' }} {...input}>
+      {minField(
+        `${input.name}.min`,
+        'flex-grow-1',
+        capitalizeFirstLetter(t('from'))
+      )}
+      {maxField(
+        `${input.name}.max`,
+        'flex-grow-1',
+        capitalizeFirstLetter(t('upto'))
+      )}
+    </div>
   );
 }
