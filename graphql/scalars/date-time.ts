@@ -1,6 +1,5 @@
 import { GraphQLScalarType, GraphQLError, Kind } from 'graphql';
 import { DateTime } from 'luxon';
-import { i18n } from 'app/i18n';
 
 export function getDateTimeScalar(
   locale: string,
@@ -48,8 +47,8 @@ export function getDateTimeScalar(
         );
       }
       const date = DateTime.fromISO(ast.value)
-        .setZone('local')
-        .setLocale(i18n.language);
+        .setZone(timezone)
+        .setLocale(locale);
       if (!date.isValid) {
         throw new GraphQLError('Query error: Invalid date-time');
       }
