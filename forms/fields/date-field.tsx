@@ -21,6 +21,7 @@ export interface Props
 }
 
 export function DateField({
+  // eslint-disable-next-line
   children,
   dateFormat,
   ...config

@@ -7,7 +7,7 @@ export interface Props {
   children?: any;
 }
 
-export function Centered({ children, className }: Props) {
+export function Centered({ children, className }: Props): JSX.Element {
   return (
     <div className={merge('centered-root text-center', className)}>
       <div className={'inner'}>{children}</div>

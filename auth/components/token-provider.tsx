@@ -16,7 +16,9 @@ export interface ContextProps {
 export const TokenContext = createContext<ContextProps>('user');
 export const useToken = createContextHook(TokenContext);
 
-export function TokenProvider({ children }: ProviderComponentProps) {
+export function TokenProvider({
+  children
+}: ProviderComponentProps): JSX.Element {
   const { push } = useHistory();
   const { value: token, set } = useState<string | null>(getInitialState());
 

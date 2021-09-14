@@ -13,7 +13,7 @@ const defaultProps = {
   onClick: () => undefined
 };
 
-export function Cross(props: Props) {
+export function Cross(props: Props): JSX.Element {
   const { className, onClick, label } = props as Props & typeof defaultProps;
   return (
     <span

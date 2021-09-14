@@ -11,6 +11,7 @@ export function convertGQLErrors2Form(
     return { [FORM_ERROR]: 'unknown error' };
   }
   try {
+    // eslint-disable-next-line
     const exceptionData = errors[0].extensions!.exception.data;
     if (exceptionData.errors) {
       return exceptionData.errors;

@@ -15,7 +15,7 @@ export interface Props {
   button: (props: ButtonProps) => JSX.Element;
 }
 
-export function MenuButton({ children, id, button }: Props) {
+export function MenuButton({ children, id, button }: Props): JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

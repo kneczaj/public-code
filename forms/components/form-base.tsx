@@ -15,7 +15,7 @@ export function FormBase<FormValues>({
   children,
   formName,
   ...rest
-}: Props<FormValues>) {
+}: Props<FormValues>): JSX.Element {
   return (
     <FormNameContext.Provider value={formName}>
       <FormFinal<FormValues> {...rest}>{children}</FormFinal>

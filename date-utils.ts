@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
  * changed if we set the time zone to any other.
  * @param dateTime
  */
-export function dateOnly(dateTime: DateTime) {
+export function dateOnly(dateTime: DateTime): DateTime {
   return dateTime
     .set({
       hour: 12,

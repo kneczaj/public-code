@@ -22,18 +22,22 @@ export interface Props extends OuterProps<TData> {
   i18nPrefix?: string;
 }
 
-export function getInitialValues(options: Props['options']) {
+export function getInitialValues(options: Props['options']): {
+  [key: string]: boolean;
+} {
   return options.reduce((acc, val) => ({ ...acc, [val]: false }), {});
 }
 
 export function CheckboxArray({
+  // eslint-disable-next-line
   className,
+  // eslint-disable-next-line
   wrapperClassName,
   options,
   label,
   i18nPrefix,
   ...config
-}: Props & CheckboxProps) {
+}: Props & CheckboxProps): JSX.Element {
   const t = useT();
   const { formControl, errorLabel } = useField<
     TData,

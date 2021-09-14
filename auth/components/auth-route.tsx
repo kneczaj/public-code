@@ -21,7 +21,7 @@ export interface Props extends Omit<RouteProps, 'children'> {
     | React.ReactNode;
 }
 
-export function AuthRoute({ children, ...props }: Props) {
+export function AuthRoute({ children, ...props }: Props): JSX.Element {
   const { user } = useUser();
   const location = useLocation();
   if (!isNull(user)) {

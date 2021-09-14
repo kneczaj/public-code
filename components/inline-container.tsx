@@ -7,7 +7,7 @@ export interface Props {
   className?: string;
 }
 
-export function InlineContainer({ children, className }: Props) {
+export function InlineContainer({ children, className }: Props): JSX.Element {
   return (
     <div className={merge('inline-container-root', className)}>
       <div className={'compensation-container'}>{children}</div>
