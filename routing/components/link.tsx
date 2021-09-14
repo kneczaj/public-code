@@ -34,7 +34,7 @@ export function LinkWithoutRef<
         location.search,
         updateSearch
       )}
-      {...rest}
+      {...(rest as any)}
       color={'initial'}
     />
   );

@@ -11,7 +11,7 @@ import { dateOnly } from '../../date-utils';
 
 type InputElementProps = Omit<
   DatePickerProps,
-  'defaultValue' | 'format' | 'name' | 'value' | 'onChange'
+  'defaultValue' | 'format' | 'name' | 'value' | 'onChange' | 'type'
 >;
 
 export interface Props

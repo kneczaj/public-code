@@ -21,6 +21,14 @@ export function convertGQLErrors2Form(
   }
 }
 
+export interface WithGraphQLErrors {
+  graphQLErrors: ReadonlyArray<GraphQLError>;
+}
+
+export function hasGraphQLErrors(val: any): val is WithGraphQLErrors {
+  return !isUndefined(val.graphQLErrors) && val.graphQLErrors.length === 0;
+}
+
 export type FinalFormSubmissionResult<
   FormValues,
   InitialFormValues = Partial<FormValues>
@@ -66,19 +74,19 @@ export function makeMutationRequest<TData, FormValues>(
             ...response,
             errors
           };
-    } catch (e) {
-      if (isUndefined(e.graphQLErrors) || e.graphQLErrors.length === 0) {
+    } catch (e: any) {
+      if (hasGraphQLErrors(e)) {
         console.error(e);
         return {
           data: null,
-          errors: {
-            [FORM_ERROR]: isUndefined(e.message) ? 'unknown error' : e.message
-          }
+          errors: convertGQLErrors2Form(e.graphQLErrors)
         };
       }
       return {
         data: null,
-        errors: convertGQLErrors2Form(e.graphQLErrors)
+        errors: {
+          [FORM_ERROR]: isUndefined(e.message) ? 'unknown error' : e.message
+        }
       };
     }
   };

@@ -91,7 +91,7 @@ export function useDialogAsync(): AsyncHook {
       Component: DialogComponent
     ): Promise<TReturnValue> {
       return new Promise<TReturnValue>(resolve => {
-        openDialogBase(Component, resolve);
+        openDialogBase(Component, resolve as () => void);
       });
     }
   };
