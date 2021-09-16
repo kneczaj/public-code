@@ -64,7 +64,7 @@ export function LoginForm({
       return;
     }
     onSuccess(token);
-  }, [data, onSuccess]);
+  }, [data, onSuccess, onError]);
 
   return (
     <Form formName={'login'} onSubmit={onSubmit}>

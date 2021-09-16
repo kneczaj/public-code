@@ -17,6 +17,7 @@ export interface NotificationManager {
   error: NotifyFunction;
 }
 
+// eslint-disable-next-line
 export const NotificationManager = NotificationManagerBase as NotificationManager;
 
 export interface Notification {
