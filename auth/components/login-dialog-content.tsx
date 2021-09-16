@@ -42,10 +42,10 @@ export function LoginDialogContent({
       <DialogTitle>{title || ct('login')}</DialogTitle>
       <DialogContent className={className}>
         {formHeader || <p>{ct('Please enter your username and password')}</p>}
-        <a href={`/connect/facebook`}>
+        <a href={`/api/connect/facebook`}>
           <button style={{ width: '150px' }}>Connect to facebook</button>
         </a>
-        <a href={`/connect/google`}>
+        <a href={`/api/connect/google`}>
           <button style={{ width: '150px' }}>Connect to google</button>
         </a>
         <LoginForm

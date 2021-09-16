@@ -17,7 +17,7 @@ export function LoginRedirect({ providerName }: Props): JSX.Element {
   useEffect(() => {
     async function loginToStrapy() {
       const data: any = await (
-        await fetch(`/auth/${providerName}/callback${searchString}`)
+        await fetch(`/api/auth/${providerName}/callback${searchString}`)
       ).json();
       // Successfully logged with Strapi
       // Now saving the jwt to use it for future authenticated requests to Strapi
