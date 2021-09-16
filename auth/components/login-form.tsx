@@ -7,12 +7,8 @@ import { capitalizeFirstLetter, isNull, isNullOrUndefined } from '../../util';
 import { useT } from '../../hooks/translation';
 import { Button, Grid, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { gql, useMutation } from '@apollo/client';
 import { makeOnSubmit } from 'public/graphql/utils';
-import {
-  LoginQueryPayload,
-  LoginResponsePayload
-} from 'public/auth/models/login';
+import { useLoginMutation } from "generated/graphql";
 
 export interface Props {
   onSuccess: (token: string) => void;
@@ -27,17 +23,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const LOGIN = gql`
-  mutation Login($username: String!, $password: String!) {
-    login(input: { identifier: $username, password: $password }) {
-      user {
-        email
-      }
-      jwt
-    }
-  }
-`;
-
 export function LoginForm({
   children,
   confirmButtonLabel,
@@ -46,10 +31,7 @@ export function LoginForm({
 }: Props): JSX.Element {
   const t = useT();
   const classes = useStyles();
-  const [trigger, { data }] = useMutation<
-    LoginResponsePayload,
-    LoginQueryPayload
-  >(LOGIN, {
+  const [trigger, { data }] = useLoginMutation({
     onError
   });
   const onSubmit = useMemo(() => makeOnSubmit(trigger), [trigger]);
