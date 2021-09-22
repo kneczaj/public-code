@@ -1,6 +1,8 @@
 import React, { forwardRef, Ref } from 'react';
 import { merge } from 'public/css';
 
+export type ScrollElement = 'PAGE' | 'CONTENT' | 'NOTHING';
+
 export interface Props {
   className?: string;
   contentClassName?: string;
@@ -8,7 +10,7 @@ export interface Props {
   navbar: React.ReactNode;
   main: React.ReactNode;
   footer?: React.ReactNode;
-  scrollWholePage?: boolean;
+  scrollElement?: ScrollElement;
 }
 
 export const PageContainer = forwardRef(
@@ -20,7 +22,7 @@ export const PageContainer = forwardRef(
       main,
       navbar,
       scrollContainerClassName,
-      scrollWholePage = false
+      scrollElement = 'CONTENT'
     }: Props,
     ref: Ref<any>
   ) => {
@@ -29,7 +31,7 @@ export const PageContainer = forwardRef(
         className={merge(
           className,
           'd-flex flex-column page-container-root flex-1',
-          scrollWholePage && 'scroll-here'
+          scrollElement === 'PAGE' && 'scroll-here'
         )}
       >
         {navbar}
@@ -37,10 +39,10 @@ export const PageContainer = forwardRef(
           className={merge(
             scrollContainerClassName,
             'd-flex flex-1 flex-column justify-content-between',
-            !scrollWholePage && 'scroll-here flex-1'
+            scrollElement === 'CONTENT' && 'scroll-here flex-1'
           )}
         >
-          <main ref={ref} className={merge('content', contentClassName)}>
+          <main ref={ref} className={merge('content d-flex', scrollElement === 'NOTHING' && 'flex-1', contentClassName)}>
             {main}
           </main>
           {footer}

@@ -31,6 +31,7 @@ export interface PropsWithoutResolve<
     | TypedDocumentNode<TData, TVariables & PaginationVariables>;
   children: (props: ChildrenProps<TResolvedData>) => React.ReactNode;
   variables: TVariables;
+  className?: string;
 }
 
 export type Props<
@@ -58,7 +59,8 @@ export function PaginationQuery<
     query,
     variables,
     noDataPlaceholder,
-    errorPlaceholder
+    errorPlaceholder,
+    className
   } = props;
   const resolveFn = isWithResolve(props) ? props.resolveFn : undefined;
   const [limit, setLimit] = useState(itemsPerPage);
@@ -105,6 +107,7 @@ export function PaginationQuery<
 
   return (
     <PaginationRequestWrapper<TResolvedData, undefined>
+      className={className}
       state={{
         data: resolvedData,
         error: error ? { messages: ['Error'] } : null,
