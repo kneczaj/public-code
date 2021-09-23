@@ -6,6 +6,7 @@ import { LoginForm } from 'public/auth/components/login-form';
 import { isUndefined } from 'public/util';
 import Button from '@material-ui/core/Button';
 import { ConfirmDialogProps } from 'public/providers/dialog-provider';
+import { getBackendUrl } from "app/root/models/urls";
 
 export interface ReturnValue {
   token: string;
@@ -42,10 +43,10 @@ export function LoginDialogContent({
       <DialogTitle>{title || ct('login')}</DialogTitle>
       <DialogContent className={className}>
         {formHeader || <p>{ct('Please enter your username and password')}</p>}
-        <a href={`/api/connect/facebook`}>
+        <a href={getBackendUrl(`/connect/facebook`)}>
           <button style={{ width: '150px' }}>Connect to facebook</button>
         </a>
-        <a href={`/api/connect/google`}>
+        <a href={getBackendUrl(`/connect/google`)}>
           <button style={{ width: '150px' }}>Connect to google</button>
         </a>
         <LoginForm

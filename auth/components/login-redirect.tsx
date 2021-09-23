@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'public/routing/hooks/history';
 import { useUser } from './user-provider';
+import { getBackendUrl } from "app/root/models/urls";
 
 export interface Props {
   providerName: string;
@@ -17,7 +18,7 @@ export function LoginRedirect({ providerName }: Props): JSX.Element {
   useEffect(() => {
     async function loginToStrapy() {
       const data: any = await (
-        await fetch(`/api/auth/${providerName}/callback${searchString}`)
+        await fetch(getBackendUrl(`/auth/${providerName}/callback${searchString}`))
       ).json();
       // Successfully logged with Strapi
       // Now saving the jwt to use it for future authenticated requests to Strapi
