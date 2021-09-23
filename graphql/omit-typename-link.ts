@@ -22,6 +22,10 @@ const omitDeep = (value: any, key: any): any => {
   return value;
 };
 
+/**
+ * This may break GraphQL data update with following error:
+ * ID cannot represent value
+ */
 export const omitTypenameLink = new ApolloLink((operation, forward) => {
   if (operation.variables) {
     operation.variables = omitDeep(operation.variables, '__typename');
