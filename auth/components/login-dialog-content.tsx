@@ -19,6 +19,7 @@ export interface Props extends Omit<ConfirmDialogProps<ReturnValue>, 'id'> {
   confirmButtonLabel?: string;
   title?: string;
   closeButtonLabel?: string;
+  enableOAuthProviders: boolean;
 }
 
 export function LoginDialogContent({
@@ -26,29 +27,33 @@ export function LoginDialogContent({
   className,
   closeButtonLabel,
   confirmButtonLabel,
+  enableOAuthProviders,
   formHeader,
   title,
   close,
   confirm
 }: Props): JSX.Element {
   const ct = useCT();
-  const { login } = useUser();
+  const {login} = useUser();
 
   function onSuccess(token: string) {
     login(token);
-    confirm({ token });
+    confirm({token});
   }
+
   return (
     <>
       <DialogTitle>{title || ct('login')}</DialogTitle>
       <DialogContent className={className}>
         {formHeader || <p>{ct('Please enter your username and password')}</p>}
-        <a href={getBackendUrl(`/connect/facebook`)}>
-          <button style={{ width: '150px' }}>Connect to facebook</button>
-        </a>
-        <a href={getBackendUrl(`/connect/google`)}>
-          <button style={{ width: '150px' }}>Connect to google</button>
-        </a>
+        {enableOAuthProviders && <>
+          <a href={getBackendUrl(`/connect/facebook`)}>
+            <button style={{width: '150px'}}>Connect to facebook</button>
+          </a>
+          <a href={getBackendUrl(`/connect/google`)}>
+            <button style={{width: '150px'}}>Connect to google</button>
+          </a>
+        </>}
         <LoginForm
           confirmButtonLabel={
             isUndefined(confirmButtonLabel) ? ct('login') : confirmButtonLabel

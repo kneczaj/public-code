@@ -11,7 +11,7 @@ import { ConfirmDialogProps } from 'public/providers/dialog-provider';
 export interface Props
   extends ConfirmDialogProps<ReturnValue>,
     Omit<MaterialDialogProps, 'open' | 'onClose' | 'onError' | 'id'>,
-    Omit<ContentProps, 'onClose'> {}
+    Omit<ContentProps, 'onClose' | 'enableOAuthProviders'> {}
 
 export function LoginDialog({
   children = null,
@@ -24,10 +24,12 @@ export function LoginDialog({
   title,
   ...rest
 }: Props): JSX.Element {
+  const enableOAuthProviders = true;
   const contentProps: ContentProps = {
     className,
     closeButtonLabel,
     confirmButtonLabel,
+    enableOAuthProviders,
     formHeader,
     close,
     confirm,
