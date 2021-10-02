@@ -3,7 +3,7 @@ import { createContext, createContextHook } from '../../utils/context-hook';
 import { ProviderComponentProps } from '../../components/provider-group';
 import { useHistory } from '../../routing/hooks/history';
 import { useNotifications } from '../../notifications/notifications-provider';
-import { useToken } from 'public/auth/components/token-provider';
+import { useToken } from 'public/auth/providers/token-provider';
 import { useMeQuery } from 'generated/graphql';
 import { User } from '../models/user';
 
