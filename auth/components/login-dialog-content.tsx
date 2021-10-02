@@ -1,6 +1,6 @@
 import React from 'react';
 import { useCT } from 'public/hooks/translation';
-import { useUser } from 'public/auth/components/user-provider';
+import { useUser } from 'public/auth/providers/user-provider';
 import { DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 import { LoginForm } from 'public/auth/components/login-form';
 import { isUndefined } from 'public/util';

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'public/routing/hooks/history';
-import { useUser } from './user-provider';
+import { useUser } from '../providers/user-provider';
 import { getBackendUrl } from "app/root/models/urls";
 
 export interface Props {

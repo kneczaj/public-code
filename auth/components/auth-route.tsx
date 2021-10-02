@@ -8,7 +8,7 @@ import {
 import { LOGIN } from '../models/urls';
 import { User } from '../models/user';
 import { isNull, isReturningReactNode } from '../../util';
-import { useUser } from './user-provider';
+import { useUser } from '../providers/user-provider';
 import { Redirect } from 'public/routing/components/redirect';
 
 export interface AuthRouteChildrenProps<T> extends RouteChildrenProps<T> {
