@@ -19,3 +19,18 @@ query Me {
     }
   }
 }
+
+mutation Register($email: String!, $password1: String!) {
+  register(
+    input: {
+      email: $email,
+      username: $email
+      password: $password1
+    }
+  ) {
+    user {
+      username
+    }
+    jwt
+  }
+}

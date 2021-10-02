@@ -2,9 +2,9 @@ import React from 'react';
 import { Dialog } from '@material-ui/core';
 import { DialogProps as MaterialDialogProps } from '@material-ui/core/Dialog/Dialog';
 import {
-  LoginDialogContent,
+  AuthenticationDialogContent,
   Props as ContentProps
-} from './login-dialog-content';
+} from 'public/auth/components/authentication-dialog-content';
 import { ConfirmDialogProps } from 'public/providers/dialog-provider';
 
 export interface Props
@@ -12,7 +12,7 @@ export interface Props
     Omit<MaterialDialogProps, 'open' | 'onClose' | 'onError' | 'id'>,
     Omit<ContentProps, 'onClose' | 'enableOAuthProviders'> {}
 
-export function LoginDialog({
+export function AuthenticationDialog({
   children = null,
   className,
   closeButtonLabel,
@@ -37,7 +37,7 @@ export function LoginDialog({
 
   return (
     <Dialog onClose={close} {...rest} open={true}>
-      <LoginDialogContent {...contentProps}>{children}</LoginDialogContent>
+      <AuthenticationDialogContent {...contentProps}>{children}</AuthenticationDialogContent>
     </Dialog>
   );
 }

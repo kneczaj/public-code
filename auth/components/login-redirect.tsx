@@ -22,7 +22,7 @@ export function LoginRedirect({providerName}: Props): JSX.Element {
       ).json();
       // Successfully logged with Strapi
       // Now saving the jwt to use it for future authenticated requests to Strapi
-      login(data.jwt);
+      login(data.jwt); // TODO
       console.log(data);
     }
 
