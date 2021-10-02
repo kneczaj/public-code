@@ -31,7 +31,7 @@ export function LoginForm({
 }: Props): JSX.Element {
   const t = useT();
   const classes = useStyles();
-  const [trigger, { data }] = useLoginMutation({
+  const { trigger, data } = useLoginMutation({
     onError
   });
   const onSubmit = useMemo(() => makeOnSubmit(trigger), [trigger]);

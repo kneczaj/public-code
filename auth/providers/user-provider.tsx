@@ -4,26 +4,29 @@ import { ProviderComponentProps } from '../../components/provider-group';
 import { useHistory } from '../../routing/hooks/history';
 import { useNotifications } from '../../notifications/notifications-provider';
 import { useToken } from 'public/auth/providers/token-provider';
-import { useMeQuery } from 'generated/graphql';
+import { MeQuery, useMeQuery } from 'generated/graphql';
 import { User } from '../models/user';
+import { RequestStateBase } from "public/requests/models/state";
+import { createRequestWrapper } from "public/requests/request-wrapper/create-request-wrapper";
 
-export interface ContextProps {
-  user: User | null;
+export interface ContextProps extends RequestStateBase<MeQuery | null> {
   isAuthenticated: boolean;
   logout: () => void;
   login: (token: string) => void;
 }
 
-export const UserContext = createContext<ContextProps>('user');
-export const useUser = createContextHook(UserContext);
+export const UserApiContext = createContext<ContextProps>('user api');
+export const useUserApi = createContextHook(UserApiContext);
+
+export const [UserRequestWrapper, useUser] = createRequestWrapper<MeQuery, User>(useUserApi, response => response.me, 'user');
 
 export function UserProvider({
   children
 }: ProviderComponentProps): JSX.Element {
-  const { show } = useNotifications();
-  const { push } = useHistory();
-  const { logout: logoutBase, isAuthenticated, login } = useToken();
-  const { data: { me } = {}, loading } = useMeQuery();
+  const {show} = useNotifications();
+  const {push} = useHistory();
+  const {logout: logoutBase, isAuthenticated, login} = useToken();
+  const meState = useMeQuery();
 
   function logout(): void {
     logoutBase();
@@ -34,20 +37,16 @@ export function UserProvider({
     });
   }
 
-  if (loading) {
-    return <>loading...</>;
-  }
-
   return (
-    <UserContext.Provider
+    <UserApiContext.Provider
       value={{
-        user: me || null,
+        ...meState,
         isAuthenticated,
         logout,
         login
       }}
     >
       {children}
-    </UserContext.Provider>
+    </UserApiContext.Provider>
   );
 }

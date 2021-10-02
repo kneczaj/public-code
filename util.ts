@@ -118,3 +118,14 @@ export function filterOutNull<T extends Record<string, unknown>>(
     return acc;
   }, {} as Partial<T>);
 }
+
+export function isPromise<T>(val: T | Promise<T>): val is Promise<T> {
+  return !isUndefined((val as Promise<T>).then);
+}
+
+export async function wrapWithPromise<T>(val: T | Promise<T>): Promise<T> {
+  if (isPromise(val)) {
+    return val;
+  }
+  return Promise.resolve(val);
+}

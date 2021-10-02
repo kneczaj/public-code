@@ -3,6 +3,8 @@ import { Config, FORM_ERROR, SubmissionErrors } from 'final-form';
 import { FetchResult } from '@apollo/client/link/core';
 import { MutationFunctionOptions } from '@apollo/client/react/types/types';
 import { GraphQLError } from 'graphql/error/GraphQLError';
+import { Errors, mergeErrors } from "public/requests/models/errors";
+import { ApolloError } from "@apollo/client";
 
 export function convertGQLErrors2Form(
   errors: ReadonlyArray<GraphQLError>
@@ -20,6 +22,38 @@ export function convertGQLErrors2Form(
   } catch (e) {
     return { [FORM_ERROR]: errors[0].message };
   }
+}
+
+export function convertGQLErrors2Errors(
+  errors: ReadonlyArray<GraphQLError>
+): Errors {
+  if (errors.length === 0) {
+    return { messages: ['unknown error'] };
+  }
+  try {
+    // eslint-disable-next-line
+    const exceptionData = errors[0].extensions!.exception.data;
+    if (exceptionData.errors) {
+      return exceptionData.errors;
+    }
+    return { messages: [exceptionData.message[0].messages[0].message] };
+  } catch (e) {
+    return { messages: [errors[0].message] };
+  }
+}
+
+export function convertApolloError2Errors(error: ApolloError): Errors | null {
+  const result: Errors[] = [];
+  if (error.message) {
+    result.push({messages: [error.message] });
+  }
+  if (error.graphQLErrors) {
+    result.push(convertGQLErrors2Errors(error.graphQLErrors))
+  }
+  if (error.networkError) {
+    result.push({messages: [error.networkError.message] });
+  }
+  return mergeErrors(result);
 }
 
 export interface WithGraphQLErrors {

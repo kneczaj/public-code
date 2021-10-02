@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'public/routing/hooks/history';
-import { useUser } from '../providers/user-provider';
+import { useUserApi } from '../providers/user-provider';
 import { getBackendUrl } from "app/root/models/urls";
 
 export interface Props {
   providerName: string;
 }
 
-export function LoginRedirect({ providerName }: Props): JSX.Element {
+export function LoginRedirect({providerName}: Props): JSX.Element {
   const [text, setText] = useState('Loading...');
   const {
     push,
-    location: { searchString }
+    location: {searchString}
   } = useHistory();
-  const { login } = useUser();
+  const {login} = useUserApi();
 
   useEffect(() => {
     async function loginToStrapy() {

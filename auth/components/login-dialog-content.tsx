@@ -1,6 +1,6 @@
 import React from 'react';
 import { useCT } from 'public/hooks/translation';
-import { useUser } from 'public/auth/providers/user-provider';
+import { useUserApi } from 'public/auth/providers/user-provider';
 import { DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 import { LoginForm } from 'public/auth/components/login-form';
 import { isUndefined } from 'public/util';
@@ -34,7 +34,7 @@ export function LoginDialogContent({
   confirm
 }: Props): JSX.Element {
   const ct = useCT();
-  const {login} = useUser();
+  const {login} = useUserApi();
 
   function onSuccess(token: string) {
     login(token);
