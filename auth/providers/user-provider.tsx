@@ -3,7 +3,6 @@ import { createContext, createContextHook } from '../../utils/context-hook';
 import { ProviderComponentProps } from '../../components/provider-group';
 import { useHistory } from '../../routing/hooks/history';
 import { useNotifications } from '../../notifications/notifications-provider';
-import { gql } from '@apollo/client';
 import { useToken } from 'public/auth/components/token-provider';
 import { useMeQuery } from 'generated/graphql';
 import { User } from '../models/user';
@@ -17,21 +16,6 @@ export interface ContextProps {
 
 export const UserContext = createContext<ContextProps>('user');
 export const useUser = createContextHook(UserContext);
-
-export const ME = gql`
-  query Me {
-    me {
-      id
-      username
-      email
-      confirmed
-      blocked
-      role {
-        name
-      }
-    }
-  }
-`;
 
 export function UserProvider({
   children

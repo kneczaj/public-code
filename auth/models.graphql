@@ -6,3 +6,16 @@ mutation Login($username: String!, $password: String!) {
     jwt
   }
 }
+
+query Me {
+  me {
+    id
+    username
+    email
+    confirmed
+    blocked
+    role {
+      name
+    }
+  }
+}
