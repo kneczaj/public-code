@@ -47,7 +47,7 @@ export function UserProvider({
   const {submit: login, loading: loginLoading, error: loginError} = useLoginMutation({
     onCompleted: payload => onLogin(payload.login)
   });
-  const { submit: register } = useRegisterMutation({
+  const { submit: register, loading: registerLoading, error: registerError } = useRegisterMutation({
     onCompleted: payload => onLogin(payload.register)
   });
 
@@ -68,8 +68,8 @@ export function UserProvider({
         logout,
         login,
         register,
-        loading: meLoading || loginLoading,
-        error: mergeErrors([meError, loginError])
+        loading: meLoading || loginLoading || registerLoading,
+        error: mergeErrors([meError, loginError, registerError])
       }}
     >
       {children}
