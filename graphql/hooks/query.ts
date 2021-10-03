@@ -13,7 +13,7 @@ export function useQuery<TData = any, TVariables = OperationVariables>(query: Do
   const baseErrors: Errors | null = isUndefined(response.error)
     ? null
     : convertApolloError2Errors(response.error);
-  const error: Errors | null = isNullOrUndefined(response.data)
+  const error: Errors | null = isNullOrUndefined(response.data) && !response.loading
     ? mergeErrors([baseErrors, {
       messages: [`Empty response from server`]
     }])
