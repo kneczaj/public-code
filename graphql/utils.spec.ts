@@ -1,5 +1,5 @@
 import { MOCKS } from "../test"
-import { convertGQLErrors2Form, makeMutationRequest } from "public/graphql/utils";
+import { convertGQLErrors2Form, makeMutationRequest } from "./utils";
 import { MutationFunctionOptions } from "@apollo/client/react/types/types";
 import { FetchResult } from "@apollo/client/link/core";
 
