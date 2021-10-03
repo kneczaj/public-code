@@ -1,3 +1,7 @@
+import { ObservableQueryFields } from "@apollo/client/react/types/types";
+import { ItemRequestState } from "public/requests/models/state";
+import { Exact, Scalars } from "generated/graphql";
+
 export interface PaginationPayload<T> {
   count: number;
   next: string | null;
@@ -6,23 +10,19 @@ export interface PaginationPayload<T> {
 }
 
 export interface PaginationBase {
-  count: number;
-  nextUrl: string | null;
-  previousUrl: string | null;
+  fetchMore: ObservableQueryFields<unknown, unknown>['fetchMore'];
+  itemsPerPage: number;
 }
 
 export interface Pagination<T> extends PaginationBase {
   data: T[];
 }
 
-export function deserialize<Payload>(
-  payload: PaginationPayload<Payload>
-): Pagination<Payload> {
-  const { next: nextUrl, previous: previousUrl, results, ...rest } = payload;
-  return {
-    nextUrl,
-    previousUrl,
-    data: results,
-    ...rest
-  };
+export interface PaginationContext<T> extends ItemRequestState<T>, PaginationBase {
+  setLimit: (val: number) => void;
 }
+
+export type PaginationVariables = Exact<{
+  limit: Scalars['Int'];
+  start: Scalars['Int'];
+}>
