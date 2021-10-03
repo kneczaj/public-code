@@ -12,8 +12,11 @@ import {
   convertGQLErrors2Form,
   hasGraphQLErrors
 } from "public/graphql/utils";
-import { Errors } from "public/requests/models/errors";
+import { Errors, isAuthenticationError } from "public/requests/models/errors";
 import { FetchResult, MutationResult } from "public/graphql/models";
+import { useNotifications } from "public/notifications/notifications-provider";
+import { useCT } from "public/hooks/translation";
+import { useToken } from "public/auth/providers/token-provider";
 
 export type MutationSubmitResult = Promise<SubmissionErrors | undefined>
 
@@ -31,22 +34,33 @@ export function useMutation<TData = any, FormValues = OperationVariables>(
   options?: MutationHookOptions<TData, FormValues>
 ): Hook<TData, FormValues> {
   const [triggerBase, result] = useMutationBase(mutation, options);
+  const {redirectToLogin} = useToken();
+  const {show} = useNotifications();
+  const ct = useCT();
   const trigger = useCallback(async (options?: MutationFunctionOptions<TData, FormValues>): Promise<FetchResult<TData>> => {
     const {data, ...response} = await triggerBase(options);
-    const baseErrors: Errors | null = isUndefined(response.errors)
-      ? null
-      : convertGQLErrors2Errors(response.errors);
-    const error: Errors | null = isNullOrUndefined(data)
-      ? {
-        messages: [`Empty response from server`, ...(baseErrors ? baseErrors.messages : [])]
+    const error: Errors | null = (() => {
+      try {
+        return isUndefined(response.errors)
+          ? isNullOrUndefined(data)
+            ? {messages: [`Empty response from server`]}
+            : null
+          : convertGQLErrors2Errors(response.errors)
+      } catch (e) {
+        if (isAuthenticationError(e)) {
+          redirectToLogin();
+        } else {
+          show({type: 'error', message: ct('unknown error occurred')});
+        }
+        return null;
       }
-      : baseErrors;
+    })();
     return {
       ...response,
       data: data || null,
       error
     }
-  }, [triggerBase]);
+  }, [triggerBase, redirectToLogin, ct, show]);
   const submit = useCallback(async (
     formValues: FormValues
   ): Promise<SubmissionErrors | undefined> => {
@@ -60,6 +74,12 @@ export function useMutation<TData = any, FormValues = OperationVariables>(
         [FORM_ERROR]: error.messages[0]
       }
     } catch (e: any) {
+      if (isAuthenticationError(e)) {
+        redirectToLogin();
+        return {
+          [FORM_ERROR]: ct('authentication error')
+        };
+      }
       if (hasGraphQLErrors(e)) {
         console.error(e);
         return convertGQLErrors2Form(e.graphQLErrors);
@@ -68,7 +88,7 @@ export function useMutation<TData = any, FormValues = OperationVariables>(
         [FORM_ERROR]: isUndefined(e.message) ? 'unknown error' : e.message
       };
     }
-  }, [trigger]);
+  }, [trigger, redirectToLogin, ct]);
   return {
     ...result,
     data: result.data || null,

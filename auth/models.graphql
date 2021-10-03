@@ -10,12 +10,20 @@ mutation Login($username: String!, $password: String!) {
 query Me {
   me {
     id
-    username
-    email
-    confirmed
-    blocked
-    role {
-      name
+    user {
+      id
+      username
+      email
+      confirmed
+      blocked
+      role {
+        name
+      }
+      currentFilter {
+        area
+        maxPricePerSquareMeter
+        name
+      }
     }
   }
 }

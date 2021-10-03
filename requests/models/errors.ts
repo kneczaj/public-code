@@ -1,6 +1,7 @@
 import { isNotNull, isUndefined } from '../../util';
 
-export class ErrorResponse extends Error {}
+export class ErrorResponse extends Error {
+}
 
 /**
  * Errors to be shown to user
@@ -23,7 +24,7 @@ export function mergeErrors(errors: Array<Errors | null>): Errors | null {
     return {
       messages: [...acc.messages, ...val.messages]
     }
-  }, { messages: [] });
+  }, {messages: []});
   return mergedErrors.messages.length ? mergedErrors : null;
 }
 
@@ -39,6 +40,13 @@ export class ValidationError extends ErrorResponse {
   constructor(public data: Record<string, unknown>) {
     super();
   }
+}
+
+export class AuthenticationError extends ErrorResponse {
+}
+
+export function isAuthenticationError(e: any): e is AuthenticationError {
+  return !!e.constructor && e.constructor.name === 'AuthenticationError';
 }
 
 /**

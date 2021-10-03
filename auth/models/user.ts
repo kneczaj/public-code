@@ -1,6 +1,12 @@
-import { MeQuery } from '../../../generated/graphql';
+import { Filter as FilterBase, Maybe, UsersPermissionsRole, UsersPermissionsUser } from 'generated/graphql';
 
-export type User = NonNullable<MeQuery['me']>;
+export type Filter = Pick<FilterBase, 'area' | 'maxPricePerSquareMeter' | 'name'>;
+
+export type User = Pick<UsersPermissionsUser, 'id' | 'username' | 'email' | 'confirmed' | 'blocked'>
+  & {
+  role: Maybe<Pick<UsersPermissionsRole, 'name'>>,
+  currentFilter: Maybe<Filter>
+};
 
 export function getInitialState(): string | null {
   return localStorage.getItem('token') || null;

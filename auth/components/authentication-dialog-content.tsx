@@ -6,7 +6,7 @@ import { isUndefined } from 'public/util';
 import Button from '@material-ui/core/Button';
 import { ConfirmDialogProps } from 'public/providers/dialog-provider';
 import { getBackendUrl } from "app/root/models/urls";
-import { UserApiContext, useUserApi } from "public/auth/providers/user-provider";
+import { AuthContext, useAuth } from "public/auth/providers/auth-provider";
 import { RegistrationForm } from "public/auth/components/registration-form";
 import { useToggle } from "public/hooks/toggle";
 
@@ -39,7 +39,7 @@ export function AuthenticationDialogContent({
 }: Props): JSX.Element {
   const ct = useCT();
   const {value: onLoginPage, toggle: togglePage} = useToggle(initialPage === 'LOGIN');
-  const {login: loginBase, register: registerBase, ...userApi} = useUserApi();
+  const {login: loginBase, register: registerBase, ...userApi} = useAuth();
 
   function confirmWhenNoErrors<T>(formErrors: T) {
     if (isUndefined(formErrors)) {
@@ -49,7 +49,7 @@ export function AuthenticationDialogContent({
   }
 
   return (
-    <UserApiContext.Provider value={{
+    <AuthContext.Provider value={{
       ...userApi,
       login: payload => loginBase(payload).then(confirmWhenNoErrors),
       register: payload => registerBase(payload).then(confirmWhenNoErrors)
@@ -87,6 +87,6 @@ export function AuthenticationDialogContent({
           {ct(onLoginPage ? 'I don\'t have an account - register me' : 'already have an account? - Log in')}
         </Button>
       </DialogActions>
-    </UserApiContext.Provider>
+    </AuthContext.Provider>
   );
 }

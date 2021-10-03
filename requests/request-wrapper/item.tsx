@@ -1,6 +1,6 @@
 import { merge } from '../../css';
 import { CircularProgress } from '@material-ui/core';
-import { isNull } from '../../util';
+import { isNull, isReturningReactNode } from '../../util';
 import React from 'react';
 import { defaultPropsBase, PropsBase } from './base';
 
@@ -32,7 +32,7 @@ export function Item<TData, TNoData = null>(props: Props<TData, TNoData>) {
       {isNull(state.error)
         ? noDataDetector(state.data)
           ? noDataPlaceholder(className)
-          : children({ data: state.data, className })
+          : isReturningReactNode(children) ? children({ data: state.data, className }) : children
         : errorPlaceholder({ error: state.error, className })}
     </div>
   );

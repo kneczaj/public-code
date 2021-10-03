@@ -1,7 +1,7 @@
 import * as FormContext from 'public/forms/form-name-context';
 import { mockHook } from './utils';
 import * as Translation from 'public/hooks/translation';
-import * as UserProvider from 'public/auth/providers/user-provider';
+import * as UserProvider from 'public/auth/providers/auth-provider';
 import * as OfferQuery from 'app/root/query-provider/query-context';
 import { user } from './consts';
 import { Query as QueryModel } from '../../app/ads-browser/models/query';

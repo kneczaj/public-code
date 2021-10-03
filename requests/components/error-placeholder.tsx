@@ -26,7 +26,7 @@ export function ErrorPlaceholder({
   const history = useHistory();
   return (
     <div
-      className={merge(className, 'error-root centered-container text-center')}
+      className={merge(className, 'error-root centered-container text-center flex-1 d-flex flex-column')}
     >
       <Centered>
         {messages.map((message, idx) => (

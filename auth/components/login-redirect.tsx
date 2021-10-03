@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'public/routing/hooks/history';
-import { useUserApi } from '../providers/user-provider';
+import { useAuth } from 'public/auth/providers/auth-provider';
 import { getBackendUrl } from "app/root/models/urls";
 
 export interface Props {
@@ -13,7 +13,7 @@ export function LoginRedirect({providerName}: Props): JSX.Element {
     push,
     location: {searchString}
   } = useHistory();
-  const {login} = useUserApi();
+  const {login} = useAuth();
 
   useEffect(() => {
     async function loginToStrapy() {

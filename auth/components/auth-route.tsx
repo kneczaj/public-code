@@ -2,9 +2,11 @@ import React from 'react';
 import { Route, RouteChildrenProps, RouteProps, useLocation } from 'react-router';
 import { LOGIN } from '../models/urls';
 import { User } from '../models/user';
-import { isNull, isReturningReactNode } from '../../util';
+import { isReturningReactNode } from '../../util';
 import { Redirect } from 'public/routing/components/redirect';
-import { useUserApi, UserRequestWrapper } from "public/auth/providers/user-provider";
+import { useAuth } from "public/auth/providers/auth-provider";
+import { UserRequestWrapper } from "public/auth/providers/user-provider";
+import { getLocationObj } from "public/routing/models";
 
 export interface AuthRouteChildrenProps<T> extends RouteChildrenProps<T> {
   user: User;
@@ -17,18 +19,25 @@ export interface Props extends Omit<RouteProps, 'children'> {
 }
 
 export function AuthRoute({children, ...props}: Props): JSX.Element {
-  const {data: user} = useUserApi();
+  const {isAuthenticated} = useAuth();
   const location = useLocation();
-  if (!isNull(user)) {
+  if (isAuthenticated) {
     return (
       <Route {...props}>
-        {isReturningReactNode<AuthRouteChildrenProps<any>>(children)
-          ? (props: RouteChildrenProps<any>) => <UserRequestWrapper>{({ data, className }) => children({...props, user: data})}</UserRequestWrapper>
+        <UserRequestWrapper>{({data, className}) =>
+          isReturningReactNode<AuthRouteChildrenProps<any>>(children)
+          ? (props: RouteChildrenProps<any>) => children({
+            ...props,
+            user: data
+          })
           : children}
+        </UserRequestWrapper>
       </Route>
     );
   }
   return (
-    <Redirect to={{pathname: LOGIN, state: {from: location.pathname}}}/>
+    <Route {...props}>
+      <Redirect to={getLocationObj(LOGIN, {}, currentSearch => ({ from: location.pathname }))}/>
+    </Route>
   );
 }

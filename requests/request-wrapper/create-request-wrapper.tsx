@@ -4,8 +4,8 @@ import { RequestStateBase } from 'public/requests/models/state';
 import { createContext, createContextHook } from 'public/utils/context-hook';
 import { isNull, isReturningReactNode } from 'public/util';
 
-export interface WrapperProps<TResponseData, TData> extends Omit<RequestWrapperProps<TResponseData, RequestStateBase<TResponseData>>,
-  'state' | 'children' | 'noDataDetector'> {
+export interface WrapperProps<TResponseData, TData> extends
+  Omit<RequestWrapperProps<TResponseData, RequestStateBase<TResponseData>>, 'state' | 'children' | 'noDataDetector'> {
   children: RequestWrapperProps<TData, RequestStateBase<TData>>['children']
 }
 

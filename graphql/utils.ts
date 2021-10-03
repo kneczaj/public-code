@@ -3,7 +3,7 @@ import { Config, FORM_ERROR, SubmissionErrors } from 'final-form';
 import { FetchResult } from '@apollo/client/link/core';
 import { MutationFunctionOptions } from '@apollo/client/react/types/types';
 import { GraphQLError } from 'graphql/error/GraphQLError';
-import { Errors, mergeErrors } from "public/requests/models/errors";
+import { AuthenticationError, Errors, isAuthenticationError, mergeErrors } from "public/requests/models/errors";
 import { ApolloError } from "@apollo/client";
 
 export function convertGQLErrors2Form(
@@ -32,12 +32,19 @@ export function convertGQLErrors2Errors(
   }
   try {
     // eslint-disable-next-line
+    const exception = errors[0].extensions!.exception;
+    if (exception.output.statusCode === 401) {
+      throw new AuthenticationError();
+    }
     const exceptionData = errors[0].extensions!.exception.data;
     if (exceptionData.errors) {
       return exceptionData.errors;
     }
     return { messages: [exceptionData.message[0].messages[0].message] };
   } catch (e) {
+    if (isAuthenticationError(e)) {
+      throw e;
+    }
     return { messages: [errors[0].message] };
   }
 }

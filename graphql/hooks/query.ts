@@ -5,19 +5,33 @@ import { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import { QueryHookOptions } from "@apollo/client/react/types/types";
 import { isNullOrUndefined, isUndefined } from "public/util";
 import { convertApolloError2Errors } from "public/graphql/utils";
-import { Errors, mergeErrors } from "public/requests/models/errors";
+import { Errors, isAuthenticationError } from "public/requests/models/errors";
 import { QueryResult } from "public/graphql/models";
+import { useNotifications } from "public/notifications/notifications-provider";
+import { useCT } from "public/hooks/translation";
+import { useToken } from "public/auth/providers/token-provider";
 
 export function useQuery<TData = any, TVariables = OperationVariables>(query: DocumentNode | TypedDocumentNode<TData, TVariables>, options?: QueryHookOptions<TData, TVariables>): QueryResult<TData, TVariables> {
   const response = useQueryBase(query, options);
-  const baseErrors: Errors | null = isUndefined(response.error)
-    ? null
-    : convertApolloError2Errors(response.error);
-  const error: Errors | null = isNullOrUndefined(response.data) && !response.loading
-    ? mergeErrors([baseErrors, {
-      messages: [`Empty response from server`]
-    }])
-    : baseErrors;
+  const {redirectToLogin} = useToken();
+  const {show} = useNotifications();
+  const ct = useCT();
+  const error: Errors | null = (() => {
+    try {
+      return isUndefined(response.error)
+        ? isNullOrUndefined(response.data) && !response.loading
+          ? {messages: [`Empty response from server`]}
+          : null
+        : convertApolloError2Errors(response.error);
+    } catch (e) {
+      if (isAuthenticationError(e)) {
+        redirectToLogin();
+      } else {
+        show({type: 'error', message: ct('unknown error occurred')});
+      }
+      return null;
+    }
+  })();
   return {
     ...response,
     data: response.data || null,

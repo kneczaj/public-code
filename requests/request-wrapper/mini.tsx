@@ -2,7 +2,7 @@ import { Errors } from '../models/errors';
 import ErrorIcon from '@material-ui/icons/Error';
 import { merge } from '../../css';
 import { CircularProgress } from '@material-ui/core';
-import { isNull } from '../../util';
+import { isNull, isReturningReactNode } from '../../util';
 import React from 'react';
 import { Props, defaultProps as itemDefaultProps } from './item';
 
@@ -39,7 +39,7 @@ export function Mini<TData>(props: Props<TData>): JSX.Element {
         noDataDetector(state.data) ? (
           noDataPlaceholder(className)
         ) : (
-          children({ data: state.data, className })
+          isReturningReactNode(children) ? children({ data: state.data, className }) : children
         )
       ) : (
         errorPlaceholder({ error: state.error, className })

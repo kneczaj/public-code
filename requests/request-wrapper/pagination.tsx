@@ -1,6 +1,6 @@
 import React from 'react';
 import './request-result.sass';
-import { isNull } from '../../util';
+import { isNull, isReturningReactNode } from '../../util';
 import { CircularProgress } from '@material-ui/core';
 import { defaultPropsBase, PropsBase } from './base';
 import { Centered } from '../../components/centered';
@@ -37,7 +37,8 @@ export function Pagination<TResolvedData extends Array<any>, TNoData = never>(
         ? state.loading // show the placeholder only if not at loading state
           ? null
           : noDataPlaceholder(className)
-        : children({ data: state.data, className })}
+        : isReturningReactNode(children) ? children({ data: state.data, className }) : children
+      }
       {!isNull(state.error) &&
         errorPlaceholder({ error: state.error, className })}
       {state.loading && (
