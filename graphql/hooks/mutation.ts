@@ -15,13 +15,15 @@ import {
 import { Errors } from "public/requests/models/errors";
 import { FetchResult, MutationResult } from "public/graphql/models";
 
+export type MutationSubmitResult = Promise<SubmissionErrors | undefined>
+
 export interface Hook<TData, TVariables> extends MutationResult<TData> {
   trigger: (options?: MutationFunctionOptions<TData, TVariables>) => Promise<FetchResult<TData>>,
   /**
    * This can trigger mutation to return errors format specially for final-form
    * @param options
    */
-  submit: (formValues: TVariables) => Promise<SubmissionErrors | undefined>
+  submit: (formValues: TVariables) => MutationSubmitResult
 }
 
 export function useMutation<TData = any, FormValues = OperationVariables>(

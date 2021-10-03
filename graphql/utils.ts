@@ -61,7 +61,7 @@ export interface WithGraphQLErrors {
 }
 
 export function hasGraphQLErrors(val: any): val is WithGraphQLErrors {
-  return !isUndefined(val.graphQLErrors) && val.graphQLErrors.length === 0;
+  return !isUndefined(val.graphQLErrors) && val.graphQLErrors.length !== 0;
 }
 
 export type FinalFormSubmissionResult<

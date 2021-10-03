@@ -1,18 +1,14 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useCT } from 'public/hooks/translation';
-import { useUserApi } from 'public/auth/providers/user-provider';
 import { DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 import { LoginForm } from 'public/auth/components/login-form';
 import { isUndefined } from 'public/util';
 import Button from '@material-ui/core/Button';
 import { ConfirmDialogProps } from 'public/providers/dialog-provider';
 import { getBackendUrl } from "app/root/models/urls";
+import { UserApiContext, useUserApi } from "public/auth/providers/user-provider";
 
-export interface ReturnValue {
-  token: string;
-}
-
-export interface Props extends Omit<ConfirmDialogProps<ReturnValue>, 'id'> {
+export interface Props extends Omit<ConfirmDialogProps<void>, 'id'> {
   formHeader?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
@@ -30,19 +26,21 @@ export function LoginDialogContent({
   enableOAuthProviders,
   formHeader,
   title,
-  close,
-  confirm
+  confirm,
+  close
 }: Props): JSX.Element {
   const ct = useCT();
-  const {login} = useUserApi();
-
-  function onSuccess(token: string) {
-    login(token);
-    confirm({token});
-  }
+  const {login: loginBase, ...userApi} = useUserApi();
+  const onLogin = useCallback(async payload => {
+    const formErrors = await loginBase(payload);
+    if (isUndefined(formErrors)) {
+      confirm();
+    }
+    return formErrors;
+  }, [loginBase, confirm])
 
   return (
-    <>
+    <UserApiContext.Provider value={{...userApi, login: onLogin}}>
       <DialogTitle>{title || ct('login')}</DialogTitle>
       <DialogContent className={className}>
         {formHeader || <p>{ct('Please enter your username and password')}</p>}
@@ -58,8 +56,6 @@ export function LoginDialogContent({
           confirmButtonLabel={
             isUndefined(confirmButtonLabel) ? ct('login') : confirmButtonLabel
           }
-          onSuccess={onSuccess}
-          onError={() => undefined /* TODO */}
         >
           {children}
         </LoginForm>
@@ -69,6 +65,6 @@ export function LoginDialogContent({
           {closeButtonLabel || ct('close')}
         </Button>
       </DialogActions>
-    </>
+    </UserApiContext.Provider>
   );
 }

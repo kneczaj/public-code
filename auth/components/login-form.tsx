@@ -1,18 +1,15 @@
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import { InputField } from '../../forms/fields/input-field';
 import { composeValidators, isEmail } from '../../forms/validation';
 import { FormRenderProps } from 'react-final-form';
 import { Form } from '../../forms/components/form';
-import { capitalizeFirstLetter, isNull, isNullOrUndefined } from '../../util';
+import { capitalizeFirstLetter } from '../../util';
 import { useT } from '../../hooks/translation';
 import { Button, Grid, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { makeOnSubmit } from 'public/graphql/utils';
-import { useLoginMutation } from "generated/graphql";
+import { useUserApi } from "public/auth/providers/user-provider";
 
 export interface Props {
-  onSuccess: (token: string) => void;
-  onError: (error: any) => void;
   children?: React.ReactNode;
   confirmButtonLabel?: string;
 }
@@ -25,31 +22,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export function LoginForm({
   children,
-  confirmButtonLabel,
-  onError,
-  onSuccess
+  confirmButtonLabel
 }: Props): JSX.Element {
   const t = useT();
   const classes = useStyles();
-  const { trigger, data } = useLoginMutation({
-    onError
-  });
-  const onSubmit = useMemo(() => makeOnSubmit(trigger), [trigger]);
-
-  useEffect(() => {
-    if (isNullOrUndefined(data)) {
-      return;
-    }
-    const token = data.login.jwt;
-    if (isNull(token)) {
-      onError('Token is empty');
-      return;
-    }
-    onSuccess(token);
-  }, [data, onSuccess, onError]);
+  const {login} = useUserApi();
 
   return (
-    <Form formName={'login'} onSubmit={onSubmit}>
+    <Form formName={'login'} onSubmit={login}>
       {{
         main() {
           return (

@@ -3,13 +3,12 @@ import { Dialog } from '@material-ui/core';
 import { DialogProps as MaterialDialogProps } from '@material-ui/core/Dialog/Dialog';
 import {
   LoginDialogContent,
-  Props as ContentProps,
-  ReturnValue
+  Props as ContentProps
 } from './login-dialog-content';
 import { ConfirmDialogProps } from 'public/providers/dialog-provider';
 
 export interface Props
-  extends ConfirmDialogProps<ReturnValue>,
+  extends ConfirmDialogProps<void>,
     Omit<MaterialDialogProps, 'open' | 'onClose' | 'onError' | 'id'>,
     Omit<ContentProps, 'onClose' | 'enableOAuthProviders'> {}
 
