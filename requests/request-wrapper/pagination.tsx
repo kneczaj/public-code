@@ -4,7 +4,6 @@ import { isNull } from '../../util';
 import { CircularProgress } from '@material-ui/core';
 import { defaultPropsBase, PropsBase } from './base';
 import { Centered } from '../../components/centered';
-import { AddResolve } from 'public/requests/models/with-resolve';
 
 interface PropsWithoutResolve<TResolvedData extends Array<any>, TNoData>
   extends PropsBase<TResolvedData, TNoData> {
@@ -16,14 +15,8 @@ interface PropsWithoutResolve<TResolvedData extends Array<any>, TNoData>
 
 export type Props<
   TResolvedData extends Array<any>,
-  TNoData,
-  TData = void
-> = AddResolve<
-  PropsWithoutResolve<TResolvedData, TNoData>,
-  TResolvedData,
-  TNoData,
-  TData
->;
+  TNoData
+> = PropsWithoutResolve<TResolvedData, TNoData>;
 
 export function Pagination<TResolvedData extends Array<any>, TNoData = never>(
   props: Props<TResolvedData, TNoData>
