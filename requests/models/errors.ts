@@ -45,10 +45,6 @@ export class ValidationError extends ErrorResponse {
 export class AuthenticationError extends ErrorResponse {
 }
 
-export function isAuthenticationError(e: any): e is AuthenticationError {
-  return !!e.constructor && e.constructor.name === 'AuthenticationError';
-}
-
 /**
  * Errors to be shown to user
  */

@@ -5,7 +5,7 @@ import { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import { QueryHookOptions } from "@apollo/client/react/types/types";
 import { isNullOrUndefined, isUndefined } from "public/util";
 import { convertApolloError2Errors } from "public/graphql/utils";
-import { Errors, isAuthenticationError } from "public/requests/models/errors";
+import { AuthenticationError, Errors } from "public/requests/models/errors";
 import { QueryResult } from "public/graphql/models";
 import { useNotifications } from "public/notifications/notifications-provider";
 import { useCT } from "public/hooks/translation";
@@ -24,7 +24,7 @@ export function useQuery<TData = any, TVariables = OperationVariables>(query: Do
           : null
         : convertApolloError2Errors(response.error);
     } catch (e) {
-      if (isAuthenticationError(e)) {
+      if (e instanceof AuthenticationError) {
         redirectToLogin();
       } else {
         show({type: 'error', message: ct('unknown error occurred')});

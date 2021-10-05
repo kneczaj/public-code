@@ -12,7 +12,7 @@ import {
   convertGQLErrors2Form,
   hasGraphQLErrors
 } from "public/graphql/utils";
-import { Errors, isAuthenticationError } from "public/requests/models/errors";
+import { AuthenticationError, Errors } from "public/requests/models/errors";
 import { FetchResult, MutationResult } from "public/graphql/models";
 import { useNotifications } from "public/notifications/notifications-provider";
 import { useCT } from "public/hooks/translation";
@@ -47,7 +47,7 @@ export function useMutation<TData = any, FormValues = OperationVariables>(
             : null
           : convertGQLErrors2Errors(response.errors)
       } catch (e) {
-        if (isAuthenticationError(e)) {
+        if (e instanceof AuthenticationError) {
           redirectToLogin();
         } else {
           show({type: 'error', message: ct('unknown error occurred')});
@@ -74,7 +74,7 @@ export function useMutation<TData = any, FormValues = OperationVariables>(
         [FORM_ERROR]: error.messages[0]
       }
     } catch (e: any) {
-      if (isAuthenticationError(e)) {
+      if (e instanceof AuthenticationError) {
         redirectToLogin();
         return {
           [FORM_ERROR]: ct('authentication error')
