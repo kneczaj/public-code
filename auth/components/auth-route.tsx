@@ -23,16 +23,16 @@ export function AuthRoute({children, ...props}: Props): JSX.Element {
   const location = useLocation();
   if (isAuthenticated) {
     return (
-      <Route {...props}>
+      <Route {...props}>{(props: RouteChildrenProps<any>) =>
         <UserRequestWrapper>{({data, className}) =>
           isReturningReactNode<AuthRouteChildrenProps<any>>(children)
-          ? (props: RouteChildrenProps<any>) => children({
-            ...props,
-            user: data
-          })
-          : children}
+            ? children({
+              ...props,
+              user: data
+            })
+            : children}
         </UserRequestWrapper>
-      </Route>
+      }</Route>
     );
   }
   return (
