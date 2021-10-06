@@ -3,10 +3,11 @@ import { Props as RequestWrapperProps } from 'public/requests/request-wrapper/it
 import { RequestStateBase } from 'public/requests/models/state';
 import { createContext, createContextHook } from 'public/utils/context-hook';
 import { isNull, isReturningReactNode } from 'public/util';
-import { PaginationRequestWrapper } from "public/requests/request-wrapper/index";
-import { PaginationVariables } from "public/requests/models/pagination";
-import * as Apollo from "public/graphql/apollo-custom";
-import { QueryResult } from "public/graphql/apollo-custom";
+import { PaginationRequestWrapper } from 'public/requests/request-wrapper/index';
+import { PaginationVariables } from 'public/requests/models/pagination';
+import { QueryResult } from 'public/graphql/apollo-custom';
+import { QueryHookOptions } from '@apollo/client/react/types/types';
+import { AdsQuery } from 'generated/graphql';
 
 export interface ChildrenProps<TData extends any[]> {
   data: TData;
@@ -15,8 +16,11 @@ export interface ChildrenProps<TData extends any[]> {
   className?: string;
 }
 
-export interface WrapperProps<TResponseData, TData extends Array<any>> extends Omit<RequestWrapperProps<TResponseData, RequestStateBase<TResponseData>>,
-  'state' | 'children' | 'noDataDetector'> {
+export interface WrapperProps<TResponseData, TData extends Array<any>>
+  extends Omit<
+    RequestWrapperProps<TResponseData, RequestStateBase<TResponseData>>,
+    'state' | 'children' | 'noDataDetector'
+  > {
   children: (props: ChildrenProps<TData>) => React.ReactNode;
 }
 
@@ -27,15 +31,26 @@ export type CreatorResult<TResponseData, TData extends Array<any>> = [
   () => TData
 ];
 
+export type PaginationRequestHookOptions<TResponseData> = QueryHookOptions<
+  TResponseData,
+  PaginationVariables
+> &
+  Required<Pick<QueryHookOptions<AdsQuery, PaginationVariables>, 'variables'>>;
+
 export interface Props<TResponseData, TData> {
-  useRequest: (baseOptions: Apollo.QueryHookOptions<TResponseData, PaginationVariables>) => QueryResult<TResponseData, PaginationVariables>,
-  extractData: (response: TResponseData) => TData,
-  displayName: string,
+  useRequest: (
+    baseOptions: PaginationRequestHookOptions<TResponseData>
+  ) => QueryResult<TResponseData, PaginationVariables>;
+  extractData: (response: TResponseData) => TData;
+  displayName: string;
   noDataDetector?: (data: TData | null) => boolean;
   itemsPerPage?: number;
 }
 
-export function createPaginationRequestWrapper<TResponseData, TData extends Array<any>>({
+export function createPaginationRequestWrapper<
+  TResponseData,
+  TData extends Array<any>
+>({
   useRequest,
   extractData,
   displayName,
@@ -50,36 +65,45 @@ export function createPaginationRequestWrapper<TResponseData, TData extends Arra
   }: WrapperProps<TResponseData, TData>): JSX.Element => {
     const [limit, setLimit] = useState(itemsPerPage);
     const [hasMore, setHasMore] = useState(true);
-    const { data, loading, ...state } = useRequest({ variables: { start: 0, limit }});
-    const extracted: TData = useMemo(() => isNull(data) ? ([] as unknown as TData) : extractData(data), [data]);
+    const { data, loading, ...state } = useRequest({
+      variables: { start: 0, limit }
+    });
+    const extracted: TData = useMemo(
+      () => (isNull(data) ? ([] as unknown as TData) : extractData(data)),
+      [data]
+    );
 
     function loadMore() {
       if (loading) {
         return;
       }
-      return state.fetchMore({
-        variables: {
-          start: extracted.length,
-          limit: itemsPerPage
-        }
-      }).then(result => {
-        const newData = extractData(result.data as any);
-        setHasMore(newData.length === itemsPerPage);
-        setLimit(extracted.length + newData.length);
-      });
+      return state
+        .fetchMore({
+          variables: {
+            start: extracted.length,
+            limit: itemsPerPage
+          }
+        })
+        .then(result => {
+          const newData = extractData(result.data as any);
+          setHasMore(newData.length === itemsPerPage);
+          setLimit(extracted.length + newData.length);
+        });
     }
 
     return (
       <PaginationRequestWrapper<TData, never>
-        state={{...state, loading, data: extracted}}
+        state={{ ...state, loading, data: extracted }}
         noDataDetector={noDataDetector as any}
         {...wrapperProps}
       >
-        {({data, className}) =>
+        {({ data, className }) => (
           <Context.Provider value={data}>
-            {isReturningReactNode(children) ? children({data, className, hasMore, loadMore}) : children}
+            {isReturningReactNode(children)
+              ? children({ data, className, hasMore, loadMore })
+              : children}
           </Context.Provider>
-        }
+        )}
       </PaginationRequestWrapper>
     );
   };
