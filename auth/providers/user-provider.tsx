@@ -8,6 +8,6 @@ import { isNull } from "public/util";
  */
 export const [UserRequestWrapper, useUser] = createRequestWrapper<MeQuery, User>(
   useMeQuery,
-  response => isNull(response.me) ? null : response.me.user,
+  response => isNull(response.me) ? null : response.me,
   'user'
 );

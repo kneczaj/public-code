@@ -1,6 +1,6 @@
 import { Filter as FilterBase, Maybe, UsersPermissionsRole, UsersPermissionsUser } from 'generated/graphql';
 
-export type Filter = Pick<FilterBase, 'area' | 'maxPricePerSquareMeter' | 'name'>;
+export type Filter = Pick<FilterBase, 'maxPricePerSquareMeter' | 'name'>;
 
 export type User = Pick<UsersPermissionsUser, 'id' | 'username' | 'email' | 'confirmed' | 'blocked'>
   & {
