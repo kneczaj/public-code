@@ -19,7 +19,14 @@ query Me {
     }
     currentFilter {
       area
-      maxPricePerSquareMeter
+      pricePerSquareMeter {
+        min
+        max
+      }
+      size {
+        min
+        max
+      }
       name
     }
   }

@@ -1,13 +1,15 @@
 import {
+  ComponentGeneralRange,
   Filter as FilterBase,
   Maybe,
   UsersPermissionsRole,
   UsersPermissionsUser
 } from 'generated/graphql';
 
-export type Filter = NonNullable<
-  Pick<FilterBase, 'maxPricePerSquareMeter' | 'name' | 'area'>
->;
+export type Filter = NonNullable<Pick<FilterBase, 'name' | 'area'>> & {
+  pricePerSquareMeter: Maybe<Pick<ComponentGeneralRange, 'min' | 'max'>>;
+  size: Maybe<Pick<ComponentGeneralRange, 'min' | 'max'>>;
+};
 
 export type User = Pick<
   UsersPermissionsUser,
