@@ -9,6 +9,7 @@ import {
 export type Filter = NonNullable<Pick<FilterBase, 'id' | 'name' | 'area'>> & {
   pricePerSquareMeter: Maybe<Pick<ComponentGeneralRange, 'min' | 'max'>>;
   size: Maybe<Pick<ComponentGeneralRange, 'min' | 'max'>>;
+  price: Maybe<Pick<ComponentGeneralRange, 'min' | 'max'>>;
 };
 
 export type User = Pick<

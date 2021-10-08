@@ -28,6 +28,10 @@ query Me {
         min
         max
       }
+      price {
+        min
+        max
+      }
       name
     }
   }
