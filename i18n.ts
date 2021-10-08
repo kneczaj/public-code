@@ -20,7 +20,7 @@ export function getI18n(resources: Resource): i18nBase.i18n {
     });
 
   if (!whitelist.includes(i18n.language)) {
-    i18n.changeLanguage(fallbackLng);
+    i18n.changeLanguage('pl');
   }
   return i18n;
 }
