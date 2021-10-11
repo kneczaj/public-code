@@ -16,13 +16,16 @@ export interface ContextProps {
   nip: string;
   regon: string;
   address: string[];
+  serviceName: string;
+  deploymentAddress: string;
+  termsOfServiceUrl: string;
 }
 
 export interface Props extends ContextProps, ProviderComponentProps {}
 
-export const CompanyDetailsContext = createContext<ContextProps>(
-  'company details'
-);
+export const CompanyDetailsContext =
+  createContext<ContextProps>('company details');
+
 export const useCompanyDetails = createContextHook<ContextProps>(
   CompanyDetailsContext
 );
