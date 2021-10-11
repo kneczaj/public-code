@@ -1,6 +1,6 @@
 import React from 'react';
 import { InputField } from '../../forms/fields/input-field';
-import { composeValidators, isEmail } from '../../forms/validation';
+import { composeValidators, isEmail, required } from '../../forms/validation';
 import { FormRenderProps } from 'react-final-form';
 import { Form } from '../../forms/components/form';
 import { capitalizeFirstLetter, isUndefined } from '../../util';
@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useAuth } from 'public/auth/providers/auth-provider';
 import { FORM_ERROR } from 'final-form';
 import { RegisterMutationVariables } from 'generated/graphql';
+import { CheckboxField } from 'public/forms/fields/checkbox-field';
 
 export interface Props {
   children?: any;
@@ -86,18 +87,28 @@ export function RegistrationForm({ children, confirmButtonLabel }: Props) {
                   variant={'outlined'}
                 />
               </Grid>
-              {/*<Grid item container spacing={0} alignContent={"stretch"} direction={"column"}>*/}
-              {/*  <Grid item>*/}
-              {/*    <CheckboxField*/}
-              {/*      size={'small'}*/}
-              {/*      name={'terms'}*/}
-              {/*      validate={required}*/}
-              {/*    />*/}
-              {/*  </Grid>*/}
-              {/*  <Grid item>*/}
-              {/*    <CheckboxField name={'privacyPolicy'} size={'small'} validate={required}/>*/}
-              {/*  </Grid>*/}
-              {/*</Grid>*/}
+              <Grid
+                item
+                container
+                spacing={0}
+                alignContent={'stretch'}
+                direction={'column'}
+              >
+                <Grid item>
+                  <CheckboxField
+                    size={'small'}
+                    name={'terms'}
+                    validate={required}
+                  />
+                </Grid>
+                <Grid item>
+                  <CheckboxField
+                    name={'privacyPolicy'}
+                    size={'small'}
+                    validate={required}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
             {children}
           </>
