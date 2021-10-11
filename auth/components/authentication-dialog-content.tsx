@@ -5,10 +5,10 @@ import { LoginForm } from 'public/auth/components/login-form';
 import { isUndefined } from 'public/util';
 import Button from '@material-ui/core/Button';
 import { ConfirmDialogProps } from 'public/providers/dialog-provider';
-import { getBackendUrl } from "app/root/models/urls";
-import { AuthContext, useAuth } from "public/auth/providers/auth-provider";
-import { RegistrationForm } from "public/auth/components/registration-form";
-import { useToggle } from "public/hooks/toggle";
+import { getBackendUrl } from 'app/root/models/urls';
+import { AuthContext, useAuth } from 'public/auth/providers/auth-provider';
+import { RegistrationForm } from 'public/auth/components/registration-form';
+import { useToggle } from 'public/hooks/toggle';
 
 export type Page = 'REGISTER' | 'LOGIN';
 
@@ -38,8 +38,10 @@ export function AuthenticationDialogContent({
   showCloseButton = true
 }: Props): JSX.Element {
   const ct = useCT();
-  const {value: onLoginPage, toggle: togglePage} = useToggle(initialPage === 'LOGIN');
-  const {login: loginBase, register: registerBase, ...userApi} = useAuth();
+  const { value: onLoginPage, toggle: togglePage } = useToggle(
+    initialPage === 'LOGIN'
+  );
+  const { login: loginBase, register: registerBase, ...userApi } = useAuth();
 
   function confirmWhenNoErrors<T>(formErrors: T) {
     if (isUndefined(formErrors)) {
@@ -49,42 +51,56 @@ export function AuthenticationDialogContent({
   }
 
   return (
-    <AuthContext.Provider value={{
-      ...userApi,
-      login: payload => loginBase(payload).then(confirmWhenNoErrors),
-      register: payload => registerBase(payload).then(confirmWhenNoErrors)
-    }}>
-      <DialogTitle>{title || onLoginPage ? ct('login') : ct('register')}</DialogTitle>
+    <AuthContext.Provider
+      value={{
+        ...userApi,
+        login: payload => loginBase(payload).then(confirmWhenNoErrors),
+        register: payload => registerBase(payload).then(confirmWhenNoErrors)
+      }}
+    >
+      <DialogTitle>
+        {title || onLoginPage ? ct('login') : ct('register')}
+      </DialogTitle>
       <DialogContent className={className}>
-        {formHeader ||
-        <p>{onLoginPage ? ct('please enter your username and password') : ct('please fill up the form')}</p>}
-        {enableOAuthProviders && <>
-          <a href={getBackendUrl(`/connect/facebook`)}>
-            <button style={{width: '150px'}}>Connect to facebook</button>
-          </a>
-          <a href={getBackendUrl(`/connect/google`)}>
-            <button style={{width: '150px'}}>Connect to google</button>
-          </a>
-        </>}
-        {onLoginPage
-          ? <LoginForm
-            confirmButtonLabel={confirmButtonLabel}
-          >
+        {formHeader || (
+          <p>
+            {onLoginPage
+              ? ct('please enter your username and password')
+              : ct('please fill up the form')}
+          </p>
+        )}
+        {enableOAuthProviders && (
+          <>
+            <a href={getBackendUrl(`/connect/facebook`)}>
+              <button style={{ width: '150px' }}>Connect to facebook</button>
+            </a>
+            <a href={getBackendUrl(`/connect/google`)}>
+              <button style={{ width: '150px' }}>Connect to google</button>
+            </a>
+          </>
+        )}
+        {onLoginPage ? (
+          <LoginForm confirmButtonLabel={confirmButtonLabel}>
             {children}
           </LoginForm>
-          : <RegistrationForm
-            confirmButtonLabel={confirmButtonLabel}
-          >
+        ) : (
+          <RegistrationForm confirmButtonLabel={confirmButtonLabel}>
             {children}
           </RegistrationForm>
-        }
+        )}
       </DialogContent>
       <DialogActions>
-        {showCloseButton && <Button onClick={close} color='primary' autoFocus>
-          {closeButtonLabel || ct('close')}
-        </Button>}
+        {showCloseButton && (
+          <Button onClick={close} color='primary' autoFocus>
+            {closeButtonLabel || ct('close')}
+          </Button>
+        )}
         <Button onClick={togglePage}>
-          {ct(onLoginPage ? 'I don\'t have an account - register me' : 'already have an account? - Log in')}
+          {ct(
+            onLoginPage
+              ? "I don't have an account - register me"
+              : 'already have an account? - Log in'
+          )}
         </Button>
       </DialogActions>
     </AuthContext.Provider>
