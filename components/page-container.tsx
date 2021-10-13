@@ -42,7 +42,14 @@ export const PageContainer = forwardRef(
             scrollElement === 'CONTENT' && 'scroll-here flex-1'
           )}
         >
-          <main ref={ref} className={merge('content d-flex', scrollElement === 'NOTHING' && 'flex-1', contentClassName)}>
+          <main
+            ref={ref}
+            className={merge(
+              'content d-flex flex-column',
+              scrollElement === 'NOTHING' && 'flex-1',
+              contentClassName
+            )}
+          >
             {main}
           </main>
           {footer}
