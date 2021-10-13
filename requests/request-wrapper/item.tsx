@@ -27,12 +27,14 @@ export function Item<TData, TNoData = null>(props: Props<TData, TNoData>) {
   } = props as Props<TData, TNoData> & typeof defaultProps;
 
   return (
-    <div className={merge(className, 'flex-1 d-flex')}>
+    <div className={merge(className, 'flex-1 d-flex flex-column')}>
       {state.loading && <CircularProgress />}
       {isNull(state.error)
         ? noDataDetector(state.data)
           ? noDataPlaceholder(className)
-          : isReturningReactNode(children) ? children({ data: state.data, className }) : children
+          : isReturningReactNode(children)
+          ? children({ data: state.data, className })
+          : children
         : errorPlaceholder({ error: state.error, className })}
     </div>
   );
