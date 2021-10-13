@@ -7,4 +7,8 @@ export * from '@apollo/client';
 
 export { useMutation } from 'public/graphql/hooks/mutation';
 export { useQuery } from 'public/graphql/hooks/query';
-export type { FetchResult, MutationResult, QueryResult } from 'public/graphql/models';
+export type {
+  FetchResult,
+  MutationResult,
+  QueryResult
+} from 'public/graphql/models';
