@@ -13,7 +13,7 @@ export interface Props<FormValues> extends FormProps<FormValues> {
 }
 
 export function Form<FormValues = any>({
-  children: {main, footer},
+  children: { main, footer },
   formName,
   className,
   initialValues,

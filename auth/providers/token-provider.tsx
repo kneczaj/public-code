@@ -5,9 +5,9 @@ import { createContext, createContextHook } from '../../utils/context-hook';
 import { ProviderComponentProps } from '../../components/provider-group';
 import { useState } from '../../hooks/state';
 import { useHistory } from '../../routing/hooks/history';
-import { LOGIN } from "public/auth/models/urls";
-import { useNotifications } from "public/notifications/notifications-provider";
-import { useCT } from "public/hooks/translation";
+import { LOGIN } from 'public/auth/models/urls';
+import { useNotifications } from 'public/notifications/notifications-provider';
+import { useCT } from 'public/hooks/translation';
 
 export interface ContextProps {
   token: string | null;
@@ -33,7 +33,7 @@ export function TokenProvider({
 }: ProviderComponentProps): JSX.Element {
   const { push } = useHistory();
   const { value: token, set } = useState<string | null>(getInitialState());
-  const {show} = useNotifications();
+  const { show } = useNotifications();
   const ct = useCT();
 
   function login(token: string): void {
@@ -58,7 +58,7 @@ export function TokenProvider({
     localStorage.removeItem('token');
     push(LOGIN, () => ({ from: window.location.href }));
     show({
-      type: "info",
+      type: 'info',
       message: ct('login first')
     });
   }

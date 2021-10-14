@@ -37,9 +37,10 @@ export function useHistory<
   const history = useHistoryBase<LocationState>();
   const location = useLocation<LocationState>();
   const searchString = location.search;
-  const search = useMemo(() => (parse(searchString) as unknown) as Search, [
-    searchString
-  ]);
+  const search = useMemo(
+    () => parse(searchString) as unknown as Search,
+    [searchString]
+  );
   return {
     ...history,
     location: {

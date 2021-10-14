@@ -1,16 +1,18 @@
-import React, { ErrorInfo } from "react";
-import { ProviderComponentProps } from "public/components/provider-group";
-import { Redirect } from "react-router-dom";
-import { LOGIN } from "public/auth/models/urls";
-import { getLocationObj } from "public/routing/models";
-import { AuthenticationError } from "public/requests/models/errors";
+import React, { ErrorInfo } from 'react';
+import { ProviderComponentProps } from 'public/components/provider-group';
+import { Redirect } from 'react-router-dom';
+import { LOGIN } from 'public/auth/models/urls';
+import { getLocationObj } from 'public/routing/models';
+import { AuthenticationError } from 'public/requests/models/errors';
 
 export interface State {
   hasError: boolean;
 }
 
-export class AuthErrorBoundary extends React.Component<ProviderComponentProps, State> {
-
+export class AuthErrorBoundary extends React.Component<
+  ProviderComponentProps,
+  State
+> {
   state = { hasError: false };
 
   static getDerivedStateFromError(error: any) {
@@ -28,7 +30,9 @@ export class AuthErrorBoundary extends React.Component<ProviderComponentProps, S
     if (this.state.hasError) {
       return (
         <Redirect
-          to={getLocationObj(LOGIN, {}, currentSearch => ({ from: window.location.href }))}
+          to={getLocationObj(LOGIN, {}, currentSearch => ({
+            from: window.location.href
+          }))}
         />
       );
     }

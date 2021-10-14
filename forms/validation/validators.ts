@@ -69,12 +69,11 @@ export function oneInFormRequired(
     : 'at_least_one_required';
 }
 
-export const makeRequired = (label?: string) => (
-  value: any,
-  values: FormValues
-): ValidationResult => {
-  return isNotEmpty(value) ? null : isUndefined(label) ? 'required' : label;
-};
+export const makeRequired =
+  (label?: string) =>
+  (value: any, values: FormValues): ValidationResult => {
+    return isNotEmpty(value) ? null : isUndefined(label) ? 'required' : label;
+  };
 
 export const required = makeRequired();
 
@@ -110,22 +109,18 @@ export const containsOnlyLetters: ValidatorFn = skipEmptyField(
 );
 
 export const isLongerThanOrEqual = (length: number): ValidatorFn =>
-  skipEmptyField(
-    (value: string, values: FormValues): ValidationResult => {
-      return value.length >= length
-        ? null
-        : ['must be longer than', { threshold: length }];
-    }
-  );
+  skipEmptyField((value: string, values: FormValues): ValidationResult => {
+    return value.length >= length
+      ? null
+      : ['must be longer than', { threshold: length }];
+  });
 
 export const hasLengthEqual = (length: number, label?: string): ValidatorFn =>
-  skipEmptyField(
-    (value: string, values: FormValues): ValidationResult => {
-      return value.length === length
-        ? null
-        : [label || 'must have length equal', { threshold: length }];
-    }
-  );
+  skipEmptyField((value: string, values: FormValues): ValidationResult => {
+    return value.length === length
+      ? null
+      : [label || 'must have length equal', { threshold: length }];
+  });
 
 export const isUniqueKeyword = (others: Array<string>): ValidatorFn => {
   const lowercaseOthers = others.map(item => item.toLowerCase());

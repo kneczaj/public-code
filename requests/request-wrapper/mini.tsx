@@ -38,8 +38,10 @@ export function Mini<TData>(props: Props<TData>): JSX.Element {
       ) : isNull(state.error) ? (
         noDataDetector(state.data) ? (
           noDataPlaceholder(className)
+        ) : isReturningReactNode(children) ? (
+          children({ data: state.data, className })
         ) : (
-          isReturningReactNode(children) ? children({ data: state.data, className }) : children
+          children
         )
       ) : (
         errorPlaceholder({ error: state.error, className })

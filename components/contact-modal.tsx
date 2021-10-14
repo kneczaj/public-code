@@ -12,13 +12,8 @@ import { useCompanyDetails } from 'public/providers/company-details-provider';
 
 export function Contact({ id, close }: SimpleDialogProps): JSX.Element {
   const ct = useCT();
-  const {
-    address,
-    contactEmail,
-    companyName,
-    nip,
-    regon
-  } = useCompanyDetails();
+  const { address, contactEmail, companyName, nip, regon } =
+    useCompanyDetails();
 
   return (
     <Dialog open={true} onClose={close} id={id}>

@@ -37,8 +37,9 @@ export function Pagination<TResolvedData extends Array<any>, TNoData = never>(
         ? state.loading // show the placeholder only if not at loading state
           ? null
           : noDataPlaceholder(className)
-        : isReturningReactNode(children) ? children({ data: state.data, className }) : children
-      }
+        : isReturningReactNode(children)
+        ? children({ data: state.data, className })
+        : children}
       {!isNull(state.error) &&
         errorPlaceholder({ error: state.error, className })}
       {state.loading && (

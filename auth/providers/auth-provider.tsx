@@ -10,11 +10,12 @@ import {
   useRegisterMutation,
   UsersPermissionsLoginPayload
 } from 'generated/graphql';
-import { RequestStateBase } from "public/requests/models/state";
-import { MutationSubmitResult } from "public/graphql/hooks/mutation";
-import { mergeErrors } from "public/requests/models/errors";
+import { RequestStateBase } from 'public/requests/models/state';
+import { MutationSubmitResult } from 'public/graphql/hooks/mutation';
+import { mergeErrors } from 'public/requests/models/errors';
 
-export interface ContextProps extends Omit<RequestStateBase<MeQuery | null>, 'data'> {
+export interface ContextProps
+  extends Omit<RequestStateBase<MeQuery | null>, 'data'> {
   isAuthenticated: boolean;
   logout: () => void;
   redirectToLogin: () => void;
@@ -33,18 +34,34 @@ export const useAuth = createContextHook(AuthContext);
 export function AuthProvider({
   children
 }: ProviderComponentProps): JSX.Element {
-  const {logout, isAuthenticated, login: setToken, redirectToLogin} = useToken();
-  const onLogin = useCallback((payload: Pick<UsersPermissionsLoginPayload, 'jwt'>) => {
-    if (!payload.jwt) {
+  const {
+    logout,
+    isAuthenticated,
+    login: setToken,
+    redirectToLogin
+  } = useToken();
+  const onLogin = useCallback(
+    (payload: Pick<UsersPermissionsLoginPayload, 'jwt'>) => {
+      if (!payload.jwt) {
         throw new Error('No jwt token in response');
       }
-      setToken(payload.jwt)
-  }, [setToken])
+      setToken(payload.jwt);
+    },
+    [setToken]
+  );
 
-  const {submit: login, loading: loginLoading, error: loginError} = useLoginMutation({
+  const {
+    submit: login,
+    loading: loginLoading,
+    error: loginError
+  } = useLoginMutation({
     onCompleted: payload => onLogin(payload.login)
   });
-  const { submit: register, loading: registerLoading, error: registerError } = useRegisterMutation({
+  const {
+    submit: register,
+    loading: registerLoading,
+    error: registerError
+  } = useRegisterMutation({
     onCompleted: payload => onLogin(payload.register)
   });
 

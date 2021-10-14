@@ -1,24 +1,27 @@
-import { MOCKS } from "../test"
-import { convertGQLErrors2Form, makeMutationRequest } from "./utils";
-import { MutationFunctionOptions } from "@apollo/client/react/types/types";
-import { FetchResult } from "@apollo/client/link/core";
+import { MOCKS } from '../test';
+import { convertGQLErrors2Form, makeMutationRequest } from './utils';
+import { MutationFunctionOptions } from '@apollo/client/react/types/types';
+import { FetchResult } from '@apollo/client/link/core';
 
 describe('convertGQLErrors2Form', () => {
   it('converts unauthorized error', () => {
-    expect(convertGQLErrors2Form([MOCKS.unathorizedError])).toEqual(MOCKS.unauthorizedFormError)
+    expect(convertGQLErrors2Form([MOCKS.unathorizedError])).toEqual(
+      MOCKS.unauthorizedFormError
+    );
   });
 });
 
 describe('makeMutationRequest', function () {
-
   const mock = {
-    mutation: jest.fn<Promise<FetchResult<any>>, [
-      MutationFunctionOptions<any, any>
-    ]>(() => Promise.resolve(MOCKS.fetchResultAllFieldsSuccess)),
-    errorMutation: jest.fn<Promise<FetchResult<any>>, [
-      MutationFunctionOptions<any, any>
-    ]>(() => Promise.resolve(MOCKS.errorResponse1))
-  }
+    mutation: jest.fn<
+      Promise<FetchResult<any>>,
+      [MutationFunctionOptions<any, any>]
+    >(() => Promise.resolve(MOCKS.fetchResultAllFieldsSuccess)),
+    errorMutation: jest.fn<
+      Promise<FetchResult<any>>,
+      [MutationFunctionOptions<any, any>]
+    >(() => Promise.resolve(MOCKS.errorResponse1))
+  };
 
   it('passes all args when no errors', async () => {
     const mutation = jest.spyOn(mock, 'mutation');

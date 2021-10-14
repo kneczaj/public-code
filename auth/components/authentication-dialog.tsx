@@ -37,7 +37,9 @@ export function AuthenticationDialog({
 
   return (
     <Dialog onClose={close} {...rest} open={true}>
-      <AuthenticationDialogContent {...contentProps}>{children}</AuthenticationDialogContent>
+      <AuthenticationDialogContent {...contentProps}>
+        {children}
+      </AuthenticationDialogContent>
     </Dialog>
   );
 }

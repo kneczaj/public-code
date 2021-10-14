@@ -1,7 +1,6 @@
 import { isNotNull, isUndefined } from '../../util';
 
-export class ErrorResponse extends Error {
-}
+export class ErrorResponse extends Error {}
 
 /**
  * Errors to be shown to user
@@ -20,11 +19,14 @@ export interface Errors {
  * @param errors
  */
 export function mergeErrors(errors: Array<Errors | null>): Errors | null {
-  const mergedErrors = errors.filter(isNotNull).reduce((acc, val) => {
-    return {
-      messages: [...acc.messages, ...val.messages]
-    }
-  }, {messages: []});
+  const mergedErrors = errors.filter(isNotNull).reduce(
+    (acc, val) => {
+      return {
+        messages: [...acc.messages, ...val.messages]
+      };
+    },
+    { messages: [] }
+  );
   return mergedErrors.messages.length ? mergedErrors : null;
 }
 
@@ -42,8 +44,7 @@ export class ValidationError extends ErrorResponse {
   }
 }
 
-export class AuthenticationError extends ErrorResponse {
-}
+export class AuthenticationError extends ErrorResponse {}
 
 /**
  * Errors to be shown to user

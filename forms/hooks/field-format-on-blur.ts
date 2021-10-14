@@ -18,23 +18,22 @@ export function useFieldFormatOnBlur<
   name: string,
   config?: UseFieldConfig<FieldValue>
 ): FieldRenderProps<FieldValue, T> {
-  const configResult:
-    | UseFieldConfigBase<FieldValue>
-    | undefined = useMemo(() => {
-    if (isUndefined(config)) {
-      return undefined;
-    }
-    const { formatOnBlur, ...configRest } = config;
-    if (isUndefined(formatOnBlur)) {
-      return configRest;
-    }
-    return {
-      ...configRest,
-      formatOnBlur: true,
-      // the inner useField takes care of formatting on blur
-      format: formatOnBlur
-    };
-  }, [config]);
+  const configResult: UseFieldConfigBase<FieldValue> | undefined =
+    useMemo(() => {
+      if (isUndefined(config)) {
+        return undefined;
+      }
+      const { formatOnBlur, ...configRest } = config;
+      if (isUndefined(formatOnBlur)) {
+        return configRest;
+      }
+      return {
+        ...configRest,
+        formatOnBlur: true,
+        // the inner useField takes care of formatting on blur
+        format: formatOnBlur
+      };
+    }, [config]);
 
   const baseResult = useFieldBase(name, configResult);
   if (isUndefined(configResult) || isUndefined(configResult.formatOnBlur)) {

@@ -34,38 +34,38 @@ export type Translator = (stringIdentifier: string, params?: unknown) => string;
  * @param functions
  * @param asyncValidate asynchronous validator
  */
-export const composeValidators = (
-  functions: Array<ValidatorFn | FieldValidator<any> | undefined>,
-  asyncValidate?: ValidatorFnAsync
-): FieldValidator<any> => (value: any, values: any, meta?: FieldState<any>) => {
-  let validationResult: ValidationResult | string | undefined = null;
-  for (let i = 0; i < functions.length; i++) {
-    const validator = functions[i];
-    validationResult = isUndefined(validator)
-      ? undefined
-      : validator(value, values);
-    if (!isNullOrUndefined(validationResult)) {
-      break;
+export const composeValidators =
+  (
+    functions: Array<ValidatorFn | FieldValidator<any> | undefined>,
+    asyncValidate?: ValidatorFnAsync
+  ): FieldValidator<any> =>
+  (value: any, values: any, meta?: FieldState<any>) => {
+    let validationResult: ValidationResult | string | undefined = null;
+    for (let i = 0; i < functions.length; i++) {
+      const validator = functions[i];
+      validationResult = isUndefined(validator)
+        ? undefined
+        : validator(value, values);
+      if (!isNullOrUndefined(validationResult)) {
+        break;
+      }
     }
-  }
-  if (isNullOrUndefined(validationResult)) {
-    if (!isUndefined(asyncValidate)) {
-      return asyncValidate(value, values);
+    if (isNullOrUndefined(validationResult)) {
+      if (!isUndefined(asyncValidate)) {
+        return asyncValidate(value, values);
+      }
+      return undefined;
     }
-    return undefined;
-  }
-  return validationResult;
-};
+    return validationResult;
+  };
 
-export const skipEmptyField: ValidatorFnDecorator = (fn: ValidatorFnSync) => (
-  value: any,
-  values: FormValues
-) => {
-  if (typeof value === 'string' && value.trim() === '') {
-    return null;
-  }
-  if (isNullOrUndefined(value)) {
-    return null;
-  }
-  return fn(value, values);
-};
+export const skipEmptyField: ValidatorFnDecorator =
+  (fn: ValidatorFnSync) => (value: any, values: FormValues) => {
+    if (typeof value === 'string' && value.trim() === '') {
+      return null;
+    }
+    if (isNullOrUndefined(value)) {
+      return null;
+    }
+    return fn(value, values);
+  };

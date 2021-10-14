@@ -16,9 +16,8 @@ export interface ContextProps {
   show: (notification: Notification) => void;
 }
 
-export const NotificationsContext = createContext<ContextProps>(
-  'notifications'
-);
+export const NotificationsContext =
+  createContext<ContextProps>('notifications');
 export const useNotifications = createContextHook(NotificationsContext);
 
 export const NotificationsProvider: ProviderComponent = ({
@@ -26,9 +25,8 @@ export const NotificationsProvider: ProviderComponent = ({
 }: ProviderComponentProps) => {
   const t = useT();
   function show(notification: Notification) {
-    const notifyFn: NotifyFunction = NotificationManager[
-      notification.type
-    ].bind(NotificationManager);
+    const notifyFn: NotifyFunction =
+      NotificationManager[notification.type].bind(NotificationManager);
     const title = notification.title
       ? capitalizeFirstLetter(t(notification.title))
       : undefined;

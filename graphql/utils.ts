@@ -3,8 +3,12 @@ import { Config, FORM_ERROR, SubmissionErrors } from 'final-form';
 import { FetchResult } from '@apollo/client/link/core';
 import { MutationFunctionOptions } from '@apollo/client/react/types/types';
 import { GraphQLError } from 'graphql/error/GraphQLError';
-import { AuthenticationError, Errors, mergeErrors } from "public/requests/models/errors";
-import { ApolloError } from "@apollo/client";
+import {
+  AuthenticationError,
+  Errors,
+  mergeErrors
+} from 'public/requests/models/errors';
+import { ApolloError } from '@apollo/client';
 
 export function convertGQLErrors2Form(
   errors: ReadonlyArray<GraphQLError>
@@ -52,13 +56,13 @@ export function convertGQLErrors2Errors(
 export function convertApolloError2Errors(error: ApolloError): Errors | null {
   const result: Errors[] = [];
   if (error.message) {
-    result.push({messages: [error.message] });
+    result.push({ messages: [error.message] });
   }
   if (error.graphQLErrors) {
-    result.push(convertGQLErrors2Errors(error.graphQLErrors))
+    result.push(convertGQLErrors2Errors(error.graphQLErrors));
   }
   if (error.networkError) {
-    result.push({messages: [error.networkError.message] });
+    result.push({ messages: [error.networkError.message] });
   }
   return mergeErrors(result);
 }

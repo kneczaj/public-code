@@ -23,7 +23,9 @@ export interface PropsBase<TResolvedData, TNoData = never, TData = void>
    * The proper component
    * @param data
    */
-  children: ((props: { data: TResolvedData; className?: string }) => React.ReactNode) | React.ReactNode;
+  children:
+    | ((props: { data: TResolvedData; className?: string }) => React.ReactNode)
+    | React.ReactNode;
   /**
    * When true render children, when false the noDataPlaceholder
    * @param data

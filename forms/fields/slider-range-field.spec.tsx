@@ -91,10 +91,10 @@ describe('Slider range field', () => {
     describe('after moving max handle', () => {
       beforeEach(() => {
         act(() => {
-          wrapper.find(Slider).first().prop('onChange')!(undefined as any, [
-            5,
-            9
-          ]);
+          wrapper.find(Slider).first().prop('onChange')!(
+            undefined as any,
+            [5, 9]
+          );
         });
       });
 
@@ -117,10 +117,10 @@ describe('Slider range field', () => {
     describe('after moving min handle', () => {
       beforeEach(() => {
         act(() => {
-          wrapper.find(Slider).first().prop('onChange')!(undefined as any, [
-            6,
-            10
-          ]);
+          wrapper.find(Slider).first().prop('onChange')!(
+            undefined as any,
+            [6, 10]
+          );
         });
       });
 
@@ -369,10 +369,10 @@ describe('Slider range field', () => {
     describe('after moving max handle', () => {
       beforeEach(() => {
         act(() => {
-          wrapper.find(Slider).first().prop('onChange')!(undefined as any, [
-            6,
-            10
-          ]);
+          wrapper.find(Slider).first().prop('onChange')!(
+            undefined as any,
+            [6, 10]
+          );
         });
       });
 
@@ -395,10 +395,10 @@ describe('Slider range field', () => {
     describe('after moving min handle', () => {
       beforeEach(() => {
         act(() => {
-          wrapper.find(Slider).first().prop('onChange')!(undefined as any, [
-            5,
-            7
-          ]);
+          wrapper.find(Slider).first().prop('onChange')!(
+            undefined as any,
+            [5, 7]
+          );
         });
       });
 

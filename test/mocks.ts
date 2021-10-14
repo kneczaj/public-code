@@ -23,7 +23,7 @@ export const fetchResultAllFieldsSuccess: FetchResult = {
   extensions: any()
 };
 
-export const unathorizedError: GraphQLError = ({
+export const unathorizedError: GraphQLError = {
   message: 'Invalid token.',
   locations: [{ line: 2, column: 3 }],
   path: ['login'],
@@ -75,7 +75,7 @@ export const unathorizedError: GraphQLError = ({
       ]
     }
   }
-} as unknown) as GraphQLError; // this is a real response from our API
+} as unknown as GraphQLError; // this is a real response from our API
 
 export const unauthorizedFormError: FinalFormSubmissionResult<any> = {
   [FORM_ERROR]: 'Invalid token.'

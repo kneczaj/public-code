@@ -127,7 +127,7 @@ export function useField<
       ...field.input,
       'aria-describedby': !!errorString ? helperTextId : undefined,
       id,
-      ...((inputElementProps as unknown) as TInputElementProps)
+      ...(inputElementProps as unknown as TInputElementProps)
     },
     formControl: {
       error: !!errorString

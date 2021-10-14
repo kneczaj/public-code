@@ -33,10 +33,10 @@ export function deserializeWithId<Id, T>(
   payload: WithIdPayload<Id> & T
 ): WithId<Id, T> {
   const { id, ...data } = payload;
-  return ({
+  return {
     id,
     data
-  } as unknown) as WithId<Id, T>;
+  } as unknown as WithId<Id, T>;
 }
 
 export function capitalizeFirstLetter(text: string) {
