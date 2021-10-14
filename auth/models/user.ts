@@ -6,7 +6,7 @@ import {
   UsersPermissionsUser
 } from 'generated/graphql';
 
-export type Filter = NonNullable<Pick<FilterBase, 'name' | 'area'>> & {
+export type Filter = NonNullable<Pick<FilterBase, 'id' | 'name' | 'area'>> & {
   pricePerSquareMeter: Maybe<Pick<ComponentGeneralRange, 'min' | 'max'>>;
   size: Maybe<Pick<ComponentGeneralRange, 'min' | 'max'>>;
 };
