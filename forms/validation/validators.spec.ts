@@ -29,6 +29,7 @@ function testValidator(
   const errorStringIdentifier = Array.isArray(expectedResult)
     ? expectedResult[0]
     : expectedResult;
+  // eslint-disable-next-line jest/valid-title
   describe(validatorName, () => {
     passes.forEach(value => {
       const valueStr =
