@@ -24,7 +24,7 @@ export function Item<TData, TNoData = null>(props: Props<TData, TNoData>) {
     errorPlaceholder,
     noDataPlaceholder,
     noDataDetector
-  } = props as Props<TData, TNoData> & typeof defaultProps;
+  } = { ...defaultProps, ...props };
 
   return (
     <div className={merge(className, 'flex-1 d-flex flex-column')}>
@@ -39,5 +39,3 @@ export function Item<TData, TNoData = null>(props: Props<TData, TNoData>) {
     </div>
   );
 }
-
-Item.defaultProps = defaultProps;
