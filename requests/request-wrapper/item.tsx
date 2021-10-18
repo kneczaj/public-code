@@ -1,8 +1,8 @@
 import { merge } from '../../css';
-import { CircularProgress } from '@material-ui/core';
 import { isNull, isReturningReactNode } from '../../util';
 import React from 'react';
 import { defaultPropsBase, PropsBase } from './base';
+import { LoadingIndicator } from 'public/requests/components/loading-indicator';
 
 export interface Props<TResolvedData, TNoData = null, TData = void>
   extends PropsBase<TResolvedData, TNoData, TData> {
@@ -28,7 +28,7 @@ export function Item<TData, TNoData = null>(props: Props<TData, TNoData>) {
 
   return (
     <div className={merge(className, 'flex-1 d-flex flex-column')}>
-      {state.loading && <CircularProgress />}
+      {state.loading && <LoadingIndicator />}
       {isNull(state.error)
         ? noDataDetector(state.data)
           ? noDataPlaceholder(className)

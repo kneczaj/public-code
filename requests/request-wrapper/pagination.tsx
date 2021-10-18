@@ -1,9 +1,8 @@
 import React from 'react';
 import './request-result.sass';
 import { isNull, isReturningReactNode } from '../../util';
-import { CircularProgress } from '@material-ui/core';
 import { defaultPropsBase, PropsBase } from './base';
-import { Centered } from '../../components/centered';
+import { LoadingIndicator } from 'public/requests/components/loading-indicator';
 
 interface PropsWithoutResolve<TResolvedData extends Array<any>, TNoData>
   extends PropsBase<TResolvedData, TNoData> {
@@ -42,11 +41,7 @@ export function Pagination<TResolvedData extends Array<any>, TNoData = never>(
         : children}
       {!isNull(state.error) &&
         errorPlaceholder({ error: state.error, className })}
-      {state.loading && (
-        <Centered className={'p-1'}>
-          <CircularProgress />
-        </Centered>
-      )}
+      {state.loading && <LoadingIndicator />}
     </>
   );
 }

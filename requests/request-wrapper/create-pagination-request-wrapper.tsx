@@ -66,7 +66,8 @@ export function createPaginationRequestWrapper<
     const [limit, setLimit] = useState(itemsPerPage);
     const [hasMore, setHasMore] = useState(true);
     const { data, loading, ...state } = useRequest({
-      variables: { start: 0, limit }
+      variables: { start: 0, limit },
+      notifyOnNetworkStatusChange: true
     });
     const extracted: TData = useMemo(
       () => (isNull(data) ? ([] as unknown as TData) : extractData(data)),
