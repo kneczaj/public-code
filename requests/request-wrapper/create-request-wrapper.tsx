@@ -4,7 +4,6 @@ import {
   Props as RequestWrapperProps
 } from 'public/requests/request-wrapper/item';
 import { RequestStateBase } from 'public/requests/models/state';
-import { createContext, createContextHook } from 'public/utils/context-hook';
 import { isNull, isReturningReactNode } from 'public/util';
 
 export interface WrapperProps<TResponseData, TData>
@@ -15,21 +14,13 @@ export interface WrapperProps<TResponseData, TData>
   children: RequestWrapperProps<TData, RequestStateBase<TData>>['children'];
 }
 
-export type CreatorResult<TResponseData, TData> = [
-  // RequestWrapper component
-  React.FunctionComponent<WrapperProps<TResponseData, TData>>,
-  // data hook
-  () => TData
-];
-
 export function createRequestWrapper<TResponseData, TData>(
   useRequest: () => RequestStateBase<TResponseData | null>,
   extractData: (response: TResponseData) => TData | null,
   displayName: string,
+  Context: React.Context<TData>,
   noDataDetector: (data: TData | null) => data is null = isNull
-): CreatorResult<TResponseData, TData> {
-  const Context = createContext<TData>(displayName);
-  const hook = createContextHook<TData>(Context);
+): React.FunctionComponent<WrapperProps<TResponseData, TData>> {
   const Component = ({
     children,
     ...wrapperProps
@@ -53,5 +44,5 @@ export function createRequestWrapper<TResponseData, TData>(
     );
   };
   Component.displayName = displayName;
-  return [Component, hook];
+  return Component;
 }
