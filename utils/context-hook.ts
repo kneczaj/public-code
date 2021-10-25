@@ -2,29 +2,33 @@ import React, { Context as ReactContext, useContext } from 'react';
 import { isUndefined } from '../util';
 
 /**
- * Differs from react context by mandatory displayName
+ * This is intended to cooperate with createContextHook so it has required displayName,
+ * and may hold initial undefined value when outside of the provider.
  */
-export interface Context<T> extends ReactContext<T> {
+export interface HookContext<T> extends ReactContext<T | undefined> {
   displayName: string;
 }
 
 /**
- * Creates a context with initial undefined value
+ * Creates a context with initial undefined value and displayName. To be used with createContextHook.
  */
-export function createContext<T>(displayName: string): Context<T> {
-  const context = React.createContext(undefined as unknown as T);
-  context.displayName = displayName;
-  return context as Context<T>;
+export function createContext<T>(displayName: string): HookContext<T> {
+  const context = React.createContext<T | undefined>(undefined);
+  return {
+    ...context,
+    displayName
+  };
 }
 
 export class ContextError extends Error {}
 
 /**
- * After the context is created with the upper function this handles the exceptions when hook used outside the context
+ * After the context is created with the upper function this handles the exceptions when hook is used outside
+ * of the context
  * @param context
  */
 export const createContextHook =
-  <T>(context: Context<T>) =>
+  <T>(context: HookContext<T>) =>
   (): T => {
     const val = useContext(context);
     if (isUndefined(val)) {

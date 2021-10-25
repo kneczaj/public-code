@@ -5,12 +5,13 @@ import {
 } from 'public/requests/request-wrapper/item';
 import { RequestStateBase } from 'public/requests/models/state';
 import { isNotNull, isNull, isReturningReactNode } from 'public/util';
+import { HookContext } from 'public/utils/context-hook';
 
 export interface Props<TResponseData, TData> {
   useRequest: () => RequestStateBase<TResponseData | null>;
   extractData: (response: TResponseData) => TData | null;
   displayName: string;
-  Context: React.Context<TData>;
+  Context: HookContext<TData>;
   hasData?: (data: TData | null) => data is TData;
 }
 
