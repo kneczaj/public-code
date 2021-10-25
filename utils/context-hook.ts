@@ -14,10 +14,8 @@ export interface HookContext<T> extends ReactContext<T | undefined> {
  */
 export function createContext<T>(displayName: string): HookContext<T> {
   const context = React.createContext<T | undefined>(undefined);
-  return {
-    ...context,
-    displayName
-  };
+  context.displayName = displayName;
+  return context as HookContext<T>;
 }
 
 export class ContextError extends Error {}
