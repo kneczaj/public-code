@@ -19,7 +19,7 @@ export interface ChildrenProps<TData extends any[]> {
 export interface WrapperProps<TResponseData, TData extends Array<any>>
   extends Omit<
     RequestWrapperProps<TResponseData, RequestStateBase<TResponseData>>,
-    'state' | 'children' | 'noDataDetector'
+    'state' | 'children' | 'hasData'
   > {
   children: (props: ChildrenProps<TData>) => React.ReactNode;
 }
@@ -43,7 +43,7 @@ export interface Props<TResponseData, TData> {
   ) => QueryResult<TResponseData, PaginationVariables>;
   extractData: (response: TResponseData) => TData;
   displayName: string;
-  noDataDetector?: (data: TData | null) => boolean;
+  hasData?: (data: TData | null) => data is TData;
   itemsPerPage?: number;
 }
 
@@ -54,7 +54,7 @@ export function createPaginationRequestWrapper<
   useRequest,
   extractData,
   displayName,
-  noDataDetector = data => !!data && !data.length,
+  hasData = (data: TData | null): data is TData => !!data && !!data.length,
   itemsPerPage = 100
 }: Props<TResponseData, TData>): CreatorResult<TResponseData, TData> {
   const Context = createContext<TData>(displayName);
@@ -95,7 +95,7 @@ export function createPaginationRequestWrapper<
     return (
       <PaginationRequestWrapper<TData, never>
         state={{ ...state, loading, data: extracted }}
-        noDataDetector={noDataDetector as any}
+        hasData={hasData}
         {...wrapperProps}
       >
         {({ data, className }) => (

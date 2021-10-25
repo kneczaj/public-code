@@ -1,5 +1,5 @@
 import { merge } from '../../css';
-import { isNull, isReturningReactNode } from '../../util';
+import { isNotNull, isNull, isReturningReactNode } from '../../util';
 import React from 'react';
 import { defaultPropsBase, PropsBase } from './base';
 import { LoadingIndicator } from 'public/requests/components/loading-indicator';
@@ -10,10 +10,10 @@ export interface Props<TResolvedData, TNoData = null, TData = void>
 }
 
 export const defaultProps: Required<
-  Pick<Props<any>, 'noDataPlaceholder' | 'errorPlaceholder' | 'noDataDetector'>
+  Pick<Props<any>, 'noDataPlaceholder' | 'errorPlaceholder' | 'hasData'>
 > = {
   ...defaultPropsBase,
-  noDataDetector: isNull
+  hasData: isNotNull
 };
 
 export function Item<TData, TNoData = null>(props: Props<TData, TNoData>) {
@@ -23,18 +23,18 @@ export function Item<TData, TNoData = null>(props: Props<TData, TNoData>) {
     state,
     errorPlaceholder,
     noDataPlaceholder,
-    noDataDetector
+    hasData
   } = { ...defaultProps, ...props };
 
   return (
     <div className={merge(className, 'flex-1 d-flex flex-column')}>
       {state.loading && <LoadingIndicator />}
       {isNull(state.error)
-        ? noDataDetector(state.data)
-          ? noDataPlaceholder(className)
-          : isReturningReactNode(children)
-          ? children({ data: state.data, className })
-          : children
+        ? hasData(state.data)
+          ? isReturningReactNode(children)
+            ? children({ data: state.data, className })
+            : children
+          : noDataPlaceholder(className)
         : errorPlaceholder({ error: state.error, className })}
     </div>
   );

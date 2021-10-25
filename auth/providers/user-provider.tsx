@@ -9,9 +9,9 @@ export const useUser = createContextHook<User>(UserContext);
 /**
  * This requires authenticated access.
  */
-export const UserRequestWrapper = createRequestWrapper<MeQuery, User>(
-  useMeQuery,
-  response => (isNull(response.me) ? null : response.me),
-  'user',
-  UserContext
-);
+export const UserRequestWrapper = createRequestWrapper<MeQuery, User>({
+  useRequest: useMeQuery,
+  extractData: response => (isNull(response.me) ? null : response.me),
+  displayName: 'user',
+  Context: UserContext
+});

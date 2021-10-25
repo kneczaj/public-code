@@ -30,7 +30,7 @@ export interface PropsBase<TResolvedData, TNoData = never, TData = void>
    * When true render children, when false the noDataPlaceholder
    * @param data
    */
-  noDataDetector: (data: TResolvedData | TNoData) => data is TNoData;
+  hasData: (data: TResolvedData | TNoData) => data is TResolvedData;
 }
 
 export const defaultPropsBase: Required<

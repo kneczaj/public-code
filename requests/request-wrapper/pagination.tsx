@@ -28,17 +28,17 @@ export function Pagination<TResolvedData extends Array<any>, TNoData = never>(
     noDataPlaceholder = (className?: string) => (
       <div className={className}>No data</div>
     ),
-    noDataDetector
+    hasData
   } = props;
   return (
     <>
-      {noDataDetector(state.data)
-        ? state.loading // show the placeholder only if not at loading state
-          ? null
-          : noDataPlaceholder(className)
-        : isReturningReactNode(children)
-        ? children({ data: state.data, className })
-        : children}
+      {hasData(state.data)
+        ? isReturningReactNode(children)
+          ? children({ data: state.data, className })
+          : children
+        : state.loading // show the placeholder only if not at loading state
+        ? null
+        : noDataPlaceholder(className)}
       {!isNull(state.error) &&
         errorPlaceholder({ error: state.error, className })}
       {state.loading && <LoadingIndicator />}

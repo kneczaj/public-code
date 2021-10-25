@@ -4,23 +4,33 @@ import {
   Props as RequestWrapperProps
 } from 'public/requests/request-wrapper/item';
 import { RequestStateBase } from 'public/requests/models/state';
-import { isNull, isReturningReactNode } from 'public/util';
+import { isNotNull, isNull, isReturningReactNode } from 'public/util';
+
+export interface Props<TResponseData, TData> {
+  useRequest: () => RequestStateBase<TResponseData | null>;
+  extractData: (response: TResponseData) => TData | null;
+  displayName: string;
+  Context: React.Context<TData>;
+  hasData?: (data: TData | null) => data is TData;
+}
 
 export interface WrapperProps<TResponseData, TData>
   extends Omit<
     RequestWrapperProps<TResponseData, RequestStateBase<TResponseData>>,
-    'state' | 'children' | 'noDataDetector'
+    'state' | 'children' | 'hasData'
   > {
   children: RequestWrapperProps<TData, RequestStateBase<TData>>['children'];
 }
 
-export function createRequestWrapper<TResponseData, TData>(
-  useRequest: () => RequestStateBase<TResponseData | null>,
-  extractData: (response: TResponseData) => TData | null,
-  displayName: string,
-  Context: React.Context<TData>,
-  noDataDetector: (data: TData | null) => data is null = isNull
-): React.FunctionComponent<WrapperProps<TResponseData, TData>> {
+export function createRequestWrapper<TResponseData, TData>({
+  useRequest,
+  extractData,
+  displayName,
+  Context,
+  hasData = isNotNull
+}: Props<TResponseData, TData>): React.FunctionComponent<
+  WrapperProps<TResponseData, TData>
+> {
   const Component = ({
     children,
     ...wrapperProps
@@ -30,7 +40,7 @@ export function createRequestWrapper<TResponseData, TData>(
     return (
       <RequestWrapper<TData>
         state={{ ...state, data: extracted }}
-        noDataDetector={noDataDetector}
+        hasData={hasData}
         {...wrapperProps}
       >
         {({ data, className }) => (

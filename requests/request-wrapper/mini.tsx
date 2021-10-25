@@ -28,7 +28,7 @@ export function Mini<TData>(props: Props<TData>): JSX.Element {
     state,
     errorPlaceholder,
     noDataPlaceholder,
-    noDataDetector
+    hasData
   } = props as Props<TData> & typeof defaultProps;
 
   return (
@@ -36,12 +36,14 @@ export function Mini<TData>(props: Props<TData>): JSX.Element {
       {state.loading ? (
         <CircularProgress size={'1em'} className={'stretch-abs'} />
       ) : isNull(state.error) ? (
-        noDataDetector(state.data) ? (
-          noDataPlaceholder(className)
-        ) : isReturningReactNode(children) ? (
-          children({ data: state.data, className })
+        hasData(state.data) ? (
+          isReturningReactNode(children) ? (
+            children({ data: state.data, className })
+          ) : (
+            children
+          )
         ) : (
-          children
+          noDataPlaceholder(className)
         )
       ) : (
         errorPlaceholder({ error: state.error, className })
