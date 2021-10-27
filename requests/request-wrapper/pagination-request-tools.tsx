@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Props as RequestWrapperProps } from 'public/requests/request-wrapper/item';
 import { RequestStateBase } from 'public/requests/models/state';
-import { createContext, createContextHook } from 'public/utils/context-hook';
+import { createHookContext, HookContext } from 'public/utils/context-hook';
 import { isNull, isReturningReactNode } from 'public/util';
 import { PaginationRequestWrapper } from 'public/requests/request-wrapper/index';
 import { PaginationVariables } from 'public/requests/models/pagination';
@@ -24,12 +24,13 @@ export interface WrapperProps<TResponseData, TData extends Array<any>>
   children: (props: ChildrenProps<TData>) => React.ReactNode;
 }
 
-export type CreatorResult<TResponseData, TData extends Array<any>> = [
+export type CreatorResult<TResponseData, TData extends Array<any>> = {
   // RequestWrapper component
-  React.FunctionComponent<WrapperProps<TResponseData, TData>>,
+  Wrapper: React.FunctionComponent<WrapperProps<TResponseData, TData>>;
   // data hook
-  () => TData
-];
+  useData: () => TData;
+  DataContext: HookContext<TData>;
+};
 
 export type PaginationRequestHookOptions<TResponseData> = QueryHookOptions<
   TResponseData,
@@ -47,7 +48,7 @@ export interface Props<TResponseData, TData> {
   itemsPerPage?: number;
 }
 
-export function createPaginationRequestWrapper<
+export function createPaginationRequestTools<
   TResponseData,
   TData extends Array<any>
 >({
@@ -57,9 +58,8 @@ export function createPaginationRequestWrapper<
   hasData = (data: TData | null): data is TData => !!data && !!data.length,
   itemsPerPage = 100
 }: Props<TResponseData, TData>): CreatorResult<TResponseData, TData> {
-  const Context = createContext<TData>(displayName);
-  const hook = createContextHook<TData>(Context);
-  const Component = ({
+  const Hook = createHookContext<TData>(displayName);
+  const Wrapper = ({
     children,
     ...wrapperProps
   }: WrapperProps<TResponseData, TData>): JSX.Element => {
@@ -99,15 +99,15 @@ export function createPaginationRequestWrapper<
         {...wrapperProps}
       >
         {({ data, className }) => (
-          <Context.Provider value={data}>
+          <Hook.Context.Provider value={data}>
             {isReturningReactNode(children)
               ? children({ data, className, hasMore, loadMore })
               : children}
-          </Context.Provider>
+          </Hook.Context.Provider>
         )}
       </PaginationRequestWrapper>
     );
   };
-  Component.displayName = displayName;
-  return [Component, hook];
+  Wrapper.displayName = displayName;
+  return { Wrapper, DataContext: Hook.Context, useData: Hook.useContext };
 }

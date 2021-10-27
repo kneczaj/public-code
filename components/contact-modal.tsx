@@ -8,12 +8,12 @@ import {
 } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { SimpleDialogProps } from 'public/providers/dialog-provider';
-import { useCompanyDetails } from 'public/providers/company-details-provider';
+import { CompanyDetails } from 'public/providers/company-details-provider';
 
 export function Contact({ id, close }: SimpleDialogProps): JSX.Element {
   const ct = useCT();
   const { address, contactEmail, companyName, nip, regon } =
-    useCompanyDetails();
+    CompanyDetails.useContext();
 
   return (
     <Dialog open={true} onClose={close} id={id}>

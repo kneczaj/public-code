@@ -1,12 +1,12 @@
 import React from 'react';
 import { getInitialState } from '../models/user';
 import { isNull } from '../../util';
-import { createContext, createContextHook } from '../../utils/context-hook';
+import { createHookContext } from '../../utils/context-hook';
 import { ProviderComponentProps } from '../../components/provider-group';
 import { useState } from '../../hooks/state';
 import { useHistory } from '../../routing/hooks/history';
 import { LOGIN } from 'public/auth/models/urls';
-import { useNotifications } from 'public/notifications/notifications-provider';
+import { Notifications } from 'public/notifications/notifications-provider';
 import { useCT } from 'public/hooks/translation';
 
 export interface ContextProps {
@@ -20,8 +20,7 @@ export interface ContextProps {
   redirectToLogin: () => void;
 }
 
-export const TokenContext = createContext<ContextProps>('user');
-export const useToken = createContextHook(TokenContext);
+export const Token = createHookContext<ContextProps>('user');
 
 /**
  * Low level authentication info which holds authentication token, and synchronises it with localStorage
@@ -33,7 +32,7 @@ export function TokenProvider({
 }: ProviderComponentProps): JSX.Element {
   const { push } = useHistory();
   const { value: token, set } = useState<string | null>(getInitialState());
-  const { show } = useNotifications();
+  const { show } = Notifications.useContext();
   const ct = useCT();
 
   function login(token: string): void {
@@ -64,7 +63,7 @@ export function TokenProvider({
   }
 
   return (
-    <TokenContext.Provider
+    <Token.Context.Provider
       value={{
         token,
         isAuthenticated: !isNull(token),
@@ -74,6 +73,6 @@ export function TokenProvider({
       }}
     >
       {children}
-    </TokenContext.Provider>
+    </Token.Context.Provider>
   );
 }

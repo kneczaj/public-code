@@ -4,9 +4,9 @@ import {
   ConfirmDialogProvider
 } from 'public/providers/dialog-provider/confirm-dialog-provider';
 import { DialogComponent } from 'public/providers/dialog-provider/dialog-provider';
-import { useDialog as useDialogBase, useDialogAsync } from './dialog-provider';
+import { Dialog, useDialogAsync } from './dialog-provider';
 import {
-  useConfirmDialog,
+  ConfirmDialog,
   useConfirmDialogAsync
 } from './confirm-dialog-provider';
 import { useCallback } from 'react';
@@ -43,9 +43,9 @@ export interface Hook {
 }
 
 export function useDialog(): Hook {
-  const { openDialog: openSimpleDialog } = useDialogBase();
+  const { openDialog: openSimpleDialog } = Dialog.useContext();
   const { openDialog: openDialogAsync } = useDialogAsync();
-  const { openDialog: openConfirmDialog } = useConfirmDialog();
+  const { openDialog: openConfirmDialog } = ConfirmDialog.useContext();
   const { openDialog: openConfirmDialogAsync } = useConfirmDialogAsync();
 
   /**

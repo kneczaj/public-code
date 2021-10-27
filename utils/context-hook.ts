@@ -9,30 +9,35 @@ export interface HookContext<T> extends ReactContext<T | undefined> {
   displayName: string;
 }
 
-/**
- * Creates a context with initial undefined value and displayName. To be used with createContextHook.
- */
-export function createContext<T>(displayName: string): HookContext<T> {
-  const context = React.createContext<T | undefined>(undefined);
-  context.displayName = displayName;
-  return context as HookContext<T>;
+export interface CreateHookContextResult<T> {
+  Context: HookContext<T>;
+  useContext: () => T;
 }
 
 export class ContextError extends Error {}
 
 /**
- * After the context is created with the upper function this handles the exceptions when hook is used outside
- * of the context
- * @param context
+ * Creates a context with initial undefined value and displayName, and a hook which works only inside this context.
+ * This saves us writing undefined checks.
  */
-export const createContextHook =
-  <T>(context: HookContext<T>) =>
-  (): T => {
-    const val = useContext(context);
+export function createHookContext<T>(
+  displayName: string
+): CreateHookContextResult<T> {
+  const Context = React.createContext<T | undefined>(
+    undefined
+  ) as HookContext<T>;
+  const useHookContext = (): T => {
+    const val = useContext(Context);
     if (isUndefined(val)) {
       throw new ContextError(
-        `A context hook for context called "${context.displayName}" is used outside the context provider`
+        `A context hook for context called "${Context.displayName}" is used outside the context provider`
       );
     }
     return val;
   };
+  Context.displayName = displayName;
+  return {
+    Context,
+    useContext: useHookContext
+  };
+}

@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 import { ProviderComponentProps } from 'public/components/provider-group';
-import { createContext, createContextHook } from 'public/utils/context-hook';
+import { createHookContext } from 'public/utils/context-hook';
 import {
   DialogProps,
-  useDialog
+  Dialog
 } from 'public/providers/dialog-provider/dialog-provider';
 
 export interface ConfirmDialogProps<TReturnValue> extends DialogProps {
@@ -27,17 +27,12 @@ export interface Hook {
   ): void;
 }
 
-export const ConfirmDialogContext = createContext<Hook>('confirm dialog');
-
-/**
- * NOTE: please use the hook from index.ts instead
- */
-export const useConfirmDialog = createContextHook(ConfirmDialogContext);
+export const ConfirmDialog = createHookContext<Hook>('confirm dialog');
 
 export const ConfirmDialogProvider = ({
   children
 }: ProviderComponentProps): JSX.Element => {
-  const { openDialog: openDialogBase } = useDialog();
+  const { openDialog: openDialogBase } = Dialog.useContext();
   const openDialog = useCallback(
     (
       Component: ConfirmDialogComponent<unknown>,
@@ -63,11 +58,11 @@ export const ConfirmDialogProvider = ({
   );
 
   return (
-    <ConfirmDialogContext.Provider
+    <ConfirmDialog.Context.Provider
       value={{ openDialog: openDialog as Hook['openDialog'] }}
     >
       {children}
-    </ConfirmDialogContext.Provider>
+    </ConfirmDialog.Context.Provider>
   );
 };
 
@@ -86,7 +81,7 @@ export interface AsyncHook {
  * NOTE: please use the hook from index.ts instead
  */
 export function useConfirmDialogAsync(): AsyncHook {
-  const { openDialog: openDialogBase } = useConfirmDialog();
+  const { openDialog: openDialogBase } = ConfirmDialog.useContext();
   return {
     openDialog<TReturnValue>(
       Component: ConfirmDialogComponent<TReturnValue>

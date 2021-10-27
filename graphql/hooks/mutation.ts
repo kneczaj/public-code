@@ -17,9 +17,9 @@ import {
 } from 'public/graphql/utils';
 import { AuthenticationError, Errors } from 'public/requests/models/errors';
 import { FetchResult, MutationResult } from 'public/graphql/models';
-import { useNotifications } from 'public/notifications/notifications-provider';
+import { Notifications } from 'public/notifications/notifications-provider';
 import { useCT } from 'public/hooks/translation';
-import { useToken } from 'public/auth/providers/token-provider';
+import { Token } from 'public/auth/providers/token-provider';
 
 export type MutationSubmitResult = Promise<SubmissionErrors | undefined>;
 
@@ -39,8 +39,8 @@ export function useMutation<TData = any, FormValues = OperationVariables>(
   options?: MutationHookOptions<TData, FormValues>
 ): Hook<TData, FormValues> {
   const [triggerBase, result] = useMutationBase(mutation, options);
-  const { redirectToLogin } = useToken();
-  const { show } = useNotifications();
+  const { redirectToLogin } = Token.useContext();
+  const { show } = Notifications.useContext();
   const ct = useCT();
   const trigger = useCallback(
     async (

@@ -7,17 +7,17 @@ import { isNullOrUndefined, isUndefined } from 'public/util';
 import { convertApolloError2Errors } from 'public/graphql/utils';
 import { AuthenticationError, Errors } from 'public/requests/models/errors';
 import { QueryResult } from 'public/graphql/models';
-import { useNotifications } from 'public/notifications/notifications-provider';
+import { Notifications } from 'public/notifications/notifications-provider';
 import { useCT } from 'public/hooks/translation';
-import { useToken } from 'public/auth/providers/token-provider';
+import { Token } from 'public/auth/providers/token-provider';
 
 export function useQuery<TData = any, TVariables = OperationVariables>(
   query: DocumentNode | TypedDocumentNode<TData, TVariables>,
   options?: QueryHookOptions<TData, TVariables>
 ): QueryResult<TData, TVariables> {
   const response = useQueryBase(query, options);
-  const { redirectToLogin } = useToken();
-  const { show } = useNotifications();
+  const { redirectToLogin } = Token.useContext();
+  const { show } = Notifications.useContext();
   const ct = useCT();
   const error: Errors | null = (() => {
     try {

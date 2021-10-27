@@ -1,7 +1,7 @@
-import { useFormName } from '../form-name-context';
+import { FormName } from '../form-name-context';
 import { toId } from '../utils';
 
 export function useId(fieldName: string): string {
-  const formName: string = useFormName();
+  const formName: string = FormName.useContext();
   return toId(`${formName}-${fieldName}`);
 }

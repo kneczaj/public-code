@@ -4,7 +4,7 @@ import {
   FormProps,
   FormRenderProps
 } from 'react-final-form';
-import { FormNameContext } from '../form-name-context';
+import { FormName } from '../form-name-context';
 
 export interface Props<FormValues> extends FormProps<FormValues> {
   formName: string;
@@ -17,8 +17,8 @@ export function FormBase<FormValues>({
   ...rest
 }: Props<FormValues>): JSX.Element {
   return (
-    <FormNameContext.Provider value={formName}>
+    <FormName.Context.Provider value={formName}>
       <FormFinal<FormValues> {...rest}>{children}</FormFinal>
-    </FormNameContext.Provider>
+    </FormName.Context.Provider>
   );
 }

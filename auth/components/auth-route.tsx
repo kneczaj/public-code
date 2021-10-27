@@ -9,7 +9,7 @@ import { LOGIN } from '../models/urls';
 import { User } from '../models/user';
 import { isReturningReactNode } from '../../util';
 import { Redirect } from 'public/routing/components/redirect';
-import { useAuth } from 'public/auth/providers/auth-provider';
+import { Auth } from 'public/auth/providers/auth-provider';
 import { UserRequest } from 'public/auth/providers/user-provider';
 import { getLocationObj } from 'public/routing/models';
 
@@ -24,7 +24,7 @@ export interface Props extends Omit<RouteProps, 'children'> {
 }
 
 export function AuthRoute({ children, ...props }: Props): JSX.Element {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = Auth.useContext();
   const location = useLocation();
   if (isAuthenticated) {
     return (

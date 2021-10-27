@@ -5,11 +5,7 @@ import {
 } from 'public/requests/request-wrapper/item';
 import { RequestStateBase } from 'public/requests/models/state';
 import { isNotNull, isNull, isReturningReactNode } from 'public/util';
-import {
-  createContext,
-  createContextHook,
-  HookContext
-} from 'public/utils/context-hook';
+import { createHookContext, HookContext } from 'public/utils/context-hook';
 
 export interface Props<TResponseData, TData> {
   useRequest: () => RequestStateBase<TResponseData | null>;
@@ -38,9 +34,8 @@ export function createRequestTools<TResponseData, TData>({
   displayName,
   hasData = isNotNull
 }: Props<TResponseData, TData>): RequestTools<TResponseData, TData> {
-  const DataContext = createContext<TData>(displayName);
-  const useData = createContextHook<TData>(DataContext);
-  const Component = ({
+  const Data = createHookContext<TData>(displayName);
+  const Wrapper = ({
     children,
     ...wrapperProps
   }: WrapperProps<TResponseData, TData>): JSX.Element => {
@@ -53,19 +48,19 @@ export function createRequestTools<TResponseData, TData>({
         {...wrapperProps}
       >
         {({ data, className }) => (
-          <DataContext.Provider value={data}>
+          <Data.Context.Provider value={data}>
             {isReturningReactNode(children)
               ? children({ data, className })
               : children}
-          </DataContext.Provider>
+          </Data.Context.Provider>
         )}
       </RequestWrapper>
     );
   };
-  Component.displayName = displayName;
+  Wrapper.displayName = displayName;
   return {
-    DataContext,
-    useData,
-    Wrapper: Component
+    DataContext: Data.Context,
+    useData: Data.useContext,
+    Wrapper
   };
 }

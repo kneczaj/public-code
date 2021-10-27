@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProviderComponentProps } from 'public/components/provider-group';
-import { createContext, createContextHook } from 'public/utils/context-hook';
+import { createHookContext } from 'public/utils/context-hook';
 
 export interface LinkProps {
   className?: string;
@@ -23,20 +23,16 @@ export interface ContextProps {
 
 export interface Props extends ContextProps, ProviderComponentProps {}
 
-export const CompanyDetailsContext =
-  createContext<ContextProps>('company details');
-
-export const useCompanyDetails = createContextHook<ContextProps>(
-  CompanyDetailsContext
-);
+export const CompanyDetails =
+  createHookContext<ContextProps>('company details');
 
 export function CompanyDetailsProvider({
   children,
   ...companyDetails
 }: Props): JSX.Element {
   return (
-    <CompanyDetailsContext.Provider value={companyDetails}>
+    <CompanyDetails.Context.Provider value={companyDetails}>
       {children}
-    </CompanyDetailsContext.Provider>
+    </CompanyDetails.Context.Provider>
   );
 }

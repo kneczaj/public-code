@@ -7,7 +7,7 @@ import { capitalizeFirstLetter } from '../../util';
 import { useT } from '../../hooks/translation';
 import { Button, Grid, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { useAuth } from 'public/auth/providers/auth-provider';
+import { Auth } from 'public/auth/providers/auth-provider';
 
 export interface Props {
   children?: React.ReactNode;
@@ -26,7 +26,7 @@ export function LoginForm({
 }: Props): JSX.Element {
   const t = useT();
   const classes = useStyles();
-  const { login } = useAuth();
+  const { login } = Auth.useContext();
 
   return (
     <Form formName={'login'} onSubmit={login}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { createContext, createContextHook } from '../utils/context-hook';
+import { createHookContext } from '../utils/context-hook';
 import {
   ProviderComponent,
   ProviderComponentProps
@@ -16,9 +16,7 @@ export interface ContextProps {
   show: (notification: Notification) => void;
 }
 
-export const NotificationsContext =
-  createContext<ContextProps>('notifications');
-export const useNotifications = createContextHook(NotificationsContext);
+export const Notifications = createHookContext<ContextProps>('notifications');
 
 export const NotificationsProvider: ProviderComponent = ({
   children
@@ -33,12 +31,12 @@ export const NotificationsProvider: ProviderComponent = ({
     notifyFn(t(notification.message), title);
   }
   return (
-    <NotificationsContext.Provider
+    <Notifications.Context.Provider
       value={{
         show
       }}
     >
       {children}
-    </NotificationsContext.Provider>
+    </Notifications.Context.Provider>
   );
 };

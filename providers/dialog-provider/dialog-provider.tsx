@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { ProviderComponentProps } from 'public/components/provider-group';
 import { Map } from 'immutable';
 import uniqueId from 'lodash.uniqueid';
-import { createContext, createContextHook } from 'public/utils/context-hook';
+import { createHookContext } from 'public/utils/context-hook';
 import { isUndefined } from 'public/util';
 
 export interface DialogProps {
@@ -20,12 +20,7 @@ export interface Hook {
   openDialog: (dialog: DialogComponent, onClose?: () => void) => void;
 }
 
-export const DialogContext = createContext<Hook>('dialog');
-
-/**
- * NOTE: please use the hook from index.ts instead
- */
-export const useDialog = createContextHook(DialogContext);
+export const Dialog = createHookContext<Hook>('dialog');
 
 export const DialogProvider = ({
   children
@@ -59,7 +54,7 @@ export const DialogProvider = ({
   );
 
   return (
-    <DialogContext.Provider value={{ openDialog }}>
+    <Dialog.Context.Provider value={{ openDialog }}>
       {children}
       {[
         ...dialogs
@@ -68,7 +63,7 @@ export const DialogProvider = ({
           ))
           .values()
       ]}
-    </DialogContext.Provider>
+    </Dialog.Context.Provider>
   );
 };
 
@@ -85,7 +80,7 @@ export interface AsyncHook {
  * NOTE: please use the hook from index.ts instead
  */
 export function useDialogAsync(): AsyncHook {
-  const { openDialog: openDialogBase } = useDialog();
+  const { openDialog: openDialogBase } = Dialog.useContext();
   return {
     openDialog<TReturnValue>(
       Component: DialogComponent
