@@ -10,7 +10,7 @@ import { User } from '../models/user';
 import { isReturningReactNode } from '../../util';
 import { Redirect } from 'public/routing/components/redirect';
 import { useAuth } from 'public/auth/providers/auth-provider';
-import { UserRequestWrapper } from 'public/auth/providers/user-provider';
+import { UserRequest } from 'public/auth/providers/user-provider';
 import { getLocationObj } from 'public/routing/models';
 
 export interface AuthRouteChildrenProps<T> extends RouteChildrenProps<T> {
@@ -30,7 +30,7 @@ export function AuthRoute({ children, ...props }: Props): JSX.Element {
     return (
       <Route {...props}>
         {(props: RouteChildrenProps<any>) => (
-          <UserRequestWrapper>
+          <UserRequest.Wrapper>
             {({ data, className }) =>
               isReturningReactNode<AuthRouteChildrenProps<any>>(children)
                 ? children({
@@ -39,7 +39,7 @@ export function AuthRoute({ children, ...props }: Props): JSX.Element {
                   })
                 : children
             }
-          </UserRequestWrapper>
+          </UserRequest.Wrapper>
         )}
       </Route>
     );

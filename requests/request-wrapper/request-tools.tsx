@@ -5,13 +5,16 @@ import {
 } from 'public/requests/request-wrapper/item';
 import { RequestStateBase } from 'public/requests/models/state';
 import { isNotNull, isNull, isReturningReactNode } from 'public/util';
-import { HookContext } from 'public/utils/context-hook';
+import {
+  createContext,
+  createContextHook,
+  HookContext
+} from 'public/utils/context-hook';
 
 export interface Props<TResponseData, TData> {
   useRequest: () => RequestStateBase<TResponseData | null>;
   extractData: (response: TResponseData) => TData | null;
   displayName: string;
-  Context: HookContext<TData>;
   hasData?: (data: TData | null) => data is TData;
 }
 
@@ -23,15 +26,20 @@ export interface WrapperProps<TResponseData, TData>
   children: RequestWrapperProps<TData, RequestStateBase<TData>>['children'];
 }
 
-export function createRequestWrapper<TResponseData, TData>({
+export interface RequestTools<TResponseData, TData> {
+  DataContext: HookContext<TData>;
+  useData: () => TData;
+  Wrapper: React.FunctionComponent<WrapperProps<TResponseData, TData>>;
+}
+
+export function createRequestTools<TResponseData, TData>({
   useRequest,
   extractData,
   displayName,
-  Context,
   hasData = isNotNull
-}: Props<TResponseData, TData>): React.FunctionComponent<
-  WrapperProps<TResponseData, TData>
-> {
+}: Props<TResponseData, TData>): RequestTools<TResponseData, TData> {
+  const DataContext = createContext<TData>(displayName);
+  const useData = createContextHook<TData>(DataContext);
   const Component = ({
     children,
     ...wrapperProps
@@ -45,15 +53,19 @@ export function createRequestWrapper<TResponseData, TData>({
         {...wrapperProps}
       >
         {({ data, className }) => (
-          <Context.Provider value={data}>
+          <DataContext.Provider value={data}>
             {isReturningReactNode(children)
               ? children({ data, className })
               : children}
-          </Context.Provider>
+          </DataContext.Provider>
         )}
       </RequestWrapper>
     );
   };
   Component.displayName = displayName;
-  return Component;
+  return {
+    DataContext,
+    useData,
+    Wrapper: Component
+  };
 }
