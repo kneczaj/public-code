@@ -7,7 +7,7 @@ export function useParam<
   TOut = string
 >(
   name: string,
-  transformer: TOut extends string ? undefined : (original: string) => TOut
+  transformer: TOut extends string ? void : (original: string) => TOut
 ): TOut extends string ? string : TOut {
   const params = useParams<RoutingParams>();
   const value = params[name];
