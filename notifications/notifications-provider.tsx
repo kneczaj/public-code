@@ -4,13 +4,9 @@ import {
   ProviderComponent,
   ProviderComponentProps
 } from '../components/provider-group';
-import {
-  Notification,
-  NotificationManager,
-  NotifyFunction
-} from './models/notifications';
-import { capitalizeFirstLetter } from '../util';
-import { useT } from '../hooks/translation';
+import { Notification } from './models/notifications';
+import { useCT } from '../hooks/translation';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 
 export interface ContextProps {
   show: (notification: Notification) => void;
@@ -18,17 +14,13 @@ export interface ContextProps {
 
 export const Notifications = createHookContext<ContextProps>('notifications');
 
-export const NotificationsProvider: ProviderComponent = ({
+const NotificationsProviderBase: ProviderComponent = ({
   children
 }: ProviderComponentProps) => {
-  const t = useT();
-  function show(notification: Notification) {
-    const notifyFn: NotifyFunction =
-      NotificationManager[notification.type].bind(NotificationManager);
-    const title = notification.title
-      ? capitalizeFirstLetter(t(notification.title))
-      : undefined;
-    notifyFn(t(notification.message), title);
+  const ct = useCT();
+  const { enqueueSnackbar } = useSnackbar();
+  function show({ type, message }: Notification) {
+    enqueueSnackbar(ct(message), { variant: type });
   }
   return (
     <Notifications.Context.Provider
@@ -38,5 +30,15 @@ export const NotificationsProvider: ProviderComponent = ({
     >
       {children}
     </Notifications.Context.Provider>
+  );
+};
+
+export const NotificationsProvider: ProviderComponent = ({
+  children
+}: ProviderComponentProps) => {
+  return (
+    <SnackbarProvider>
+      <NotificationsProviderBase>{children}</NotificationsProviderBase>
+    </SnackbarProvider>
   );
 };

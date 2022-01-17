@@ -1,27 +1,7 @@
-// @ts-ignore
-import { NotificationManager as NotificationManagerBase } from 'react-notifications';
-
-export type NotificationType = 'info' | 'success' | 'warning' | 'error';
-
-export type NotifyFunction = (
-  message: string,
-  title?: string,
-  timeout?: number,
-  callback?: () => void
-) => void;
-
-export interface NotificationManager {
-  info: NotifyFunction;
-  success: NotifyFunction;
-  warning: NotifyFunction;
-  error: NotifyFunction;
-}
-
-// eslint-disable-next-line
-export const NotificationManager = NotificationManagerBase as NotificationManager;
+import { VariantType } from 'notistack';
 
 export interface Notification {
-  type: NotificationType;
+  type: VariantType;
   message: string;
   title?: string;
 }
