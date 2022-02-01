@@ -30,7 +30,7 @@ export function AuthRoute({ children, ...props }: Props): JSX.Element {
     return (
       <Route {...props}>
         {(props: RouteChildrenProps<any>) => (
-          <UserRequest.Wrapper>
+          <UserRequest.WrapperWithProvider>
             {({ data, className }) =>
               isReturningReactNode<AuthRouteChildrenProps<any>>(children)
                 ? children({
@@ -39,7 +39,7 @@ export function AuthRoute({ children, ...props }: Props): JSX.Element {
                   })
                 : children
             }
-          </UserRequest.Wrapper>
+          </UserRequest.WrapperWithProvider>
         )}
       </Route>
     );

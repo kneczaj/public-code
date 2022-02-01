@@ -26,6 +26,9 @@ export interface RequestTools<TResponseData, TData> {
   DataContext: HookContext<TData>;
   useData: () => TData;
   Wrapper: React.FunctionComponent<WrapperProps<TResponseData, TData>>;
+  WrapperWithProvider: React.FunctionComponent<
+    WrapperProps<TResponseData, TData>
+  >;
 }
 
 export function createRequestTools<TResponseData, TData>({
@@ -47,6 +50,21 @@ export function createRequestTools<TResponseData, TData>({
         hasData={hasData}
         {...wrapperProps}
       >
+        {({ data, className }) =>
+          isReturningReactNode(children)
+            ? children({ data, className })
+            : children
+        }
+      </RequestWrapper>
+    );
+  };
+  Wrapper.displayName = displayName;
+  const WrapperWithProvider = ({
+    children,
+    ...wrapperProps
+  }: WrapperProps<TResponseData, TData>): JSX.Element => {
+    return (
+      <Wrapper {...wrapperProps}>
         {({ data, className }) => (
           <Data.Context.Provider value={data}>
             {isReturningReactNode(children)
@@ -54,13 +72,13 @@ export function createRequestTools<TResponseData, TData>({
               : children}
           </Data.Context.Provider>
         )}
-      </RequestWrapper>
+      </Wrapper>
     );
   };
-  Wrapper.displayName = displayName;
   return {
     DataContext: Data.Context,
     useData: Data.useContext,
-    Wrapper
+    Wrapper,
+    WrapperWithProvider
   };
 }
