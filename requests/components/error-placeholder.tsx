@@ -1,28 +1,20 @@
 import React from 'react';
-import { Errors as ErrorModel } from '../models/errors';
 import { useHistory } from 'react-router';
 import { merge } from '../../css';
 import { Button } from '@material-ui/core';
 import { Centered } from '../../components/centered';
-
-export interface Props {
-  value: ErrorModel;
-  className?: string;
-  showGoBack?: boolean;
-  retry?: () => void;
-  children?: React.ReactNode;
-}
+import { ErrorPlaceholderProps } from 'public/requests/request-wrapper/models';
 
 /**
  * Show error to the user, occupies minimum place in height
  */
-export function ErrorPlaceholder({
+export function DefaultErrorPlaceholder({
   children,
   value: { messages },
   showGoBack,
   className,
   retry
-}: Props): JSX.Element {
+}: ErrorPlaceholderProps): JSX.Element {
   const history = useHistory();
   return (
     <div

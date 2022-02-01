@@ -1,41 +1,39 @@
 import { merge } from '../../css';
 import { isNotNull, isNull, isReturningReactNode } from '../../util';
 import React from 'react';
-import { defaultPropsBase, PropsBase } from './base';
-import { LoadingIndicator } from 'public/requests/components/loading-indicator';
+import { PropsBase } from './models';
+import { DefaultLoadingIndicator } from 'public/requests/components/loading-indicator';
+import { DefaultErrorPlaceholder } from 'public/requests/components/error-placeholder';
+import { DefaultNoDataPlaceholder } from 'public/requests/components/no-data-placeholder';
 
-export interface Props<TResolvedData, TNoData = null, TData = void>
-  extends PropsBase<TResolvedData, TNoData, TData> {
-  className?: string;
-}
+export interface Props<TData, TNoData = null>
+  extends PropsBase<TData, TNoData> {}
 
-export const defaultProps: Required<
-  Pick<Props<any>, 'noDataPlaceholder' | 'errorPlaceholder' | 'hasData'>
-> = {
-  ...defaultPropsBase,
-  hasData: isNotNull
-};
-
-export function Item<TData, TNoData = null>(props: Props<TData, TNoData>) {
-  const {
-    children,
-    className,
-    state,
-    errorPlaceholder,
-    noDataPlaceholder,
-    hasData
-  } = { ...defaultProps, ...props };
-
+export function Item<TData, TNoData = null>({
+  children,
+  className,
+  state,
+  ErrorPlaceholder = DefaultErrorPlaceholder,
+  NoDataPlaceholder = DefaultNoDataPlaceholder,
+  LoadingIndicator = DefaultLoadingIndicator,
+  hasData = (data: TData | TNoData): data is TData => isNotNull(data)
+}: Props<TData, TNoData>) {
   return (
     <div className={merge(className, 'flex-1 d-flex flex-column')}>
       {state.loading && <LoadingIndicator />}
-      {isNull(state.error)
-        ? hasData(state.data)
-          ? isReturningReactNode(children)
-            ? children({ data: state.data, className })
-            : children
-          : noDataPlaceholder(className)
-        : errorPlaceholder({ error: state.error, className })}
+      {isNull(state.error) ? (
+        hasData(state.data) ? (
+          isReturningReactNode(children) ? (
+            children({ data: state.data, className })
+          ) : (
+            children
+          )
+        ) : (
+          <NoDataPlaceholder className={className} />
+        )
+      ) : (
+        <ErrorPlaceholder value={state.error} className={className} />
+      )}
     </div>
   );
 }

@@ -1,36 +1,24 @@
-import { Errors } from '../models/errors';
 import ErrorIcon from '@material-ui/icons/Error';
 import { merge } from '../../css';
 import { CircularProgress } from '@material-ui/core';
 import { isNull, isReturningReactNode } from '../../util';
 import React from 'react';
-import { Props, defaultProps as itemDefaultProps } from './item';
+import { Props } from './item';
+import { ErrorPlaceholderProps } from 'public/requests/request-wrapper/models';
+import { DefaultNoDataPlaceholder } from 'public/requests/components/no-data-placeholder';
 
-function errorPlaceholder({
-  error,
-  className
-}: {
-  error: Errors;
-  className?: string;
-}) {
-  return <ErrorIcon className={'stretch-abs'} />;
+function MiniErrorPlaceholder({ className }: ErrorPlaceholderProps) {
+  return <ErrorIcon className={merge('stretch-abs', className)} />;
 }
 
-const defaultProps: typeof itemDefaultProps = {
-  ...itemDefaultProps,
-  errorPlaceholder
-};
-
-export function Mini<TData>(props: Props<TData>): JSX.Element {
-  const {
-    children,
-    className,
-    state,
-    errorPlaceholder,
-    noDataPlaceholder,
-    hasData
-  } = props as Props<TData> & typeof defaultProps;
-
+export function Mini<TData>({
+  children,
+  className,
+  state,
+  ErrorPlaceholder = MiniErrorPlaceholder,
+  NoDataPlaceholder = DefaultNoDataPlaceholder,
+  hasData
+}: Props<TData>): JSX.Element {
   return (
     <div className={merge(className, 'mini-request-result-root')}>
       {state.loading ? (
@@ -43,13 +31,11 @@ export function Mini<TData>(props: Props<TData>): JSX.Element {
             children
           )
         ) : (
-          noDataPlaceholder(className)
+          <NoDataPlaceholder className={className} />
         )
       ) : (
-        errorPlaceholder({ error: state.error, className })
+        <ErrorPlaceholder value={state.error} className={className} />
       )}
     </div>
   );
 }
-
-Mini.defaultProps = defaultProps;

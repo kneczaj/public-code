@@ -1,8 +1,10 @@
 import React from 'react';
 import './request-result.sass';
 import { isNull, isReturningReactNode } from '../../util';
-import { defaultPropsBase, PropsBase } from './base';
-import { LoadingIndicator } from 'public/requests/components/loading-indicator';
+import { PropsBase } from './models';
+import { DefaultLoadingIndicator } from 'public/requests/components/loading-indicator';
+import { DefaultErrorPlaceholder } from 'public/requests/components/error-placeholder';
+import { NoDataPlaceholderProps } from 'public/requests/request-wrapper/models';
 
 interface PropsWithoutResolve<TResolvedData extends Array<any>, TNoData>
   extends PropsBase<TResolvedData, TNoData> {
@@ -10,6 +12,12 @@ interface PropsWithoutResolve<TResolvedData extends Array<any>, TNoData>
    * Passed to each: children, noDataPlaceholder, errorPlaceholder
    */
   className?: string;
+}
+
+export function PaginationNoDataPlaceholder({
+  className
+}: NoDataPlaceholderProps): JSX.Element {
+  return <div className={className}>No data</div>;
 }
 
 export type Props<
@@ -24,23 +32,25 @@ export function Pagination<TResolvedData extends Array<any>, TNoData = never>(
     children,
     className,
     state,
-    errorPlaceholder = defaultPropsBase.errorPlaceholder,
-    noDataPlaceholder = (className?: string) => (
-      <div className={className}>No data</div>
-    ),
+    ErrorPlaceholder = DefaultErrorPlaceholder,
+    NoDataPlaceholder = PaginationNoDataPlaceholder,
+    LoadingIndicator = DefaultLoadingIndicator,
     hasData
   } = props;
   return (
     <>
-      {hasData(state.data)
-        ? isReturningReactNode(children)
-          ? children({ data: state.data, className })
-          : children
-        : state.loading // show the placeholder only if not at loading state
-        ? null
-        : noDataPlaceholder(className)}
-      {!isNull(state.error) &&
-        errorPlaceholder({ error: state.error, className })}
+      {hasData(state.data) ? (
+        isReturningReactNode(children) ? (
+          children({ data: state.data, className })
+        ) : (
+          children
+        )
+      ) : state.loading ? null : ( // show the placeholder only if not at loading state
+        <NoDataPlaceholder className={className} />
+      )}
+      {!isNull(state.error) && (
+        <ErrorPlaceholder value={state.error} className={className} />
+      )}
       {state.loading && <LoadingIndicator />}
     </>
   );
