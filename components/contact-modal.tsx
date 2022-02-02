@@ -1,22 +1,16 @@
 import React from 'react';
 import { useCT } from 'public/hooks/translation';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle
-} from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import { SimpleDialogProps } from 'public/providers/dialog-provider';
+import { DialogContent, DialogTitle } from '@material-ui/core';
+import { SimpleDialog, SimpleDialogProps } from 'public/dialogs/SimpleDialog';
 import { CompanyDetails } from 'public/providers/company-details-provider';
 
-export function Contact({ id, close }: SimpleDialogProps): JSX.Element {
+export function Contact(props: SimpleDialogProps): JSX.Element {
   const ct = useCT();
   const { address, contactEmail, companyName, nip, regon } =
     CompanyDetails.useContext();
 
   return (
-    <Dialog open={true} onClose={close} id={id}>
+    <SimpleDialog {...props}>
       <DialogTitle>{ct('contact')}</DialogTitle>
       <DialogContent>
         <h3 itemProp={'company'}>{companyName}</h3>
@@ -33,11 +27,6 @@ export function Contact({ id, close }: SimpleDialogProps): JSX.Element {
           <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
         </p>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={close} color='primary' autoFocus>
-          {ct('close')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+    </SimpleDialog>
   );
 }

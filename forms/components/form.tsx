@@ -1,9 +1,24 @@
 import React from 'react';
-import { FormProps, FormRenderProps } from 'react-final-form';
+import { FormProps, FormRenderProps, RenderableProps } from 'react-final-form';
 import { FormBase } from './form-base';
 import { useCT } from '../../hooks/translation';
+import { Config } from 'final-form';
 
-export interface Props<FormValues> extends FormProps<FormValues> {
+/**
+ * This excludes record-like part at the original FormProps
+ */
+interface FinalFormProps<
+  FormValues = Record<string, any>,
+  InitialFormValues = Partial<FormValues>
+> extends Config<FormValues, InitialFormValues>,
+    RenderableProps<FormRenderProps<FormValues, InitialFormValues>>,
+    Pick<
+      FormProps<FormValues, InitialFormValues>,
+      'subscription' | 'decorators' | 'form' | 'initialValuesEqual'
+    > {}
+
+export interface Props<FormValues, InitialFormValues = FormValues>
+  extends FinalFormProps<FormValues, InitialFormValues> {
   formName: string;
   className?: string;
   children: {
@@ -12,18 +27,21 @@ export interface Props<FormValues> extends FormProps<FormValues> {
   };
 }
 
-export function Form<FormValues = any>({
+export function Form<
+  FormValues = Record<string, any>,
+  InitialFormValues = Partial<FormValues>
+>({
   children: { main, footer },
   formName,
   className,
   initialValues,
   ...rest
-}: Props<FormValues>): React.ReactElement {
+}: Props<FormValues, InitialFormValues>): React.ReactElement {
   const ct = useCT();
   return (
-    <FormBase<FormValues>
+    <FormBase<FormValues, InitialFormValues>
       formName={formName}
-      initialValues={initialValues as FormValues}
+      initialValues={initialValues}
       {...rest}
     >
       {(props: FormRenderProps<any>) => (

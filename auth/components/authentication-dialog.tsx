@@ -5,10 +5,10 @@ import {
   AuthenticationDialogContent,
   Props as ContentProps
 } from 'public/auth/components/authentication-dialog-content';
-import { ConfirmDialogProps } from 'public/providers/dialog-provider';
+import { ConfirmDialogProps } from 'public/dialogs/ConfirmDialog';
 
 export interface Props
-  extends ConfirmDialogProps<void>,
+  extends ConfirmDialogProps,
     Omit<MaterialDialogProps, 'open' | 'onClose' | 'onError' | 'id'>,
     Omit<ContentProps, 'onClose' | 'enableOAuthProviders'> {}
 

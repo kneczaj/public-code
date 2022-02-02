@@ -4,7 +4,7 @@ import { DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 import { LoginForm } from 'public/auth/components/login-form';
 import { isUndefined } from 'public/util';
 import Button from '@material-ui/core/Button';
-import { ConfirmDialogProps } from 'public/providers/dialog-provider';
+import { ConfirmDialogProps } from 'public/dialogs/ConfirmDialog';
 import { getBackendUrl } from 'app/root/models/urls';
 import { Auth } from 'public/auth/providers/auth-provider';
 import { RegistrationForm } from 'public/auth/components/registration-form';
@@ -12,7 +12,7 @@ import { useToggle } from 'public/hooks/toggle';
 
 export type Page = 'REGISTER' | 'LOGIN';
 
-export interface Props extends Omit<ConfirmDialogProps<void>, 'id'> {
+export interface Props extends Omit<ConfirmDialogProps, 'id'> {
   formHeader?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
