@@ -1,8 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Props as RequestWrapperProps } from 'public/requests/request-wrapper/item';
-import { RequestStateBase } from 'public/requests/models/state';
 import { ContextHookFactory, HookContext } from 'public/utils/context-hook';
-import { isNull, isReturningReactNode } from 'public/util';
+import { isNull, maybePassProps } from 'public/util';
 import { PaginationRequestWrapper } from 'public/requests/request-wrapper/index';
 import { PaginationVariables } from 'public/requests/models/pagination';
 import { QueryResult } from 'public/graphql/apollo-custom';
@@ -18,14 +17,14 @@ export interface ChildrenProps<TData extends any[]> {
 
 export interface WrapperProps<TResponseData, TData extends Array<any>>
   extends Omit<
-    RequestWrapperProps<TResponseData, RequestStateBase<TResponseData>>,
+    RequestWrapperProps<TResponseData>,
     'state' | 'children' | 'hasData'
   > {
   children: (props: ChildrenProps<TData>) => React.ReactNode;
 }
 
 export type CreatorResult<TResponseData, TData extends Array<any>> = {
-  // RequestWrapper component
+  // QueryWrapper component
   Wrapper: React.FunctionComponent<WrapperProps<TResponseData, TData>>;
   // data hook
   useData: () => TData;
@@ -100,9 +99,7 @@ export function createPaginationRequestTools<
       >
         {({ data, className }) => (
           <Hook.Context.Provider value={data}>
-            {isReturningReactNode(children)
-              ? children({ data, className, hasMore, loadMore })
-              : children}
+            {maybePassProps(children, { data, className, hasMore, loadMore })}
           </Hook.Context.Provider>
         )}
       </PaginationRequestWrapper>

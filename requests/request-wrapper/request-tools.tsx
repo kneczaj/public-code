@@ -4,72 +4,64 @@ import {
   Props as RequestWrapperProps
 } from 'public/requests/request-wrapper/item';
 import { RequestStateBase } from 'public/requests/models/state';
-import { isNotNull, isNull, isReturningReactNode } from 'public/util';
+import { isNotNull, maybePassProps } from 'public/util';
 import { ContextHookFactory, HookContext } from 'public/utils/context-hook';
 
-export interface Props<TResponseData, TData> {
-  useRequest: () => RequestStateBase<TResponseData | null>;
-  extractData: (response: TResponseData) => TData | null;
+export interface Props<TData> {
+  useRequest: () => RequestStateBase<TData | null>;
   displayName: string;
   hasData?: (data: TData | null) => data is TData;
 }
 
-export interface WrapperProps<TResponseData, TData>
-  extends Omit<
-    RequestWrapperProps<TResponseData, RequestStateBase<TResponseData>>,
-    'state' | 'children' | 'hasData'
-  > {
-  children: RequestWrapperProps<TData, RequestStateBase<TData>>['children'];
-}
+export interface WrapperProps<
+  TData,
+  TMutationLabels extends string | never = never
+> extends Omit<
+    RequestWrapperProps<TData, TMutationLabels, RequestStateBase<TData>>,
+    'state' | 'hasData'
+  > {}
 
-export interface RequestTools<TResponseData, TData> {
+export interface RequestTools<
+  TData,
+  TMutationLabels extends string | never = never
+> {
   DataContext: HookContext<TData>;
   useData: () => TData;
-  Wrapper: React.FunctionComponent<WrapperProps<TResponseData, TData>>;
+  Wrapper: React.FunctionComponent<WrapperProps<TData, TMutationLabels>>;
   WrapperWithProvider: React.FunctionComponent<
-    WrapperProps<TResponseData, TData>
+    WrapperProps<TData, TMutationLabels>
   >;
 }
 
-export function createRequestTools<TResponseData, TData>({
+export function createRequestTools<
+  TData,
+  TMutationLabels extends string | never = never
+>({
   useRequest,
-  extractData,
   displayName,
   hasData = isNotNull
-}: Props<TResponseData, TData>): RequestTools<TResponseData, TData> {
+}: Props<TData>): RequestTools<TData, TMutationLabels> {
   const Data = ContextHookFactory.createHookAndContext<TData>(displayName);
-  const Wrapper = ({
-    children,
-    ...wrapperProps
-  }: WrapperProps<TResponseData, TData>): JSX.Element => {
+  const Wrapper = (wrapperProps: WrapperProps<TData>): JSX.Element => {
     const state = useRequest();
-    const extracted = isNull(state.data) ? null : extractData(state.data);
     return (
-      <RequestWrapper<TData>
-        state={{ ...state, data: extracted }}
+      <RequestWrapper<TData, TMutationLabels>
+        state={state}
         hasData={hasData}
         {...wrapperProps}
-      >
-        {({ data, className }) =>
-          isReturningReactNode(children)
-            ? children({ data, className })
-            : children
-        }
-      </RequestWrapper>
+      />
     );
   };
   Wrapper.displayName = displayName;
   const WrapperWithProvider = ({
     children,
     ...wrapperProps
-  }: WrapperProps<TResponseData, TData>): JSX.Element => {
+  }: WrapperProps<TData>): JSX.Element => {
     return (
       <Wrapper {...wrapperProps}>
         {({ data, className }) => (
           <Data.Context.Provider value={data}>
-            {isReturningReactNode(children)
-              ? children({ data, className })
-              : children}
+            {maybePassProps(children, { data, className })}
           </Data.Context.Provider>
         )}
       </Wrapper>

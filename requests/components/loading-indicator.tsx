@@ -11,12 +11,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export function DefaultLoadingIndicator({
-  className
+  className,
+  label
 }: LoadingIndicatorProps): JSX.Element {
   const classes = useStyles();
   return (
     <Centered className={merge(classes.root, className)}>
       <CircularProgress />
+      {label && <p>{label}</p>}
     </Centered>
   );
 }

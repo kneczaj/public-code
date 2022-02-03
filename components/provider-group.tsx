@@ -1,6 +1,10 @@
 import React from 'react';
 import { ReactNode } from 'react';
 
+export interface ChildrenFnProviderProps<TContextProps = unknown> {
+  children: (context: TContextProps) => React.ReactNode;
+}
+
 export interface ProviderComponentProps<TContextProps = unknown> {
   children: ReactNode | ((context: TContextProps) => React.ReactNode);
 }

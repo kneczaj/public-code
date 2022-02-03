@@ -24,3 +24,14 @@ export interface FetchResult<
   data: TData | null;
   error: Errors | null;
 }
+
+export interface MutationsContext<
+  TMutationLabels extends string | never = never
+> {
+  /**
+   * There can be a label used for a mutation indicator if any is in progress.
+   * If no is in progress then false.
+   * If unnamed mutation in progress then true;
+   */
+  mutating: TMutationLabels | boolean;
+}

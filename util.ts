@@ -75,10 +75,24 @@ export function isFunction(val: any): boolean {
   return val && {}.toString.call(val) === '[object Function]';
 }
 
-export function isReturningReactNode<TProps>(
-  val: React.ReactNode | ((formProps: TProps) => React.ReactNode)
+export type MaybeChildrenAsFn<TProps> =
+  | React.ReactNode
+  | ((formProps: TProps) => React.ReactNode);
+
+function isReturningReactNode<TProps>(
+  val: MaybeChildrenAsFn<TProps>
 ): val is (formProps: TProps) => React.ReactNode {
   return isFunction(val);
+}
+
+export function maybePassProps<TProps>(
+  val: MaybeChildrenAsFn<TProps>,
+  props: TProps
+): React.ReactNode {
+  if (isReturningReactNode<TProps>(val)) {
+    return val(props);
+  }
+  return val;
 }
 
 export function getIfDefined<T>(val: T | undefined, fallback: T): T {

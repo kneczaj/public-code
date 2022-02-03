@@ -1,13 +1,16 @@
 import React from 'react';
 import './request-result.sass';
-import { isNull, isReturningReactNode } from '../../util';
+import { isNull, maybePassProps } from '../../util';
 import { PropsBase } from './models';
 import { DefaultLoadingIndicator } from 'public/requests/components/loading-indicator';
 import { DefaultErrorPlaceholder } from 'public/requests/components/error-placeholder';
 import { NoDataPlaceholderProps } from 'public/requests/request-wrapper/models';
 
-interface PropsWithoutResolve<TResolvedData extends Array<any>, TNoData>
-  extends PropsBase<TResolvedData, TNoData> {
+interface Props<
+  TData extends Array<any>,
+  TMutationLabels extends string | never = never,
+  TNoData = null | TData
+> extends PropsBase<TData, TMutationLabels, TNoData> {
   /**
    * Passed to each: children, noDataPlaceholder, errorPlaceholder
    */
@@ -20,14 +23,11 @@ export function PaginationNoDataPlaceholder({
   return <div className={className}>No data</div>;
 }
 
-export type Props<
-  TResolvedData extends Array<any>,
-  TNoData
-> = PropsWithoutResolve<TResolvedData, TNoData>;
-
-export function Pagination<TResolvedData extends Array<any>, TNoData = never>(
-  props: Props<TResolvedData, TNoData>
-): JSX.Element {
+export function Pagination<
+  TData extends Array<any>,
+  TMutationLabels extends string | never = never,
+  TNoData = null | TData
+>(props: Props<TData, TMutationLabels, TNoData>): JSX.Element {
   const {
     children,
     className,
@@ -40,11 +40,7 @@ export function Pagination<TResolvedData extends Array<any>, TNoData = never>(
   return (
     <>
       {hasData(state.data) ? (
-        isReturningReactNode(children) ? (
-          children({ data: state.data, className })
-        ) : (
-          children
-        )
+        maybePassProps(children, { data: state.data, className })
       ) : state.loading ? null : ( // show the placeholder only if not at loading state
         <NoDataPlaceholder className={className} />
       )}

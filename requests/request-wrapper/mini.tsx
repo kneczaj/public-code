@@ -1,7 +1,7 @@
 import ErrorIcon from '@material-ui/icons/Error';
 import { merge } from '../../css';
 import { CircularProgress } from '@material-ui/core';
-import { isNull, isReturningReactNode } from '../../util';
+import { isNotNull, isNull, maybePassProps } from '../../util';
 import React from 'react';
 import { Props } from './item';
 import { ErrorPlaceholderProps } from 'public/requests/request-wrapper/models';
@@ -17,19 +17,15 @@ export function Mini<TData>({
   state,
   ErrorPlaceholder = MiniErrorPlaceholder,
   NoDataPlaceholder = DefaultNoDataPlaceholder,
-  hasData
-}: Props<TData>): JSX.Element {
+  hasData = (data: TData | null): data is TData => isNotNull(data)
+}: Props<TData, string>): JSX.Element {
   return (
     <div className={merge(className, 'mini-request-result-root')}>
       {state.loading ? (
         <CircularProgress size={'1em'} className={'stretch-abs'} />
       ) : isNull(state.error) ? (
         hasData(state.data) ? (
-          isReturningReactNode(children) ? (
-            children({ data: state.data, className })
-          ) : (
-            children
-          )
+          maybePassProps(children, { data: state.data, className })
         ) : (
           <NoDataPlaceholder className={className} />
         )

@@ -1,6 +1,7 @@
 import { Errors as ErrorModel } from 'public/requests/models/errors';
 import React, { ComponentType } from 'react';
-import { RequestStateBase } from 'public/requests/models/state';
+import { RequestState } from 'public/requests/models/state';
+import { MaybeChildrenAsFn } from 'public/util';
 
 export interface ErrorPlaceholderProps {
   value: ErrorModel;
@@ -16,9 +17,19 @@ export interface NoDataPlaceholderProps {
 
 export interface LoadingIndicatorProps {
   className?: string;
+  label?: string;
 }
 
-export interface PropsBase<TData, TNoData = null> {
+export interface WrapperChildrenProps<TData> {
+  data: TData;
+  className?: string;
+}
+
+export interface PropsBase<
+  TData,
+  TMutationLabels extends string | never = never,
+  TNoData = null
+> {
   /**
    * Passed to each: children, noDataPlaceholder, errorPlaceholder
    */
@@ -29,14 +40,11 @@ export interface PropsBase<TData, TNoData = null> {
   /**
    * The request data or null when in progress or error data
    */
-  state: RequestStateBase<TData | TNoData>;
+  state: RequestState<TData | TNoData, TMutationLabels>;
   /**
    * The proper component
-   * @param data
    */
-  children:
-    | ((props: { data: TData; className?: string }) => React.ReactNode)
-    | React.ReactNode;
+  children: MaybeChildrenAsFn<WrapperChildrenProps<TData>>;
   /**
    * When true render children, when false the noDataPlaceholder
    * @param data

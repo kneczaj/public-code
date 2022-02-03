@@ -7,7 +7,7 @@ import {
 } from 'react-router';
 import { LOGIN } from '../models/urls';
 import { User } from '../models/user';
-import { isReturningReactNode } from '../../util';
+import { maybePassProps } from '../../util';
 import { Redirect } from 'public/routing/components/redirect';
 import { Auth } from 'public/auth/providers/auth-provider';
 import { UserRequest } from 'public/auth/providers/user-provider';
@@ -32,12 +32,10 @@ export function AuthRoute({ children, ...props }: Props): JSX.Element {
         {(props: RouteChildrenProps<any>) => (
           <UserRequest.WrapperWithProvider>
             {({ data, className }) =>
-              isReturningReactNode<AuthRouteChildrenProps<any>>(children)
-                ? children({
-                    ...props,
-                    user: data
-                  })
-                : children
+              maybePassProps<AuthRouteChildrenProps<any>>(children, {
+                ...props,
+                user: data
+              })
             }
           </UserRequest.WrapperWithProvider>
         )}
