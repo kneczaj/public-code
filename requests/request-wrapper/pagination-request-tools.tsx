@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Props as RequestWrapperProps } from 'public/requests/request-wrapper/item';
 import { RequestStateBase } from 'public/requests/models/state';
-import { createHookContext, HookContext } from 'public/utils/context-hook';
+import { ContextHookFactory, HookContext } from 'public/utils/context-hook';
 import { isNull, isReturningReactNode } from 'public/util';
 import { PaginationRequestWrapper } from 'public/requests/request-wrapper/index';
 import { PaginationVariables } from 'public/requests/models/pagination';
@@ -58,7 +58,7 @@ export function createPaginationRequestTools<
   hasData = (data: TData | null): data is TData => !!data && !!data.length,
   itemsPerPage = 100
 }: Props<TResponseData, TData>): CreatorResult<TResponseData, TData> {
-  const Hook = createHookContext<TData>(displayName);
+  const Hook = ContextHookFactory.createHookAndContext<TData>(displayName);
   const Wrapper = ({
     children,
     ...wrapperProps

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProviderComponentProps } from 'public/components/provider-group';
-import { createHookContext } from 'public/utils/context-hook';
+import { ContextHookFactory } from 'public/utils/context-hook';
 
 export interface LinkProps {
   className?: string;
@@ -24,7 +24,7 @@ export interface ContextProps {
 export interface Props extends ContextProps, ProviderComponentProps {}
 
 export const CompanyDetails =
-  createHookContext<ContextProps>('company details');
+  ContextHookFactory.createHookAndContext<ContextProps>('company details');
 
 export function CompanyDetailsProvider({
   children,

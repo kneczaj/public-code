@@ -1,3 +1,4 @@
-import { createHookContext } from '../utils/context-hook';
+import { ContextHookFactory } from '../utils/context-hook';
 
-export const FormName = createHookContext<string>('form name');
+export const FormName =
+  ContextHookFactory.createHookAndContext<string>('form name');

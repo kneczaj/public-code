@@ -1,7 +1,7 @@
 import React from 'react';
 import { getInitialState } from '../models/user';
 import { isNull } from '../../util';
-import { createHookContext } from '../../utils/context-hook';
+import { ContextHookFactory } from '../../utils/context-hook';
 import { ProviderComponentProps } from '../../components/provider-group';
 import { useState } from '../../hooks/state';
 import { useHistory } from '../../routing/hooks/history';
@@ -20,7 +20,8 @@ export interface ContextProps {
   redirectToLogin: () => void;
 }
 
-export const Token = createHookContext<ContextProps>('user');
+export const Token =
+  ContextHookFactory.createHookAndContext<ContextProps>('user');
 
 /**
  * Low level authentication info which holds authentication token, and synchronises it with localStorage

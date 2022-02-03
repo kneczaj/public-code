@@ -1,4 +1,4 @@
-import { Dialog } from 'public/dialogs/dialog-provider';
+import { useGlobalDialog } from 'public/dialogs/dialog-provider';
 import { Dialog as MuiDialog, DialogActions } from '@material-ui/core';
 import { DialogComponent, DialogEventsBase, DialogProps, Hook } from './models';
 import React, { PropsWithChildren } from 'react';
@@ -15,8 +15,8 @@ export interface SimpleDialogProps extends DialogProps {
 
 export function useSimpleDialog(
   Component: DialogComponent
-): Hook<EventHandlers> {
-  const { openDialog } = Dialog.useContext();
+): Hook<EventHandlers | void> {
+  const openDialog = useGlobalDialog();
   return {
     open({ onClose } = {}) {
       openDialog(props => (

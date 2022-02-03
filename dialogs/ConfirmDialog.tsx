@@ -59,6 +59,6 @@ export function ConfirmDialog({
 
 export function useConfirmDialog(
   Component: DialogComponent<Events>
-): Hook<EventHandlers> {
+): Hook<EventHandlers | void> {
   return useFormDialog<void>(Component);
 }

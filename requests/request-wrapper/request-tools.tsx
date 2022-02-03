@@ -5,7 +5,7 @@ import {
 } from 'public/requests/request-wrapper/item';
 import { RequestStateBase } from 'public/requests/models/state';
 import { isNotNull, isNull, isReturningReactNode } from 'public/util';
-import { createHookContext, HookContext } from 'public/utils/context-hook';
+import { ContextHookFactory, HookContext } from 'public/utils/context-hook';
 
 export interface Props<TResponseData, TData> {
   useRequest: () => RequestStateBase<TResponseData | null>;
@@ -37,7 +37,7 @@ export function createRequestTools<TResponseData, TData>({
   displayName,
   hasData = isNotNull
 }: Props<TResponseData, TData>): RequestTools<TResponseData, TData> {
-  const Data = createHookContext<TData>(displayName);
+  const Data = ContextHookFactory.createHookAndContext<TData>(displayName);
   const Wrapper = ({
     children,
     ...wrapperProps

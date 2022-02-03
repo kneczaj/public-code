@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { createHookContext } from '../../utils/context-hook';
+import { ContextHookFactory } from '../../utils/context-hook';
 import { ProviderComponentProps } from '../../components/provider-group';
 import { Token } from 'public/auth/providers/token-provider';
 import {
@@ -23,7 +23,8 @@ export interface ContextProps
   register: (payload: RegisterMutationVariables) => MutationSubmitResult;
 }
 
-export const Auth = createHookContext<ContextProps>('authentication');
+export const Auth =
+  ContextHookFactory.createHookAndContext<ContextProps>('authentication');
 
 /**
  * High level authentication provider which calls GraphQL API

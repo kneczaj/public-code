@@ -1,4 +1,4 @@
-import { Dialog } from 'public/dialogs/dialog-provider';
+import { useGlobalDialog } from 'public/dialogs/dialog-provider';
 import React, { PropsWithChildren, ReactNode } from 'react';
 import { DialogComponent, DialogEventsBase, DialogProps, Hook } from './models';
 import {
@@ -76,8 +76,8 @@ export function FormDialog<TValues>({
 
 export function useFormDialog<TReturnValue, TProps = unknown>(
   Component: DialogComponent<Events<TReturnValue> & TProps>
-): Hook<EventHandlers<TReturnValue>, TProps, TReturnValue> {
-  const { openDialog } = Dialog.useContext();
+): Hook<EventHandlers<TReturnValue> | void, TProps, TReturnValue> {
+  const openDialog = useGlobalDialog();
   return {
     open({
       onClose,

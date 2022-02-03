@@ -1,5 +1,5 @@
 import React from 'react';
-import { createHookContext } from '../utils/context-hook';
+import { ContextHookFactory } from '../utils/context-hook';
 import {
   ProviderComponent,
   ProviderComponentProps
@@ -12,7 +12,8 @@ export interface ContextProps {
   show: (notification: Notification) => void;
 }
 
-export const Notifications = createHookContext<ContextProps>('notifications');
+export const Notifications =
+  ContextHookFactory.createHookAndContext<ContextProps>('notifications');
 
 const NotificationsProviderBase: ProviderComponent = ({
   children
