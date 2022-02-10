@@ -33,15 +33,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export function MutationWrapper<
-  TData,
-  TMutationLabels extends string | never = never,
-  TNoData = null
+  TMutationLabels extends string | never = never
 >({
   children,
   className,
   mutating,
   LoadingIndicator = DefaultLoadingIndicator
-}: Props<any>): JSX.Element {
+}: Props<TMutationLabels>): JSX.Element {
   const classes = useStyles();
   const ct = useCT();
   return (

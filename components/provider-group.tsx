@@ -1,12 +1,13 @@
 import React from 'react';
 import { ReactNode } from 'react';
+import { MaybeChildrenAsFn } from 'public/util';
 
 export interface ChildrenFnProviderProps<TContextProps = unknown> {
   children: (context: TContextProps) => React.ReactNode;
 }
 
 export interface ProviderComponentProps<TContextProps = unknown> {
-  children: ReactNode | ((context: TContextProps) => React.ReactNode);
+  children: MaybeChildrenAsFn<TContextProps>;
 }
 
 /**
