@@ -1,19 +1,23 @@
 import React, { ComponentType } from 'react';
 import { Item as RequestWrapper } from 'public/requests/request-wrapper/item';
 import { RequestStateBase } from 'public/requests/models/state';
-import { MaybeChildrenAsFn } from 'public/util';
+import { MaybeChildrenAsFn, maybePassProps } from 'public/util';
 import {
   PropsBase,
   WrapperChildrenProps
 } from 'public/requests/request-wrapper/models';
+import { HookContext } from 'public/utils/context-hook';
+import { MaybeContextProvider } from 'public/utils/remote-item/maybe-context-provider';
 
 export interface CreatorProps<TData>
   extends Pick<
     PropsBase<TData>,
-    'hasData' | 'NoDataPlaceholder' | 'ErrorPlaceholder' | 'LoadingIndicator'
+    'NoDataPlaceholder' | 'ErrorPlaceholder' | 'LoadingIndicator'
   > {
   useRequest: () => RequestStateBase<TData | null>;
   displayName: string;
+  Context?: HookContext<TData>;
+  hasData?: PropsBase<TData>['hasData'];
 }
 
 export interface Props<TData> {
@@ -27,7 +31,8 @@ export function createRequestWrapper<TData>({
   NoDataPlaceholder,
   ErrorPlaceholder,
   LoadingIndicator,
-  hasData
+  hasData,
+  Context
 }: CreatorProps<TData>): ComponentType<Props<TData>> {
   const Wrapper = ({ children, className }: Props<TData>): JSX.Element => {
     const state = useRequest();
@@ -40,7 +45,11 @@ export function createRequestWrapper<TData>({
         hasData={hasData}
         className={className}
       >
-        {children}
+        {props => (
+          <MaybeContextProvider Context={Context} value={props.data}>
+            {maybePassProps(children, props)}
+          </MaybeContextProvider>
+        )}
       </RequestWrapper>
     );
   };
