@@ -6,19 +6,12 @@ import { DefaultErrorPlaceholder } from 'public/requests/components/error-placeh
 import { DefaultNoDataPlaceholder } from 'public/requests/components/no-data-placeholder';
 import { useCT } from 'public/hooks/translation';
 
-export interface Props<
-  TData,
-  TMutationLabels extends string | never = never,
-  TNoData = null
-> extends Omit<PropsBase<TData, TMutationLabels, TNoData>, 'hasData'> {
-  hasData?: PropsBase<TData, TMutationLabels, TNoData>['hasData'];
+export interface Props<TData, TNoData = null>
+  extends Omit<PropsBase<TData, TNoData>, 'hasData'> {
+  hasData?: PropsBase<TData, TNoData>['hasData'];
 }
 
-export function Item<
-  TData,
-  TMutationLabels extends string | never = never,
-  TNoData = null
->({
+export function Item<TData, TNoData = null>({
   children,
   className = 'flex-1 d-flex flex-column',
   state,
@@ -26,7 +19,7 @@ export function Item<
   NoDataPlaceholder = DefaultNoDataPlaceholder,
   LoadingIndicator = DefaultLoadingIndicator,
   hasData = (data: TData | TNoData): data is TData => isNotNull(data)
-}: Props<TData, TMutationLabels, TNoData>) {
+}: Props<TData, TNoData>) {
   const ct = useCT();
   return (
     <div className={className}>

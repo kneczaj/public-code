@@ -1,6 +1,6 @@
 import { Errors as ErrorModel } from 'public/requests/models/errors';
 import React, { ComponentType } from 'react';
-import { RequestState } from 'public/requests/models/state';
+import { RequestState, RequestStateBase } from 'public/requests/models/state';
 import { MaybeChildrenAsFn } from 'public/util';
 
 export interface ErrorPlaceholderProps {
@@ -25,11 +25,7 @@ export interface WrapperChildrenProps<TData> {
   className?: string;
 }
 
-export interface PropsBase<
-  TData,
-  TMutationLabels extends string | never = never,
-  TNoData = null
-> {
+export interface PropsBase<TData, TNoData = null> {
   /**
    * Passed to each: children, noDataPlaceholder, errorPlaceholder
    */
@@ -40,7 +36,7 @@ export interface PropsBase<
   /**
    * The request data or null when in progress or error data
    */
-  state: RequestState<TData | TNoData, TMutationLabels>;
+  state: RequestStateBase<TData | TNoData>;
   /**
    * The proper component
    */

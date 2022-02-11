@@ -6,11 +6,8 @@ import { DefaultLoadingIndicator } from 'public/requests/components/loading-indi
 import { DefaultErrorPlaceholder } from 'public/requests/components/error-placeholder';
 import { NoDataPlaceholderProps } from 'public/requests/request-wrapper/models';
 
-interface Props<
-  TData extends Array<any>,
-  TMutationLabels extends string | never = never,
-  TNoData = null | TData
-> extends PropsBase<TData, TMutationLabels, TNoData> {
+interface Props<TData extends Array<any>, TNoData = null | TData>
+  extends PropsBase<TData, TNoData> {
   /**
    * Passed to each: children, noDataPlaceholder, errorPlaceholder
    */
@@ -23,11 +20,9 @@ export function PaginationNoDataPlaceholder({
   return <div className={className}>No data</div>;
 }
 
-export function Pagination<
-  TData extends Array<any>,
-  TMutationLabels extends string | never = never,
-  TNoData = null | TData
->(props: Props<TData, TMutationLabels, TNoData>): JSX.Element {
+export function Pagination<TData extends Array<any>, TNoData = null | TData>(
+  props: Props<TData, TNoData>
+): JSX.Element {
   const {
     children,
     className,

@@ -13,39 +13,26 @@ export interface Props<TData> {
   hasData?: (data: TData | null) => data is TData;
 }
 
-export interface WrapperProps<
-  TData,
-  TMutationLabels extends string | never = never
-> extends Omit<
-    RequestWrapperProps<TData, TMutationLabels, RequestStateBase<TData>>,
-    'state' | 'hasData'
-  > {}
+export interface WrapperProps<TData>
+  extends Omit<RequestWrapperProps<TData>, 'state' | 'hasData'> {}
 
-export interface RequestTools<
-  TData,
-  TMutationLabels extends string | never = never
-> {
+export interface RequestTools<TData> {
   DataContext: HookContext<TData>;
   useData: () => TData;
-  Wrapper: React.FunctionComponent<WrapperProps<TData, TMutationLabels>>;
-  WrapperWithProvider: React.FunctionComponent<
-    WrapperProps<TData, TMutationLabels>
-  >;
+  Wrapper: React.FunctionComponent<WrapperProps<TData>>;
+  WrapperWithProvider: React.FunctionComponent<WrapperProps<TData>>;
 }
 
-export function createRequestTools<
-  TData,
-  TMutationLabels extends string | never = never
->({
+export function createRequestTools<TData>({
   useRequest,
   displayName,
   hasData = isNotNull
-}: Props<TData>): RequestTools<TData, TMutationLabels> {
+}: Props<TData>): RequestTools<TData> {
   const Data = ContextHookFactory.createHookAndContext<TData>(displayName);
   const Wrapper = (wrapperProps: WrapperProps<TData>): JSX.Element => {
     const state = useRequest();
     return (
-      <RequestWrapper<TData, TMutationLabels>
+      <RequestWrapper<TData>
         state={state}
         hasData={hasData}
         {...wrapperProps}

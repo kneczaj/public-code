@@ -18,7 +18,7 @@ export function Mini<TData>({
   ErrorPlaceholder = MiniErrorPlaceholder,
   NoDataPlaceholder = DefaultNoDataPlaceholder,
   hasData = (data: TData | null): data is TData => isNotNull(data)
-}: Props<TData, string>): JSX.Element {
+}: Props<TData>): JSX.Element {
   return (
     <div className={merge(className, 'mini-request-result-root')}>
       {state.loading ? (

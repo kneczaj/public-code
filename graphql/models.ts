@@ -25,13 +25,17 @@ export interface FetchResult<
   error: Errors | null;
 }
 
+/**
+ * There can be a label used for a mutation indicator if any is in progress.
+ * If no is in progress then false.
+ * If unnamed mutation in progress then true;
+ */
+export type MutatingState<TMutationLabels extends string | never = never> =
+  | TMutationLabels
+  | boolean;
+
 export interface MutationsContext<
   TMutationLabels extends string | never = never
 > {
-  /**
-   * There can be a label used for a mutation indicator if any is in progress.
-   * If no is in progress then false.
-   * If unnamed mutation in progress then true;
-   */
-  mutating: TMutationLabels | boolean;
+  mutating: MutatingState<TMutationLabels>;
 }

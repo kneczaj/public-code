@@ -92,7 +92,7 @@ export function createPaginationRequestTools<
     }
 
     return (
-      <PaginationRequestWrapper<TData, never>
+      <PaginationRequestWrapper<TData>
         state={{ ...state, loading, data: extracted }}
         hasData={hasData}
         {...wrapperProps}
