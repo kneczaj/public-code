@@ -39,3 +39,26 @@ export interface MutationsContext<
 > {
   mutating: MutatingState<TMutationLabels>;
 }
+
+export interface MutationHookResult<TData, TArgs extends Array<any>>
+  extends MutationResult<TData> {
+  trigger: (...args: TArgs) => Promise<FetchResult<TData>>;
+}
+
+/**
+ * Allows to label loading state with a string which tells what activity is in progress
+ */
+export interface LabeledMutationResult<TData, TArgs extends Array<any>>
+  extends Omit<MutationResult<TData>, 'loading'> {
+  loading: string | boolean;
+  trigger: (...args: TArgs) => Promise<FetchResult<TData>>;
+}
+
+export type MutationHook<
+  TData,
+  TArgs extends Array<any>
+> = () => MutationHookResult<TData, TArgs>;
+
+export type QueryHook<TData, TArgs extends Array<any>> = (
+  ...args: TArgs
+) => RequestStateBase<TData | null>;

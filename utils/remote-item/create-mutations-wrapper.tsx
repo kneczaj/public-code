@@ -8,58 +8,44 @@ import { MutatingState } from 'public/graphql/models';
 import { MaybeContextProvider } from 'public/utils/remote-item/maybe-context-provider';
 import { HookContext } from 'public/utils/context-hook';
 
-type ContextProps<TData, TMutationsApi> = TMutationsApi & { data: TData };
-
 export interface CreatorProps<
-  TData,
   TMutationLabels extends string | never,
   TMutationsApi extends { data?: never }
 > extends Pick<MutationWrapperProps, 'LoadingIndicator'> {
-  useMutations: (
-    data: TData
-  ) => [TMutationsApi, MutatingState<TMutationLabels>];
+  useMutations: () => [TMutationsApi, MutatingState<TMutationLabels>];
   displayName: string;
-  Context?: HookContext<ContextProps<TData, TMutationsApi>>;
+  Context?: HookContext<TMutationsApi>;
 }
 
-export interface Props<TData, TMutationsApi extends { data?: never }> {
-  children: MaybeChildrenAsFn<ContextProps<TData, TMutationsApi>>;
+export interface Props<TMutationsApi> {
+  children: MaybeChildrenAsFn<TMutationsApi>;
   className?: string;
-  data: TData;
 }
 
 export function createMutationsWrapper<
-  TData,
   TMutationLabels extends string | never,
   TMutationsApi
 >({
   Context,
   displayName,
   useMutations
-}: CreatorProps<TData, TMutationLabels, TMutationsApi>) {
-  function RemoteItem({
+}: CreatorProps<TMutationLabels, TMutationsApi>) {
+  function MutationsWrapper({
     children,
-    className,
-    data
-  }: Props<TData, TMutationsApi>): JSX.Element {
-    const [mutations, mutating] = useMutations(data);
-    const toContext = { ...mutations, data };
+    className
+  }: Props<TMutationsApi>): JSX.Element {
+    const [mutations, mutating] = useMutations();
     return (
       <MutationWrapper<TMutationLabels>
         mutating={mutating}
         className={className}
       >
-        <MaybeContextProvider Context={Context} value={toContext}>
-          {maybePassProps<ContextProps<TData, TMutationsApi>>(
-            children,
-            toContext
-          )}
+        <MaybeContextProvider Context={Context} value={mutations}>
+          {maybePassProps<TMutationsApi>(children, mutations)}
         </MaybeContextProvider>
       </MutationWrapper>
     );
   }
-  RemoteItem.displayName = displayName;
-  return RemoteItem;
+  MutationsWrapper.displayName = displayName;
+  return MutationsWrapper;
 }
-
-export type { ContextProps as MutationContextProps };
