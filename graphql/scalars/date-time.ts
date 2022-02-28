@@ -12,8 +12,8 @@ export function getDateTimeScalar(
      * @param  {value} value date value
      * @return {String} date as string
      */
-    serialize: function (value: DateTime) {
-      if (!value.isValid) {
+    serialize(value: unknown): string {
+      if (!DateTime.isDateTime(value) || !value.isValid) {
         throw new GraphQLError(
           'Field serialize error: value is an invalid DateTime'
         );
@@ -25,7 +25,12 @@ export function getDateTimeScalar(
      * @param  {*} value serialized date value
      * @return {value} date value
      */
-    parseValue: function (value: string): DateTime {
+    parseValue(value: unknown): DateTime {
+      if (typeof value !== 'string') {
+        throw new GraphQLError(
+          'Field parse error: input value of DateTime must be string'
+        );
+      }
       const date = DateTime.fromISO(value).setZone(timezone).setLocale(locale);
       if (!date.isValid) {
         throw new GraphQLError(

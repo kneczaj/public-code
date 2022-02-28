@@ -6,7 +6,6 @@ import { PaginationRequestWrapper } from 'public/requests/request-wrapper/index'
 import { PaginationVariables } from 'public/requests/models/pagination';
 import { QueryResult } from 'public/graphql/apollo-custom';
 import { QueryHookOptions } from '@apollo/client/react/types/types';
-import { AdsQuery } from 'generated/graphql';
 
 export interface ChildrenProps<TData extends any[]> {
   data: TData;
@@ -35,7 +34,9 @@ export type PaginationRequestHookOptions<TResponseData> = QueryHookOptions<
   TResponseData,
   PaginationVariables
 > &
-  Required<Pick<QueryHookOptions<AdsQuery, PaginationVariables>, 'variables'>>;
+  Required<
+    Pick<QueryHookOptions<TResponseData, PaginationVariables>, 'variables'>
+  >;
 
 export interface Props<TResponseData, TData> {
   useRequest: (

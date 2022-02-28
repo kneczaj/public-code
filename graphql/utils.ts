@@ -17,7 +17,7 @@ export function convertGQLErrors2Form(
     return { [FORM_ERROR]: 'unknown error' };
   }
   try {
-    // eslint-disable-next-line
+    // @ts-ignore
     const exceptionData = errors[0].extensions!.exception.data;
     if (exceptionData.errors) {
       return exceptionData.errors;
@@ -31,16 +31,16 @@ export function convertGQLErrors2Form(
 export function convertGQLErrors2Errors(
   errors: ReadonlyArray<GraphQLError>
 ): Errors {
-  if (errors.length === 0) {
+  const firstError = errors[0];
+  if (isUndefined(firstError)) {
     return { messages: ['unknown error'] };
   }
+  const exception: any = firstError.extensions.exception;
   try {
-    // eslint-disable-next-line
-    const exception = errors[0].extensions!.exception;
     if (exception.output.statusCode === 401) {
       throw new AuthenticationError();
     }
-    const exceptionData = errors[0].extensions!.exception.data;
+    const exceptionData = exception.data;
     if (exceptionData.errors) {
       return exceptionData.errors;
     }
