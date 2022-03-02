@@ -16,6 +16,18 @@ export interface CreateHookContextResult<T> {
 
 export class ContextError extends Error {}
 
+export function useDefinedContext<TContext>(
+  Context: HookContext<TContext>
+): TContext {
+  const val = useContext(Context);
+  if (isUndefined(val)) {
+    throw new ContextError(
+      `A context hook for context called "${Context.displayName}" is used outside the context provider`
+    );
+  }
+  return val;
+}
+
 /**
  * Creates a context with initial undefined value and displayName, and a hook which works only inside this context.
  * This saves us writing undefined checks.
@@ -23,13 +35,7 @@ export class ContextError extends Error {}
 export class ContextHookFactory {
   static createHook<TContext>(Context: HookContext<TContext>): () => TContext {
     return (): TContext => {
-      const val = useContext(Context);
-      if (isUndefined(val)) {
-        throw new ContextError(
-          `A context hook for context called "${Context.displayName}" is used outside the context provider`
-        );
-      }
-      return val;
+      return useDefinedContext(Context);
     };
   }
 
