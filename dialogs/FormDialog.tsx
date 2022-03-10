@@ -1,6 +1,7 @@
 import { useGlobalDialog } from 'public/dialogs/dialog-provider';
 import React, { PropsWithChildren, ReactNode } from 'react';
-import { DialogComponent, DialogEventsBase, DialogProps, Hook } from './models';
+import { Hook } from './models';
+import { DialogComponent, DialogProps } from './useDialogs';
 import {
   Dialog as MuiDialog,
   DialogActions,
@@ -11,6 +12,7 @@ import { Form, Props as FormProps } from 'public/forms/components/form';
 import Button from '@material-ui/core/Button';
 import { useCT } from 'public/hooks/translation';
 import { EventHandlers as SimpleDialogEventHandlers } from 'public/dialogs/SimpleDialog';
+import { DialogEventsBase } from 'public/dialogs/useStandardDialogs';
 
 export interface Events<TReturnValue> extends DialogEventsBase {
   confirm: (data: TReturnValue) => void;

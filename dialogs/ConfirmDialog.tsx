@@ -3,7 +3,7 @@ import {
   Events as FormDialogEvents,
   useFormDialog
 } from 'public/dialogs/FormDialog';
-import { DialogComponent, DialogProps, Hook } from './models';
+import { Hook } from './models';
 import React, { PropsWithChildren, ReactNode } from 'react';
 import { useCT } from 'public/hooks/translation';
 import {
@@ -13,6 +13,7 @@ import {
   DialogTitle
 } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import { DialogComponent, DialogProps } from 'public/dialogs/useDialogs';
 
 export interface Events extends FormDialogEvents<void> {}
 export interface EventHandlers extends FormDialogEventHandlers<void> {}

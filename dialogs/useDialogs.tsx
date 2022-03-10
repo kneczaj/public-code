@@ -1,44 +1,52 @@
 import {
-  OpenDialogComponentProps,
+  DialogProps as DialogPropsBase,
   Hook as HookBase,
-  OpenDialogFn as OpenDialogFnWithoutAdditionalProps
+  useStandardDialogs
 } from 'public/dialogs/useStandardDialogs';
-import { useStandardDialogs } from 'public/dialogs/useStandardDialogs';
+import { ComponentType } from 'react';
 
-export type OpenDialogFn<TAdditionalProps> = TAdditionalProps extends void
-  ? OpenDialogFnWithoutAdditionalProps
-  : (
-      ...args: [
-        Component: (
-          props: OpenDialogComponentProps & TAdditionalProps
-        ) => JSX.Element,
-        props: TAdditionalProps
-      ]
-    ) => void;
+/**
+ * Dialog props with additional props
+ */
+export type DialogProps<TAdditionalProps = void> = DialogPropsBase &
+  Omit<TAdditionalProps, keyof DialogPropsBase>;
+/**
+ * Additional props over DialogProps
+ */
+export type AdditionalProps<TProps> = Omit<TProps, keyof DialogPropsBase>;
+/**
+ * DialogComponent with possible additional props over DialogProps
+ */
+export type DialogComponent<TProps = void> = ComponentType<DialogProps<TProps>>;
 
-export interface Hook<TAdditionalProps = void>
-  extends Omit<HookBase, 'openDialog'> {
+export interface Hook extends Omit<HookBase, 'openDialog'> {
   /**
    * Open dialog
-   * @param value JSX element of the dialog
    */
-  openDialog: OpenDialogFn<TAdditionalProps>;
+  openDialog<TAdditionalProps>(
+    Component: DialogComponent<TAdditionalProps>,
+    props: AdditionalProps<TAdditionalProps>
+  ): void;
+  openDialog(Component: DialogComponent): void;
 }
 
-export function useDialogs<TAdditionalProps = void>(): Hook<TAdditionalProps> {
+/**
+ * Allows to pass additional props to opened dialog
+ */
+export function useDialogs(): Hook {
   const { DialogContainer, openDialog: openDialogBase } = useStandardDialogs();
-  const openDialog = (
-    Component: (
-      props: OpenDialogComponentProps & TAdditionalProps
-    ) => JSX.Element,
-    props: TAdditionalProps
-  ) => {
-    return openDialogBase(dialogProps => (
-      <Component {...dialogProps} {...props} />
-    ));
-  };
   return {
-    openDialog: openDialog as OpenDialogFn<TAdditionalProps>,
+    openDialog<TAdditionalProps>(
+      Component: DialogComponent<TAdditionalProps>,
+      props?: AdditionalProps<TAdditionalProps>
+    ) {
+      if (props) {
+        return openDialogBase((dialogProps: DialogPropsBase) => (
+          <Component {...props} {...dialogProps} />
+        ));
+      }
+      return openDialogBase(Component as DialogComponent);
+    },
     DialogContainer
   };
 }

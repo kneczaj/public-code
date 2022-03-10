@@ -1,9 +1,14 @@
 import { useGlobalDialog } from 'public/dialogs/dialog-provider';
 import { Dialog as MuiDialog, DialogActions } from '@material-ui/core';
-import { DialogComponent, DialogEventsBase, DialogProps, Hook } from './models';
+import { DialogComponent } from './useDialogs';
 import React, { PropsWithChildren } from 'react';
 import Button from '@material-ui/core/Button';
 import { useCT } from 'public/hooks/translation';
+import {
+  DialogEventsBase,
+  DialogProps
+} from 'public/dialogs/useStandardDialogs';
+import { Hook } from './models';
 
 export interface EventHandlers {
   onClose?: DialogEventsBase['close'];

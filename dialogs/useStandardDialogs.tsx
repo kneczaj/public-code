@@ -1,21 +1,24 @@
-import React, { useCallback } from 'react';
+import React, { ComponentType, useCallback } from 'react';
 import { Map } from 'immutable';
 import uniqueId from 'lodash.uniqueid';
-import { DialogComponent, DialogProps } from './models';
 
-export interface OpenDialogComponentProps extends DialogProps {}
+export interface DialogEventsBase {
+  close: () => void;
+}
 
-export type OpenDialogFn = (
-  Component: (props: OpenDialogComponentProps) => JSX.Element
-) => void;
+export interface DialogProps extends DialogEventsBase {
+  id: string;
+}
+
+export type DialogComponent = ComponentType<DialogProps>;
 
 export interface Hook {
-  DialogContainer: () => JSX.Element;
+  DialogContainer: ComponentType;
   /**
    * Open dialog
    * @param value JSX element of the dialog
    */
-  openDialog: OpenDialogFn;
+  openDialog: (Component: DialogComponent) => void;
 }
 
 export function useStandardDialogs(): Hook {
@@ -36,9 +39,8 @@ export function useStandardDialogs(): Hook {
     [setDialogs, dialogs]
   );
 
-  return {
-    openDialog,
-    DialogContainer: () => (
+  const DialogContainer = useCallback(
+    () => (
       <>
         {[
           ...dialogs
@@ -48,6 +50,12 @@ export function useStandardDialogs(): Hook {
             .values()
         ]}
       </>
-    )
+    ),
+    [dialogs, closeDialog]
+  );
+
+  return {
+    openDialog,
+    DialogContainer
   };
 }
