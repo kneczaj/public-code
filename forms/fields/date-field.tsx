@@ -1,7 +1,7 @@
 import React from 'react';
 import { DatePicker } from '@material-ui/pickers';
 import { useField } from '../hooks/field';
-import { OuterProps } from 'public/forms/models/field';
+import { OuterProps, SubstitutePropsTypes } from 'public/forms/models/field';
 import { DatePickerProps } from '@material-ui/pickers/DatePicker/DatePicker';
 import { isNullOrUndefined } from '../../util';
 import { FormControl, FormHelperText } from '@material-ui/core';
@@ -9,29 +9,28 @@ import { DateTime } from 'luxon';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { dateOnly } from '../../date-utils';
 
-type InputElementProps = Omit<
-  DatePickerProps,
-  'defaultValue' | 'format' | 'name' | 'value' | 'onChange' | 'type'
->;
-
-export interface Props
-  extends OuterProps<MaterialUiPickersDate>,
-    InputElementProps {
+export interface PropsBase extends DatePickerProps {
   dateFormat?: DatePickerProps['format'];
 }
 
-export function DateField({
-  // eslint-disable-next-line
-  children,
+export interface Props<TFormPayload>
+  extends OuterProps<DatePickerProps, MaterialUiPickersDate, TFormPayload> {}
+
+export function DateField<TFormPayload>({
   dateFormat,
   ...config
-}: Props): JSX.Element {
+}: Props<TFormPayload>): JSX.Element {
   const {
     input,
     input: { value },
     formControl,
     errorLabel
-  } = useField<any, HTMLDivElement, InputElementProps>({
+  } = useField<
+    TFormPayload,
+    DateTime | undefined,
+    HTMLDivElement,
+    SubstitutePropsTypes<PropsBase, Props<TFormPayload>>
+  >({
     ...config,
     format: (value: DateTime | undefined) => {
       if (isNullOrUndefined(value)) {

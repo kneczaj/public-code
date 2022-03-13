@@ -1,17 +1,15 @@
-import { OuterProps } from 'public/forms/models/field';
+import { OuterProps, SubstitutePropsTypes } from 'public/forms/models/field';
 import React from 'react';
 import { useField } from '../hooks/field';
 import { TextField, TextFieldProps } from '@material-ui/core';
 import { isUndefined } from '../../util';
 import { naturalNumberFormat, naturalNumberParser } from '../parser';
 
-type PropsBase<FieldValue, TFormPayload> = OuterProps<FieldValue, TFormPayload>;
-
-export type Props<FieldValue, TFormPayload> = PropsBase<
+export type Props<FieldValue, TFormPayload> = OuterProps<
+  TextFieldProps,
   FieldValue,
   TFormPayload
-> &
-  TextFieldProps;
+>;
 
 export function InputField<
   TFormPayload,
@@ -26,9 +24,12 @@ export function InputField<
     input: { value },
     formControl,
     errorLabel
-  } = useField<TFormPayload, FieldValue, HTMLInputElement, TextFieldProps>(
-    config
-  );
+  } = useField<
+    TFormPayload,
+    FieldValue,
+    HTMLInputElement,
+    SubstitutePropsTypes<TextFieldProps, Props<FieldValue, TFormPayload>>
+  >(config);
   return (
     <TextField
       {...input}

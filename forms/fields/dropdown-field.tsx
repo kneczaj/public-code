@@ -5,35 +5,36 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import { useT } from '../../hooks/translation';
 import { capitalizeFirstLetter } from '../../util';
-import { SelectProps } from '@material-ui/core/Select/Select';
-import { OuterProps } from 'public/forms/models/field';
-import { Select, Props as PropsBase } from 'public/forms/components';
+import { OuterProps, SubstitutePropsTypes } from 'public/forms/models/field';
+import { Select, Props as PropsBase } from 'public/forms/components/select';
 
-export function StrDropdownField(
-  props: Omit<Props<string>, 'getLabel'> & SelectProps
+export function StrDropdownField<TFormPayload>(
+  props: Omit<Props<string, TFormPayload>, 'getLabel'>
 ): JSX.Element {
   const t = useT();
   const getLabel = useCallback(val => capitalizeFirstLetter(t(val)), [t]);
   return <DropdownField getLabel={getLabel} {...props} />;
 }
 
-export interface Props<FieldValue extends string | number | undefined>
-  extends OuterProps<FieldValue>,
-    PropsBase<FieldValue> {
-  className?: string;
-  wrapperClassName?: string;
-}
+export interface Props<
+  FieldValue extends string | number | undefined,
+  TFormPayload
+> extends OuterProps<PropsBase<FieldValue>, FieldValue, TFormPayload> {}
 
-export function DropdownField<FieldValue extends string | number | undefined>({
+export function DropdownField<
+  FieldValue extends string | number | undefined,
+  TFormPayload
+>({
   className,
   wrapperClassName,
   ...config
-}: Props<FieldValue> & SelectProps): JSX.Element {
+}: Props<FieldValue, TFormPayload>): JSX.Element {
   const t = useT();
   const { input, formControl, errorLabel } = useField<
+    TFormPayload,
     FieldValue,
     HTMLElement,
-    SelectProps
+    SubstitutePropsTypes<PropsBase<FieldValue>, Props<FieldValue, TFormPayload>>
   >(config);
   return (
     <FormControl

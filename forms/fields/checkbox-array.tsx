@@ -16,13 +16,13 @@ import { isUndefined } from '../../util';
 
 type TData = { [key: string]: boolean };
 
-export interface Props<TFormPayload>
-  extends OuterProps<TData, TFormPayload>,
-    CheckboxProps {
+export interface PropsBase extends CheckboxProps {
   options: Array<string>;
   label: string;
   i18nPrefix?: string;
 }
+
+export type Props<TFormPayload> = OuterProps<PropsBase, TData, TFormPayload>;
 
 export function getInitialValues<TFormPayload>(
   options: Props<TFormPayload>['options']

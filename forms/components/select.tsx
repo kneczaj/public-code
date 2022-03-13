@@ -5,7 +5,8 @@ import { useT } from '../../hooks/translation';
 import { capitalizeFirstLetter } from '../../util';
 import { SelectProps } from '@material-ui/core/Select/Select';
 
-export interface Props<FieldValue extends string | number | undefined> {
+export interface Props<FieldValue extends string | number | undefined>
+  extends SelectProps {
   placeholder: string;
   options: FieldValue[];
   getLabel: (val: FieldValue) => string;
@@ -16,7 +17,7 @@ export function Select<FieldValue extends string | number | undefined>({
   options,
   placeholder,
   ...input
-}: Props<FieldValue> & SelectProps): JSX.Element {
+}: Props<FieldValue>): JSX.Element {
   const t = useT();
   return (
     <MuiSelect {...input}>
