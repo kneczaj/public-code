@@ -12,10 +12,11 @@ export interface UseFieldConfig<FieldValue>
 }
 
 export function useFieldFormatOnBlur<
+  TFormPayload,
   FieldValue = any,
   T extends HTMLElement = HTMLElement
 >(
-  name: string,
+  name: keyof TFormPayload,
   config?: UseFieldConfig<FieldValue>
 ): FieldRenderProps<FieldValue, T> {
   const configResult: UseFieldConfigBase<FieldValue> | undefined =
@@ -35,7 +36,7 @@ export function useFieldFormatOnBlur<
       };
     }, [config]);
 
-  const baseResult = useFieldBase(name, configResult);
+  const baseResult = useFieldBase(name as string, configResult);
   if (isUndefined(configResult) || isUndefined(configResult.formatOnBlur)) {
     return baseResult;
   }
@@ -49,7 +50,7 @@ export function useFieldFormatOnBlur<
       get value() {
         // the wrapper takes care of formatting on keypress
         // this is similar to how the final form works for keypress formatting
-        return formatBase(baseResult.input.value, name);
+        return formatBase(baseResult.input.value, name as string);
       }
     }
   };

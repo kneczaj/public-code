@@ -10,15 +10,16 @@ import {
 import { OuterProps } from 'public/forms/models/field';
 import { CheckboxProps } from '@material-ui/core/Checkbox/Checkbox';
 
-export type Props = OuterProps<string | string[]>;
+export type Props<TFormPayload> = OuterProps<string | string[], TFormPayload>;
 
-export function CheckboxField({
+export function CheckboxField<TFormPayload>({
   className,
   wrapperClassName,
   ...config
-}: Props & CheckboxProps): JSX.Element {
+}: Props<TFormPayload> & CheckboxProps): JSX.Element {
   const t = useT();
   const { input, formControl, errorLabel } = useField<
+    TFormPayload,
     string | string[],
     HTMLInputElement,
     CheckboxProps

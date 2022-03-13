@@ -16,19 +16,23 @@ import { isUndefined } from '../../util';
 
 type TData = { [key: string]: boolean };
 
-export interface Props extends OuterProps<TData> {
+export interface Props<TFormPayload>
+  extends OuterProps<TData, TFormPayload>,
+    CheckboxProps {
   options: Array<string>;
   label: string;
   i18nPrefix?: string;
 }
 
-export function getInitialValues(options: Props['options']): {
+export function getInitialValues<TFormPayload>(
+  options: Props<TFormPayload>['options']
+): {
   [key: string]: boolean;
 } {
   return options.reduce((acc, val) => ({ ...acc, [val]: false }), {});
 }
 
-export function CheckboxArray({
+export function CheckboxArray<TFormPayload>({
   // eslint-disable-next-line
   className,
   // eslint-disable-next-line
@@ -37,9 +41,10 @@ export function CheckboxArray({
   label,
   i18nPrefix,
   ...config
-}: Props & CheckboxProps): JSX.Element {
+}: Props<TFormPayload>): JSX.Element {
   const t = useT();
   const { formControl, errorLabel } = useField<
+    TFormPayload,
     TData,
     HTMLInputElement,
     CheckboxProps

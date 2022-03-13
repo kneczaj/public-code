@@ -5,19 +5,30 @@ import { TextField, TextFieldProps } from '@material-ui/core';
 import { isUndefined } from '../../util';
 import { naturalNumberFormat, naturalNumberParser } from '../parser';
 
-type PropsBase<FieldValue> = OuterProps<FieldValue>;
+type PropsBase<FieldValue, TFormPayload> = OuterProps<FieldValue, TFormPayload>;
 
-export type Props<FieldValue> = PropsBase<FieldValue> & TextFieldProps;
+export type Props<FieldValue, TFormPayload> = PropsBase<
+  FieldValue,
+  TFormPayload
+> &
+  TextFieldProps;
 
 export function InputField<
+  TFormPayload,
   FieldValue extends string | number | string[] | undefined
->({ className, wrapperClassName, ...config }: Props<FieldValue>): JSX.Element {
+>({
+  className,
+  wrapperClassName,
+  ...config
+}: Props<FieldValue, TFormPayload>): JSX.Element {
   const {
     input,
     input: { value },
     formControl,
     errorLabel
-  } = useField<FieldValue, HTMLInputElement, TextFieldProps>(config);
+  } = useField<TFormPayload, FieldValue, HTMLInputElement, TextFieldProps>(
+    config
+  );
   return (
     <TextField
       {...input}
@@ -37,11 +48,11 @@ export function InputField<
  * It shows numeric keyboard on mobile
  * @param props
  */
-export function NaturalNumberInputField(
-  props: Omit<Props<number>, 'parse' | 'type'>
+export function NaturalNumberInputField<TFormPayload>(
+  props: Omit<Props<number, TFormPayload>, 'parse' | 'type'>
 ) {
   return (
-    <InputField
+    <InputField<TFormPayload, number>
       {...props}
       inputProps={{
         inputMode: 'numeric'

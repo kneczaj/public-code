@@ -32,8 +32,9 @@ export interface Hook<
   errorLabel?: DefaultComponentProps<FormHelperTextTypeMap>;
 }
 
-export interface Props<FieldValue> extends UseFieldConfig<FieldValue> {
-  name: string;
+export interface Props<FieldValue, TFormPayload>
+  extends UseFieldConfig<FieldValue> {
+  name: keyof TFormPayload;
   showErrorWhen?: (props: FieldRenderProps<FieldValue>) => boolean;
   ignoreTouched?: boolean;
 }
@@ -59,11 +60,12 @@ export function getDisplayedError<FieldValue>(
 }
 
 export function useField<
+  TFormPayload,
   FieldValue = any,
   T extends HTMLElement = HTMLElement,
   TInputElementProps = any
 >(
-  props: Props<FieldValue> & TInputElementProps
+  props: Props<FieldValue, TFormPayload> & TInputElementProps
 ): Hook<FieldValue, TInputElementProps, T> {
   const t = useT();
   const {
@@ -88,8 +90,8 @@ export function useField<
     showErrorWhen,
     ignoreTouched,
     ...inputElementProps
-  } = props as Required<Props<FieldValue>>;
-  const id = useId(name);
+  } = props as Required<Props<FieldValue, TFormPayload>>;
+  const id = useId(name as string);
   // type checking in case UseFieldConfig interface changes, so it is sure this contains all the needed properties
   // to really check these changes artificial 'Required' is there
   const config: Required<UseFieldConfig<FieldValue>> = {
@@ -110,7 +112,7 @@ export function useField<
     validateFields,
     value
   };
-  const field = useFieldFormatOnBlur(name, config);
+  const field = useFieldFormatOnBlur(name as string, config);
   const helperTextId = `${id}-helper-text`;
   const errorString: string | undefined = useMemo(() => {
     if (!ignoreTouched && !field.meta.touched) {
