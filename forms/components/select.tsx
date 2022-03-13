@@ -1,5 +1,5 @@
 import React from 'react';
-import Select from '@material-ui/core/Select';
+import MuiSelect from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useT } from '../../hooks/translation';
 import { capitalizeFirstLetter } from '../../util';
@@ -11,7 +11,7 @@ export interface Props<FieldValue extends string | number | undefined> {
   getLabel: (val: FieldValue) => string;
 }
 
-export function Dropdown<FieldValue extends string | number | undefined>({
+export function Select<FieldValue extends string | number | undefined>({
   getLabel,
   options,
   placeholder,
@@ -19,7 +19,7 @@ export function Dropdown<FieldValue extends string | number | undefined>({
 }: Props<FieldValue> & SelectProps): JSX.Element {
   const t = useT();
   return (
-    <Select {...input}>
+    <MuiSelect {...input}>
       {!input.value && (
         <MenuItem value={''} disabled={true}>
           {capitalizeFirstLetter(t(placeholder))}
@@ -30,6 +30,6 @@ export function Dropdown<FieldValue extends string | number | undefined>({
           {getLabel(value)}
         </MenuItem>
       ))}
-    </Select>
+    </MuiSelect>
   );
 }

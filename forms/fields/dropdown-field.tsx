@@ -2,13 +2,12 @@ import React, { useCallback } from 'react';
 import { useField } from '../hooks/field';
 import { FormControl } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import { useT } from '../../hooks/translation';
 import { capitalizeFirstLetter } from '../../util';
 import { SelectProps } from '@material-ui/core/Select/Select';
 import { OuterProps } from 'public/forms/models/field';
+import { Select, Props as PropsBase } from 'public/forms/components';
 
 export function StrDropdownField(
   props: Omit<Props<string>, 'getLabel'> & SelectProps
@@ -19,19 +18,14 @@ export function StrDropdownField(
 }
 
 export interface Props<FieldValue extends string | number | undefined>
-  extends OuterProps<FieldValue> {
+  extends OuterProps<FieldValue>,
+    PropsBase<FieldValue> {
   className?: string;
   wrapperClassName?: string;
-  placeholder: string;
-  options: FieldValue[];
-  getLabel: (val: FieldValue) => string;
 }
 
 export function DropdownField<FieldValue extends string | number | undefined>({
   className,
-  getLabel,
-  options,
-  placeholder,
   wrapperClassName,
   ...config
 }: Props<FieldValue> & SelectProps): JSX.Element {
@@ -48,19 +42,8 @@ export function DropdownField<FieldValue extends string | number | undefined>({
       className={wrapperClassName}
       fullWidth={config.fullWidth}
     >
-      <InputLabel>{capitalizeFirstLetter(t(placeholder))}</InputLabel>
-      <Select {...input}>
-        {!input.value && (
-          <MenuItem value={''} disabled={true}>
-            {capitalizeFirstLetter(t(placeholder))}
-          </MenuItem>
-        )}
-        {options.map(value => (
-          <MenuItem key={value} value={value}>
-            {getLabel(value)}
-          </MenuItem>
-        ))}
-      </Select>
+      <InputLabel>{capitalizeFirstLetter(t(input.placeholder))}</InputLabel>
+      <Select {...input} />
       <FormHelperText {...errorLabel} />
     </FormControl>
   );
