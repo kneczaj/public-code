@@ -13,7 +13,8 @@ export interface Props<TData, TNoData = null>
 
 export function Item<TData, TNoData = null>({
   children,
-  className = 'flex-1 d-flex flex-column',
+  className,
+  contentClassName,
   state,
   ErrorPlaceholder = DefaultErrorPlaceholder,
   NoDataPlaceholder = DefaultNoDataPlaceholder,
@@ -23,15 +24,23 @@ export function Item<TData, TNoData = null>({
   const ct = useCT();
   return (
     <div className={className}>
-      {state.loading && <LoadingIndicator label={`${ct('loading')}...`} />}
+      {state.loading && (
+        <LoadingIndicator
+          label={`${ct('loading')}...`}
+          className={contentClassName}
+        />
+      )}
       {isNull(state.error) ? (
         hasData(state.data) ? (
-          maybePassProps(children, { data: state.data, className })
+          maybePassProps(children, {
+            data: state.data,
+            className: contentClassName
+          })
         ) : (
-          <NoDataPlaceholder className={className} />
+          <NoDataPlaceholder className={contentClassName} />
         )
       ) : (
-        <ErrorPlaceholder value={state.error} className={className} />
+        <ErrorPlaceholder value={state.error} className={contentClassName} />
       )}
     </div>
   );

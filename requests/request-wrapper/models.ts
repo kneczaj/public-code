@@ -29,6 +29,10 @@ export interface PropsBase<TData, TNoData = null> {
   /**
    * Passed to each: children, noDataPlaceholder, errorPlaceholder
    */
+  contentClassName?: string;
+  /**
+   * Outer wrapper props which holds children, noDataPlaceholder, errorPlaceholder
+   */
   className?: string;
   NoDataPlaceholder?: ComponentType<NoDataPlaceholderProps>;
   ErrorPlaceholder?: ComponentType<ErrorPlaceholderProps>;
