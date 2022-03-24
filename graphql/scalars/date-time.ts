@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 export function getDateTimeScalar(
   locale: string,
   timezone = 'local'
-): GraphQLScalarType {
+): GraphQLScalarType<DateTime, string> {
   return new GraphQLScalarType({
     name: 'DateTime',
     /**
@@ -44,7 +44,7 @@ export function getDateTimeScalar(
      * @param  {Object} ast graphql ast
      * @return date value
      */
-    parseLiteral: ast => {
+    parseLiteral(ast): DateTime {
       if (ast.kind !== Kind.STRING) {
         throw new GraphQLError(
           'Query error: Can only parse strings to date-time but got: ' +

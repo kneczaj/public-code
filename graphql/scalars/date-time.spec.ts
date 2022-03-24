@@ -1,6 +1,7 @@
-import { IntValueNode, Kind } from 'graphql';
+import { IntValueNode, Kind, ValueNode } from 'graphql';
 import { getDateTimeScalar } from './date-time';
 import { DateTime } from 'luxon';
+import { GraphQLScalarLiteralParser } from "graphql/type/definition";
 
 describe('GraphQLMoment DateTime', () => {
   // these are the same dates
@@ -10,8 +11,9 @@ describe('GraphQLMoment DateTime', () => {
   // Date (not DateTime) scalar should be used for this
   const invalidDateTime = '2016-04-31'; // This date doesn't exist
   const locale = 'pl-PL';
+  const timezone = 'UTC+2';
 
-  const DATE_TIME_SCALAR = getDateTimeScalar(locale);
+  const DATE_TIME_SCALAR = getDateTimeScalar(locale, timezone);
 
   describe('serialize', () => {
     it('should error when serializing an invalid date', () => {
@@ -43,16 +45,16 @@ describe('GraphQLMoment DateTime', () => {
 
     it('should parse a value to date-time', () => {
       expect(DATE_TIME_SCALAR.parseValue(validDateTime)).toEqual(
-        DateTime.fromISO(validDateTime).setLocale(locale)
+        DateTime.fromISO(validDateTime).setLocale(locale).setZone(timezone)
       );
     });
 
-    it('should parse a UTC value to date-time', () => {
+    it('should parse a UTC value to date-time in given timezone', () => {
       const momentDate: DateTime = DATE_TIME_SCALAR.parseValue(validDateTime);
-      expect(momentDate.offset).toBe(120); // in minutes, TODO: this changes when time switches summer/winter
-      expect(momentDate.hour).toBe(12); // TODO: this changes when time switches summer/winter
+      expect(momentDate.offset).toBe(120); // in minutes
+      expect(momentDate.hour).toBe(12);
       expect(DATE_TIME_SCALAR.parseValue(validDateTime)).toEqual(
-        DateTime.fromISO(validDateTimeUTC).setLocale(locale)
+        DateTime.fromISO(validDateTimeUTC).setLocale(locale).setZone(timezone)
       );
     });
   });
@@ -79,11 +81,11 @@ describe('GraphQLMoment DateTime', () => {
     });
 
     it('should parse a ast literal', () => {
-      const ast = {
+      const ast: ValueNode = {
         kind: Kind.STRING,
         value: validDateTime
       };
-      const date = DATE_TIME_SCALAR.parseLiteral(ast, {});
+      const date: DateTime = DATE_TIME_SCALAR.parseLiteral(ast, {});
       expect(DateTime.isDateTime(date)).toBe(true);
       expect(date.toJSON()).toEqual(ast.value);
     });
