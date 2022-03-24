@@ -22,7 +22,7 @@ function TestComponent(props: Props) {
   );
 }
 
-describe('Slider range field', () => {
+xdescribe('Slider range field', () => {
   let wrapper: ReactWrapper<any, any, any>;
   const spy = jest.spyOn(mocks, 'onSubmit');
 
