@@ -23,16 +23,20 @@ export interface ContextProps {
 
 export interface Props extends ContextProps, ProviderComponentProps {}
 
-export const CompanyDetails =
-  ContextHookFactory.createHookAndContext<ContextProps>('company details');
+export const CompanyDetailsContext =
+  ContextHookFactory.createContext<ContextProps>('company details');
+
+export const useCompanyDetails = ContextHookFactory.createHook<ContextProps>(
+  CompanyDetailsContext
+);
 
 export function CompanyDetailsProvider({
   children,
   ...companyDetails
 }: Props): JSX.Element {
   return (
-    <CompanyDetails.Context.Provider value={companyDetails}>
+    <CompanyDetailsContext.Provider value={companyDetails}>
       {children}
-    </CompanyDetails.Context.Provider>
+    </CompanyDetailsContext.Provider>
   );
 }

@@ -6,7 +6,7 @@ import { isUndefined } from 'public/util';
 import Button from '@material-ui/core/Button';
 import { ConfirmDialogProps } from 'public/dialogs/ConfirmDialog';
 import { getBackendUrl } from 'app/root/models/urls';
-import { Auth } from 'public/auth/providers/auth-provider';
+import { useAuth, AuthContext } from 'public/auth/providers/auth-provider';
 import { RegistrationForm } from 'public/auth/components/registration-form';
 import { useToggle } from 'public/hooks/toggle';
 
@@ -41,11 +41,7 @@ export function AuthenticationDialogContent({
   const { value: onLoginPage, toggle: togglePage } = useToggle(
     initialPage === 'LOGIN'
   );
-  const {
-    login: loginBase,
-    register: registerBase,
-    ...userApi
-  } = Auth.useContext();
+  const { login: loginBase, register: registerBase, ...userApi } = useAuth();
 
   function confirmWhenNoErrors<T>(formErrors: T) {
     if (isUndefined(formErrors)) {
@@ -55,7 +51,7 @@ export function AuthenticationDialogContent({
   }
 
   return (
-    <Auth.Context.Provider
+    <AuthContext.Provider
       value={{
         ...userApi,
         login: payload => loginBase(payload).then(confirmWhenNoErrors),
@@ -107,6 +103,6 @@ export function AuthenticationDialogContent({
           )}
         </Button>
       </DialogActions>
-    </Auth.Context.Provider>
+    </AuthContext.Provider>
   );
 }

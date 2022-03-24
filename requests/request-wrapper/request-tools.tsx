@@ -20,17 +20,18 @@ export interface RequestTools<TData> {
 export function createRequestTools<TData>(
   props: CreatorProps<TData>
 ): RequestTools<TData> {
-  const Data = ContextHookFactory.createHookAndContext<TData>(
+  const DataContext = ContextHookFactory.createContext<TData>(
     props.displayName
   );
+  const useData = ContextHookFactory.createHook<TData>(DataContext);
   const Wrapper = createRequestWrapper(props);
   const WrapperWithProvider = createRequestWrapper({
     ...props,
-    Context: Data.Context
+    Context: DataContext
   });
   return {
-    DataContext: Data.Context,
-    useData: Data.useContext,
+    DataContext,
+    useData,
     Wrapper,
     WrapperWithProvider
   };

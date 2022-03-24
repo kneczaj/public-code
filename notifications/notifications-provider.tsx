@@ -12,8 +12,11 @@ export interface ContextProps {
   show: (notification: Notification) => void;
 }
 
-export const Notifications =
-  ContextHookFactory.createHookAndContext<ContextProps>('notifications');
+export const NotificationsContext =
+  ContextHookFactory.createContext<ContextProps>('notifications');
+
+export const useNotifications =
+  ContextHookFactory.createHook<ContextProps>(NotificationsContext);
 
 const NotificationsProviderBase: ProviderComponent = ({
   children
@@ -24,13 +27,13 @@ const NotificationsProviderBase: ProviderComponent = ({
     enqueueSnackbar(ct(message), { variant: type });
   }
   return (
-    <Notifications.Context.Provider
+    <NotificationsContext.Provider
       value={{
         show
       }}
     >
       {children}
-    </Notifications.Context.Provider>
+    </NotificationsContext.Provider>
   );
 };
 

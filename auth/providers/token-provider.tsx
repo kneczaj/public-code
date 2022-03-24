@@ -6,7 +6,7 @@ import { ProviderComponentProps } from '../../components/provider-group';
 import { useState } from '../../hooks/state';
 import { useHistory } from '../../routing/hooks/history';
 import { LOGIN } from 'public/auth/models/urls';
-import { Notifications } from 'public/notifications/notifications-provider';
+import { useNotifications } from 'public/notifications/notifications-provider';
 import { useCT } from 'public/hooks/translation';
 
 export interface ContextProps {
@@ -20,8 +20,11 @@ export interface ContextProps {
   redirectToLogin: () => void;
 }
 
-export const Token =
-  ContextHookFactory.createHookAndContext<ContextProps>('user');
+export const TokenContext =
+  ContextHookFactory.createContext<ContextProps>('user');
+
+export const useToken =
+  ContextHookFactory.createHook<ContextProps>(TokenContext);
 
 /**
  * Low level authentication info which holds authentication token, and synchronises it with localStorage
@@ -33,7 +36,7 @@ export function TokenProvider({
 }: ProviderComponentProps): JSX.Element {
   const { push } = useHistory();
   const { value: token, set } = useState<string | null>(getInitialState());
-  const { show } = Notifications.useContext();
+  const { show } = useNotifications();
   const ct = useCT();
 
   function login(token: string): void {
@@ -64,7 +67,7 @@ export function TokenProvider({
   }
 
   return (
-    <Token.Context.Provider
+    <TokenContext.Provider
       value={{
         token,
         isAuthenticated: !isNull(token),
@@ -74,6 +77,6 @@ export function TokenProvider({
       }}
     >
       {children}
-    </Token.Context.Provider>
+    </TokenContext.Provider>
   );
 }

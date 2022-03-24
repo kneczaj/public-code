@@ -44,14 +44,4 @@ export class ContextHookFactory {
     Context.displayName = displayName;
     return Context as HookContext<T>;
   }
-
-  static createHookAndContext<T>(
-    displayName: string
-  ): CreateHookContextResult<T> {
-    const Context = ContextHookFactory.createContext<T>(displayName);
-    return {
-      Context,
-      useContext: ContextHookFactory.createHook<T>(Context)
-    };
-  }
 }

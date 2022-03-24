@@ -1,8 +1,11 @@
-import { createHookContext } from '../../utils/context-hook';
+import { ContextHookFactory } from '../../utils/context-hook';
 
 export interface ContextProps {
   str: string;
   setStr: (val: string) => void;
 }
 
-export const TestContext = createHookContext<ContextProps>('test');
+export const TestContext =
+  ContextHookFactory.createContext<ContextProps>('test');
+
+export const useTest = ContextHookFactory.createHook<ContextProps>(TestContext);

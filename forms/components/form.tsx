@@ -8,7 +8,7 @@ import {
 import { useCT } from '../../hooks/translation';
 import { Config } from 'final-form';
 import { MaybeChildrenAsFn, maybePassProps } from 'public/util';
-import { FormName } from '../form-name-context';
+import { FormNameContext } from '../form-name-context';
 
 /**
  * This excludes record-like part at the original FormProps
@@ -44,7 +44,7 @@ export function Form<
 }: Props<FormValues, InitialFormValues>): React.ReactElement {
   const ct = useCT();
   return (
-    <FormName.Context.Provider value={formName}>
+    <FormNameContext.Provider value={formName}>
       <FormFinal<FormValues, InitialFormValues>
         formName={formName}
         initialValues={initialValues}
@@ -67,6 +67,6 @@ export function Form<
           </form>
         )}
       </FormFinal>
-    </FormName.Context.Provider>
+    </FormNameContext.Provider>
   );
 }

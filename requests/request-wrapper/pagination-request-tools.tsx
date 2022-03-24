@@ -58,7 +58,8 @@ export function createPaginationRequestTools<
   hasData = (data: TData | null): data is TData => !!data && !!data.length,
   itemsPerPage = 100
 }: Props<TResponseData, TData>): CreatorResult<TResponseData, TData> {
-  const Hook = ContextHookFactory.createHookAndContext<TData>(displayName);
+  const DataContext = ContextHookFactory.createContext<TData>(displayName);
+  const useData = ContextHookFactory.createHook<TData>(DataContext);
   const Wrapper = ({
     children,
     ...wrapperProps
@@ -99,13 +100,13 @@ export function createPaginationRequestTools<
         {...wrapperProps}
       >
         {({ data, className }) => (
-          <Hook.Context.Provider value={data}>
+          <DataContext.Provider value={data}>
             {maybePassProps(children, { data, className, hasMore, loadMore })}
-          </Hook.Context.Provider>
+          </DataContext.Provider>
         )}
       </PaginationRequestWrapper>
     );
   };
   Wrapper.displayName = displayName;
-  return { Wrapper, DataContext: Hook.Context, useData: Hook.useContext };
+  return { Wrapper, DataContext, useData };
 }

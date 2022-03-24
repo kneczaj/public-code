@@ -7,7 +7,7 @@ import { capitalizeFirstLetter, isUndefined } from '../../util';
 import { useT } from '../../hooks/translation';
 import { Button, Grid, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Auth } from 'public/auth/providers/auth-provider';
+import { useAuth } from 'public/auth/providers/auth-provider';
 import { FORM_ERROR } from 'final-form';
 import { RegisterMutationVariables } from 'generated/graphql';
 import { CheckboxField } from 'public/forms/fields/checkbox-field';
@@ -32,7 +32,7 @@ export interface RegistrationFormPayload extends RegisterMutationVariables {
 export function RegistrationForm({ children, confirmButtonLabel }: Props) {
   const t = useT();
   const classes = useStyles();
-  const { register } = Auth.useContext();
+  const { register } = useAuth();
 
   function validate(values: RegistrationFormPayload) {
     if (values.password1 !== values.password2) {

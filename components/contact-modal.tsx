@@ -2,12 +2,12 @@ import React from 'react';
 import { useCT } from 'public/hooks/translation';
 import { DialogContent, DialogTitle } from '@material-ui/core';
 import { SimpleDialog, SimpleDialogProps } from 'public/dialogs/SimpleDialog';
-import { CompanyDetails } from 'public/providers/company-details-provider';
+import { useCompanyDetails } from 'public/providers/company-details-provider';
 
 export function Contact(props: SimpleDialogProps): JSX.Element {
   const ct = useCT();
   const { address, contactEmail, companyName, nip, regon } =
-    CompanyDetails.useContext();
+    useCompanyDetails();
 
   return (
     <SimpleDialog {...props}>

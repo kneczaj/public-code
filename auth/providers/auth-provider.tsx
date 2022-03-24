@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { ContextHookFactory } from '../../utils/context-hook';
 import { ProviderComponentProps } from '../../components/provider-group';
-import { Token } from 'public/auth/providers/token-provider';
+import { useToken } from 'public/auth/providers/token-provider';
 import {
   LoginMutationVariables,
   MeQuery,
@@ -23,8 +23,10 @@ export interface ContextProps
   register: (payload: RegisterMutationVariables) => MutationSubmitResult;
 }
 
-export const Auth =
-  ContextHookFactory.createHookAndContext<ContextProps>('authentication');
+export const AuthContext =
+  ContextHookFactory.createContext<ContextProps>('authentication');
+
+export const useAuth = ContextHookFactory.createHook<ContextProps>(AuthContext);
 
 /**
  * High level authentication provider which calls GraphQL API
@@ -39,7 +41,7 @@ export function AuthProvider({
     isAuthenticated,
     login: setToken,
     redirectToLogin
-  } = Token.useContext();
+  } = useToken();
   const onLogin = useCallback(
     (payload: Pick<UsersPermissionsLoginPayload, 'jwt'>) => {
       if (!payload.jwt) {
@@ -66,7 +68,7 @@ export function AuthProvider({
   });
 
   return (
-    <Auth.Context.Provider
+    <AuthContext.Provider
       value={{
         isAuthenticated,
         logout,
@@ -78,6 +80,6 @@ export function AuthProvider({
       }}
     >
       {children}
-    </Auth.Context.Provider>
+    </AuthContext.Provider>
   );
 }
