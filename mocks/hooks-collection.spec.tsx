@@ -67,4 +67,28 @@ describe('mockHookCollection', () => {
     expect(() => render(<InnerComponent />)).toThrow(ContextError);
     errorSpy.mockRestore();
   });
+
+  describe('with beforeAll', () => {
+    const setup = () => ({
+      spies: mockHookCollection(HooksCollection),
+      ...render(<InnerComponent />)
+    });
+    // TODO: this does not work!
+    // beforeAll(() => {
+    //   console.log('beforeAll')
+    //   spies = mockHookCollection(HooksCollection);
+    //   renderResult = render(<InnerComponent />);
+    // });
+    it('works', () => {
+      const { getByText, spies } = setup();
+      expect(getByText('mockedStr')).toBeInTheDocument();
+      expect(spies.useTest).toHaveBeenCalledTimes(1);
+      spies.useTest.mockRestore();
+      const errorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
+      expect(() => render(<InnerComponent />)).toThrow(ContextError);
+      errorSpy.mockRestore();
+    });
+  });
 });
