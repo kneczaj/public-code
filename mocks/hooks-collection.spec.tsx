@@ -1,17 +1,17 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { InnerComponent } from './hooks-collection-sandbox/innner-component';
-import { useTest } from './hooks-collection-sandbox/mocks';
 import * as HooksCollection from './hooks-collection-sandbox/mocks';
+import { useTest } from './hooks-collection-sandbox/mocks';
 import { ContextError } from '../utils/context-hook';
 import { mockHookCollection } from './hooks-collection';
 
 describe('mockHook', () => {
   it('mocks TestContext', () => {
     const spy = useTest();
-    const { getByText } = render(<InnerComponent />);
+    render(<InnerComponent />);
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(getByText('mockedStr')).toBeInTheDocument();
+    expect(screen.getByText('mockedStr')).toBeInTheDocument();
     spy.mockRestore();
     const errorSpy = jest
       .spyOn(console, 'error')
@@ -22,10 +22,10 @@ describe('mockHook', () => {
 
   it('mocks TestContext with custom value', () => {
     const spy = useTest({ str: 'alfa', setStr: val => undefined });
-    const { getByText, queryByText } = render(<InnerComponent />);
+    render(<InnerComponent />);
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(getByText('alfa')).toBeInTheDocument();
-    expect(queryByText('mockedStr')).not.toBeInTheDocument();
+    expect(screen.getByText('alfa')).toBeInTheDocument();
+    expect(screen.queryByText('mockedStr')).not.toBeInTheDocument();
     spy.mockRestore();
     const errorSpy = jest
       .spyOn(console, 'error')
@@ -38,8 +38,8 @@ describe('mockHook', () => {
 describe('mockHookCollection', () => {
   it('mocks TestContext with collection mock', () => {
     const spies = mockHookCollection(HooksCollection);
-    const { getByText } = render(<InnerComponent />);
-    expect(getByText('mockedStr')).toBeInTheDocument();
+    render(<InnerComponent />);
+    expect(screen.getByText('mockedStr')).toBeInTheDocument();
     expect(spies.useTest).toHaveBeenCalledTimes(1);
     spies.useTest.mockRestore();
     const errorSpy = jest
@@ -56,9 +56,9 @@ describe('mockHookCollection', () => {
         str: 'alfa'
       })
     });
-    const { getByText, queryByText } = render(<InnerComponent />);
-    expect(getByText('alfa')).toBeInTheDocument();
-    expect(queryByText('mockedStr')).not.toBeInTheDocument();
+    render(<InnerComponent />);
+    expect(screen.getByText('alfa')).toBeInTheDocument();
+    expect(screen.queryByText('mockedStr')).not.toBeInTheDocument();
     expect(spies.useTest).toHaveBeenCalledTimes(1);
     spies.useTest.mockRestore();
     const errorSpy = jest
