@@ -5,6 +5,7 @@ import { SliderRangeField, Props } from './slider-range-field';
 import { Slider } from '@material-ui/core';
 import { act } from 'react-dom/test-utils';
 import { mockAllProviderHooks } from 'public/mocks';
+import { render, RenderResult } from "@testing-library/react";
 
 const mocks = {
   onSubmit: (values: unknown) => undefined
@@ -23,16 +24,17 @@ function TestComponent(props: Props) {
 }
 
 xdescribe('Slider range field', () => {
-  let wrapper: ReactWrapper<any, any, any>;
+  let wrapper: RenderResult;
   const spy = jest.spyOn(mocks, 'onSubmit');
 
   beforeAll(() => {
+    // This will not work - see the unit tests
     mockAllProviderHooks();
   });
 
   describe('with undefined values', () => {
     beforeEach(() => {
-      wrapper = mount(
+      wrapper = render(
         <TestComponent
           name={'test'}
           // @ts-ignore
