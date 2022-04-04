@@ -14,26 +14,38 @@ import { UserRequest } from 'public/auth/providers/user-provider';
 import { getLocationObj } from 'public/routing/models';
 
 export interface AuthRouteChildrenProps<T> extends RouteChildrenProps<T> {
+  className?: string;
   user: User;
 }
 
 export interface Props extends Omit<RouteProps, 'children'> {
+  contentClassName?: string;
+  className?: string;
   children:
     | ((props: AuthRouteChildrenProps<any>) => React.ReactNode)
     | React.ReactNode;
 }
 
-export function AuthRoute({ children, ...props }: Props): JSX.Element {
+export function AuthRoute({
+  children,
+  contentClassName,
+  className,
+  ...props
+}: Props): JSX.Element {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
   if (isAuthenticated) {
     return (
       <Route {...props}>
         {(props: RouteChildrenProps<any>) => (
-          <UserRequest.WrapperWithProvider>
+          <UserRequest.WrapperWithProvider
+            className={className}
+            contentClassName={contentClassName}
+          >
             {({ data, className }) =>
               maybePassProps<AuthRouteChildrenProps<any>>(children, {
                 ...props,
+                className,
                 user: data
               })
             }
