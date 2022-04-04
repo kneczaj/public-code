@@ -42,92 +42,88 @@ export function RegistrationForm({ children, confirmButtonLabel }: Props) {
   }
 
   return (
-    <Form
+    <Form<RegistrationFormPayload>
       formName={'register'}
       className={'registration-form-root'}
       onSubmit={register}
       validate={validate}
+      Footer={({ values }: FormRenderProps<RegistrationFormPayload>) => (
+        <Button
+          className={classes.submit}
+          type={'submit'}
+          color={'primary'}
+          disabled={!values.email || !values.password1 || !values.password2}
+          fullWidth
+          variant={'contained'}
+        >
+          {isUndefined(confirmButtonLabel)
+            ? capitalizeFirstLetter(t('register'))
+            : confirmButtonLabel}
+        </Button>
+      )}
     >
-      {{
-        main: () => (
-          <>
-            <Grid
-              container
-              spacing={2}
-              alignContent={'stretch'}
-              direction={'column'}
-            >
-              <Grid item>
-                <InputField
-                  name={'email'}
-                  showLabel={false}
-                  placeholder={capitalizeFirstLetter(t('email'))}
-                  validate={composeValidators([isEmail])}
-                  fullWidth
-                  variant={'outlined'}
-                />
-              </Grid>
-              <Grid item>
-                <InputField
-                  name={'password1'}
-                  showLabel={false}
-                  type={'password'}
-                  placeholder={capitalizeFirstLetter(t('password1'))}
-                  fullWidth
-                  variant={'outlined'}
-                />
-              </Grid>
-              <Grid item>
-                <InputField
-                  name={'password2'}
-                  showLabel={false}
-                  type={'password'}
-                  placeholder={capitalizeFirstLetter(t('password2'))}
-                  fullWidth
-                  variant={'outlined'}
-                />
-              </Grid>
-              <Grid
-                item
-                container
-                spacing={0}
-                alignContent={'stretch'}
-                direction={'column'}
-              >
-                <Grid item>
-                  <CheckboxField
-                    size={'small'}
-                    name={'terms'}
-                    validate={required}
-                  />
-                </Grid>
-                <Grid item>
-                  <CheckboxField
-                    name={'privacyPolicy'}
-                    size={'small'}
-                    validate={required}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            {children}
-          </>
-        ),
-        footer: ({ values }: FormRenderProps) => (
-          <Button
-            className={classes.submit}
-            type={'submit'}
-            color={'primary'}
-            disabled={!values.email || !values.password1 || !values.password2}
-            fullWidth
-            variant={'contained'}
+      <>
+        <Grid
+          container
+          spacing={2}
+          alignContent={'stretch'}
+          direction={'column'}
+        >
+          <Grid item>
+            <InputField
+              name={'email'}
+              showLabel={false}
+              placeholder={capitalizeFirstLetter(t('email'))}
+              validate={composeValidators([isEmail])}
+              fullWidth
+              variant={'outlined'}
+            />
+          </Grid>
+          <Grid item>
+            <InputField
+              name={'password1'}
+              showLabel={false}
+              type={'password'}
+              placeholder={capitalizeFirstLetter(t('password1'))}
+              fullWidth
+              variant={'outlined'}
+            />
+          </Grid>
+          <Grid item>
+            <InputField
+              name={'password2'}
+              showLabel={false}
+              type={'password'}
+              placeholder={capitalizeFirstLetter(t('password2'))}
+              fullWidth
+              variant={'outlined'}
+            />
+          </Grid>
+          <Grid
+            item
+            container
+            spacing={0}
+            alignContent={'stretch'}
+            direction={'column'}
           >
-            {isUndefined(confirmButtonLabel)
-              ? capitalizeFirstLetter(t('register'))
-              : confirmButtonLabel}
-          </Button>
-        )
-      }}
+            <Grid item>
+              <CheckboxField
+                size={'small'}
+                name={'terms'}
+                validate={required}
+              />
+            </Grid>
+            <Grid item>
+              <CheckboxField
+                name={'privacyPolicy'}
+                size={'small'}
+                validate={required}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+        {children}
+      </>
     </Form>
   );
 }

@@ -8,6 +8,7 @@ import { useT } from '../../hooks/translation';
 import { Button, Grid, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useAuth } from 'public/auth/providers/auth-provider';
+import { LoginMutationVariables } from 'generated/graphql';
 
 export interface Props {
   children?: React.ReactNode;
@@ -29,56 +30,51 @@ export function LoginForm({
   const { login } = useAuth();
 
   return (
-    <Form formName={'login'} onSubmit={login}>
-      {{
-        main() {
-          return (
-            <>
-              <Grid
-                container
-                spacing={2}
-                alignContent={'stretch'}
-                direction={'column'}
-              >
-                <Grid item>
-                  <InputField
-                    name={'username'}
-                    showLabel={false}
-                    placeholder={capitalizeFirstLetter(t('username'))}
-                    validate={composeValidators([isEmail])}
-                    variant={'outlined'}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item>
-                  <InputField
-                    name={'password'}
-                    showLabel={false}
-                    placeholder={capitalizeFirstLetter(t('password'))}
-                    type={'password'}
-                    variant={'outlined'}
-                    fullWidth
-                  />
-                </Grid>
-                {children && <div className={'agreements'}>{children}</div>}
-              </Grid>
-            </>
-          );
-        },
-        footer({ values }: FormRenderProps) {
-          return (
-            <Button
-              className={classes.submit}
-              type={'submit'}
+    <Form<LoginMutationVariables>
+      formName={'login'}
+      onSubmit={login}
+      Footer={({ values }: FormRenderProps<LoginMutationVariables>) => (
+        <Button
+          className={classes.submit}
+          type={'submit'}
+          fullWidth
+          variant={'contained'}
+          disabled={!values.username || !values.password}
+        >
+          {confirmButtonLabel || capitalizeFirstLetter(t('login'))}
+        </Button>
+      )}
+    >
+      <>
+        <Grid
+          container
+          spacing={2}
+          alignContent={'stretch'}
+          direction={'column'}
+        >
+          <Grid item>
+            <InputField
+              name={'username'}
+              showLabel={false}
+              placeholder={capitalizeFirstLetter(t('username'))}
+              validate={composeValidators([isEmail])}
+              variant={'outlined'}
               fullWidth
-              variant={'contained'}
-              disabled={!values.username || !values.password}
-            >
-              {confirmButtonLabel || capitalizeFirstLetter(t('login'))}
-            </Button>
-          );
-        }
-      }}
+            />
+          </Grid>
+          <Grid item>
+            <InputField
+              name={'password'}
+              showLabel={false}
+              placeholder={capitalizeFirstLetter(t('password'))}
+              type={'password'}
+              variant={'outlined'}
+              fullWidth
+            />
+          </Grid>
+          {children && <div className={'agreements'}>{children}</div>}
+        </Grid>
+      </>
     </Form>
   );
 }

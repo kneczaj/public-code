@@ -57,20 +57,21 @@ export function FormDialog<TValues>({
   return (
     <MuiDialog open={true} onClose={close} id={id}>
       {DialogTitleContent && <DialogTitle>{DialogTitleContent}</DialogTitle>}
-      <Form onSubmit={confirm} {...formProps}>
-        {{
-          main: () => <DialogContent>{children}</DialogContent>,
-          footer: () => (
-            <DialogActions>
-              <Button color='secondary' onClick={close}>
-                {closeLabel || ct('close')}
-              </Button>
-              <Button type={'submit'} color='primary' autoFocus>
-                {confirmLabel || ct('save')}
-              </Button>
-            </DialogActions>
-          )
-        }}
+      <Form
+        onSubmit={confirm}
+        {...formProps}
+        Footer={() => (
+          <DialogActions>
+            <Button color='secondary' onClick={close}>
+              {closeLabel || ct('close')}
+            </Button>
+            <Button type={'submit'} color='primary' autoFocus>
+              {confirmLabel || ct('save')}
+            </Button>
+          </DialogActions>
+        )}
+      >
+        <DialogContent>{children}</DialogContent>
       </Form>
     </MuiDialog>
   );
