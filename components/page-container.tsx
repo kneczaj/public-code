@@ -1,4 +1,4 @@
-import React, { forwardRef, Ref } from 'react';
+import React, { Ref } from 'react';
 import { merge } from 'public/css';
 
 export type ScrollElement = 'PAGE' | 'CONTENT' | 'NOTHING';
@@ -11,52 +11,47 @@ export interface Props {
   main: React.ReactNode;
   footer?: React.ReactNode;
   scrollElement?: ScrollElement;
+  contentScrollContainerRef?: Ref<any>;
 }
 
-export const PageContainer = forwardRef(
-  (
-    {
-      contentClassName,
-      className,
-      footer,
-      main,
-      navbar,
-      scrollContainerClassName,
-      scrollElement = 'CONTENT'
-    }: Props,
-    ref: Ref<any>
-  ) => {
-    return (
+export function PageContainer({
+  contentScrollContainerRef,
+  contentClassName,
+  className,
+  footer,
+  main,
+  navbar,
+  scrollContainerClassName,
+  scrollElement = 'CONTENT'
+}: Props) {
+  return (
+    <div
+      className={merge(
+        className,
+        'd-flex flex-column page-container-root flex-1',
+        scrollElement === 'PAGE' && 'scroll-here'
+      )}
+    >
+      {navbar}
       <div
         className={merge(
-          className,
-          'd-flex flex-column page-container-root flex-1',
-          scrollElement === 'PAGE' && 'scroll-here'
+          scrollContainerClassName,
+          'd-flex flex-1 flex-column justify-content-between',
+          scrollElement === 'CONTENT' && 'scroll-here flex-1'
         )}
+        ref={contentScrollContainerRef}
       >
-        {navbar}
-        <div
+        <main
           className={merge(
-            scrollContainerClassName,
-            'd-flex flex-1 flex-column justify-content-between',
-            scrollElement === 'CONTENT' && 'scroll-here flex-1'
+            'content d-flex flex-column',
+            scrollElement === 'NOTHING' && 'flex-1',
+            contentClassName
           )}
         >
-          <main
-            ref={ref}
-            className={merge(
-              'content d-flex flex-column',
-              scrollElement === 'NOTHING' && 'flex-1',
-              contentClassName
-            )}
-          >
-            {main}
-          </main>
-          {footer}
-        </div>
+          {main}
+        </main>
+        {footer}
       </div>
-    );
-  }
-);
-
-PageContainer.displayName = 'PageContainer';
+    </div>
+  );
+}
