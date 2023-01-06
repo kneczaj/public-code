@@ -8,7 +8,7 @@ export interface Props {
   contentClassName?: string;
   scrollContainerClassName?: string;
   navbar: React.ReactNode;
-  main: React.ReactNode;
+  children: React.ReactNode;
   footer?: React.ReactNode;
   scrollElement?: ScrollElement;
   contentScrollContainerRef?: Ref<any>;
@@ -19,7 +19,7 @@ export function PageContainer({
   contentClassName,
   className,
   footer,
-  main,
+  children,
   navbar,
   scrollContainerClassName,
   scrollElement = 'CONTENT'
@@ -48,7 +48,7 @@ export function PageContainer({
             contentClassName
           )}
         >
-          {main}
+          {children}
         </main>
         {footer}
       </div>
