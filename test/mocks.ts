@@ -3,6 +3,7 @@ import { MutationFunctionOptions } from '@apollo/client/react/types/types';
 import { GraphQLError } from 'graphql/error/GraphQLError';
 import { FinalFormSubmissionResult } from 'public/graphql/utils';
 import { FORM_ERROR } from 'final-form';
+import { ContextHookFactory } from 'public/utils/context-hook';
 
 function any(): any {
   return Symbol() as any;
@@ -89,3 +90,6 @@ export const errorResponse1: FetchResult = {
 export const getMutation: <TData, FormValues>(
   options?: MutationFunctionOptions<TData, FormValues>
 ) => Promise<FetchResult<TData>> = jest.fn();
+
+export const TestContext = ContextHookFactory.createContext('TestContext');
+export const useTest = ContextHookFactory.createHook(TestContext);
