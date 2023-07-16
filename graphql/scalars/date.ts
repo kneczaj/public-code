@@ -1,8 +1,10 @@
-import { GraphQLScalarType, GraphQLError, Kind } from 'graphql';
+import { GraphQLError, GraphQLScalarType, Kind } from 'graphql';
 import { DateTime } from 'luxon';
-import { dateOnly } from '../../date-utils';
+import { dateOnly } from 'public/date-utils';
 
-export function getDateScalar(locale: string): GraphQLScalarType {
+export function getDateScalar(
+  locale: string
+): GraphQLScalarType<DateTime, string> {
   return new GraphQLScalarType<DateTime, string>({
     name: 'Date',
     /**
@@ -43,7 +45,7 @@ export function getDateScalar(locale: string): GraphQLScalarType {
      * @param  {Object} ast graphql ast
      * @return {date} date value
      */
-    parseLiteral(ast) {
+    parseLiteral(ast): DateTime {
       if (ast.kind !== Kind.STRING) {
         throw new GraphQLError(
           'Query error: Can only parse strings to date but got: ' + ast.kind
