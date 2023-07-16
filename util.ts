@@ -30,12 +30,12 @@ export interface WithId<T, Id = number> {
 }
 
 export function deserializeWithId<Id, T>(
-  payload: WithIdPayload<Id> & T
+  payload: WithIdPayload<Id> & T,
 ): WithId<Id, T> {
   const { id, ...data } = payload;
   return {
     id,
-    data
+    data,
   } as unknown as WithId<Id, T>;
 }
 
@@ -55,7 +55,7 @@ export function capitalizeFirstLetter(text: string) {
 export function joinWords(
   words: string[],
   connector: string,
-  lastWordConnector: string
+  lastWordConnector: string,
 ) {
   if (words.length === 1) {
     return words[0];
@@ -72,6 +72,7 @@ export function joinWords(
  * @param val
  */
 export function isFunction(val: any): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return val && {}.toString.call(val) === '[object Function]';
 }
 
@@ -80,14 +81,14 @@ export type MaybeChildrenAsFn<TProps> =
   | ((formProps: TProps) => React.ReactNode);
 
 function isReturningReactNode<TProps>(
-  val: MaybeChildrenAsFn<TProps>
+  val: MaybeChildrenAsFn<TProps>,
 ): val is (formProps: TProps) => React.ReactNode {
   return isFunction(val);
 }
 
 export function maybePassProps<TProps>(
   val: MaybeChildrenAsFn<TProps>,
-  props: TProps
+  props: TProps,
 ): React.ReactNode {
   if (isReturningReactNode<TProps>(val)) {
     return val(props);
@@ -104,13 +105,13 @@ export function getIfDefined<T>(val: T | undefined, fallback: T): T {
  * @param input
  */
 export function keys<T extends Record<string, unknown>>(
-  input: T
+  input: T,
 ): Array<keyof T> {
   return Object.keys(input) as Array<keyof T>;
 }
 
 export function filterOutUndefined<T extends Record<string, unknown>>(
-  input: T
+  input: T,
 ): Partial<T> {
   return keys(input).reduce<Partial<T>>((acc, key) => {
     if (isUndefined(input[key])) {
@@ -122,7 +123,7 @@ export function filterOutUndefined<T extends Record<string, unknown>>(
 }
 
 export function filterOutNull<T extends Record<string, unknown>>(
-  input: T
+  input: T,
 ): Partial<T> {
   return keys(input).reduce<Partial<T>>((acc, key) => {
     if (isNull(input[key])) {

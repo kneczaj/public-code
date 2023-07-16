@@ -1,9 +1,8 @@
-import React from 'react';
 import { ReactNode } from 'react';
 import { MaybeChildrenAsFn } from 'public/util';
 
 export interface ChildrenFnProviderProps<TContextProps = unknown> {
-  children: (context: TContextProps) => React.ReactNode;
+  children: (context: TContextProps) => ReactNode;
 }
 
 export interface ProviderComponentProps<TContextProps = unknown> {
@@ -31,6 +30,6 @@ export function ProviderGroup({ children, providers }: Props): JSX.Element {
     (children, Provider): JSX.Element => {
       return <Provider>{children}</Provider>;
     },
-    <>{children}</>
+    <>{children}</>,
   );
 }
