@@ -5,7 +5,7 @@ import { SliderRangeField, Props } from './slider-range-field';
 import { Slider } from '@material-ui/core';
 import { act } from 'react-dom/test-utils';
 import { mockAllProviderHooks } from 'public/mocks';
-import { render, RenderResult } from "@testing-library/react";
+import { render, RenderResult } from '@testing-library/react';
 
 const mocks = {
   onSubmit: (values: unknown) => undefined

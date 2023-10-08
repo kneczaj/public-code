@@ -5,7 +5,7 @@ export class RouterError extends Error {}
 
 export function useParam<
   RoutingParams extends { [K in string]?: string },
-  TOut = string,
+  TOut = string
 >(name: string): TOut extends string ? string : TOut {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-assignment
   const params = useParams<RoutingParams>();

@@ -30,6 +30,6 @@ export function ProviderGroup({ children, providers }: Props): JSX.Element {
     (children, Provider): JSX.Element => {
       return <Provider>{children}</Provider>;
     },
-    <>{children}</>,
+    <>{children}</>
   );
 }
