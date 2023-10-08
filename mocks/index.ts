@@ -13,8 +13,8 @@ export const mockAllProviderHooks = (
 export function mockOneHook<Name extends keyof typeof HookMocks>(
   name: Name,
   getValue: (
-    defaults: ReturnType<ReturnType<typeof HookMocks[Name]>>
-  ) => ReturnType<ReturnType<typeof HookMocks[Name]>>
+    defaults: ReturnType<ReturnType<(typeof HookMocks)[Name]>>
+  ) => ReturnType<ReturnType<(typeof HookMocks)[Name]>>
 ) {
   const hookMock = HookMocks[name];
   const value = getValue(hookMock.defaultValue);

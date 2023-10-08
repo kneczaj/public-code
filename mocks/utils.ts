@@ -1,8 +1,7 @@
 export type MockContextHook<THookFn extends (...args: any[]) => any> = {
-  (val?: ReturnType<THookFn>): jest.Mock<
-    ReturnType<THookFn>,
-    Parameters<THookFn>
-  >;
+  (
+    val?: ReturnType<THookFn>
+  ): jest.Mock<ReturnType<THookFn>, Parameters<THookFn>>;
   defaultValue: ReturnType<THookFn>;
 };
 

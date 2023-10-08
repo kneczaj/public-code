@@ -1,7 +1,7 @@
 import { IntValueNode, Kind, ValueNode } from 'graphql';
 import { getDateTimeScalar } from './date-time';
 import { DateTime } from 'luxon';
-import { GraphQLScalarLiteralParser } from "graphql/type/definition";
+import { GraphQLScalarLiteralParser } from 'graphql/type/definition';
 
 describe('GraphQLMoment DateTime', () => {
   // these are the same dates

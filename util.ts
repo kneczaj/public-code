@@ -72,6 +72,7 @@ export function joinWords(
  * @param val
  */
 export function isFunction(val: any): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return val && {}.toString.call(val) === '[object Function]';
 }
 

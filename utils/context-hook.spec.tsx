@@ -1,20 +1,19 @@
-import {ContextHookFactory} from "public/utils/context-hook";
-import {MOCKS} from "public/test";
-import {render, RenderResult, screen} from "@testing-library/react";
-import {Component} from "react";
+import { ContextHookFactory } from 'public/utils/context-hook';
+import { MOCKS } from 'public/test';
+import { render, RenderResult, screen } from '@testing-library/react';
+import { Component } from 'react';
 
 describe('ContextHookFactory', () => {
-
   let rendered: RenderResult;
 
   const getElement = {
     error: () => screen.getByTestId('error'),
     contextValue: () => screen.getByTestId('contextValue')
-  }
+  };
 
   const spies = {
     useTest: jest.spyOn(MOCKS, 'useTest')
-  }
+  };
 
   const useTest = MOCKS.useTest;
   const TestContext = MOCKS.TestContext;
@@ -60,7 +59,7 @@ describe('ContextHookFactory', () => {
       beforeEach(() => {
         rendered = render(
           <TestContext.Provider value={'success'}>
-            <HookComponent/>
+            <HookComponent />
           </TestContext.Provider>
         );
       });
@@ -71,11 +70,17 @@ describe('ContextHookFactory', () => {
     });
     describe('outside context', () => {
       beforeEach(() => {
-        rendered = render(<ErrorBoundary><HookComponent/></ErrorBoundary>);
+        rendered = render(
+          <ErrorBoundary>
+            <HookComponent />
+          </ErrorBoundary>
+        );
       });
       it('throws error', () => {
         expect(getElement.error()).toBeInTheDocument();
-        expect(getElement.error()).toHaveTextContent('A context hook for context called "TestContext" is used outside the context provider');
+        expect(getElement.error()).toHaveTextContent(
+          'A context hook for context called "TestContext" is used outside the context provider'
+        );
       });
     });
   });
